@@ -1,0 +1,31 @@
+to install with single node:
+
+# configure will all test
+> puppet apply nova/tests/all.pp
+
+# create priv/pub key pairs, this assumes the default project/user
+>cd ~
+>sudo nova-manage project zipfile nova novaadmin
+>unzip nova.zip
+# set up credentials
+>source novarc
+
+# test that you can download something into glance:
+>mkdir lucid_ami && cd lucid_ami
+
+>wget -q -O - http://173.203.107.207/ubuntu-lucid.tar | tar xSv
+
+>glance add name=ramdisk disk_format=ari container_format=ari is_public=True < initrd.img-2.6.32-23-server
+>glance add name=kernel disk_format=aki container_format=aki is_public=True < vmlinuz-2.6.32-23-server
+>glance add name=lucid_ami disk_format=ami container_format=ami is_public=True ramdisk_id=<ramdisk ID> kernel_id=<kernel ID> < ubuntu-lucid.img
+# verify that the images are in the glance db
+>glance index
+
+# see what flavors nova knows about
+>nova flavor-list
+# verify that nova is aware of the new images
+>nova image-list
+# boot an image
+>nova boot test --flavor <flavor ID> --image <image ID>
+
+# this last test still does not work for me :(
