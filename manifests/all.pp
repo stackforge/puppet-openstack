@@ -1,7 +1,7 @@
 #
 # This manifest installs all of the nova
 # components on one node.
-#
+import 'hosts.pp'
 resources { 'nova_config':
   purge => true,
 }
