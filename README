@@ -3,12 +3,13 @@ Puppet Labs OpenStack
 
 A collection of modules to install a single node OpenStack server.
 
+Thanks to Canonical and Rackspace for their assistance in developing these modules.
 
 Requirements
 ------------
 
 * Currently only works on Ubuntu Natty
-* Puppet 2.6.x or later
+* Puppet 2.6.8 or later
 * Nova PPA
 
 Installation
@@ -32,20 +33,15 @@ Installation
 
 5. Download the Puppet OpenStack module
 
-        $ cd ~ && git clone git://github.com/puppetlabs/puppetlabs-openstack.git
+        $ cd ~ && git clone --recurse git://github.com/puppetlabs/puppetlabs-openstack.git
 
-6. Update the Puppet OpenStack modules
-
-        $ cd ~/puppetlabs-openstack && git pull && git submodule init && git submodule update && git submodule status
-
-7. Copy the modules into the Puppet modulepath
+6. Copy the modules into the Puppet modulepath
 
         $ sudo cp -R ~/puppetlabs-openstack/modules/* /etc/puppet/
 
-8. Run Puppet
+7. Run Puppet
 
         $ sudo puppet apply --verbose ~/puppetlabs-openstack/manifests/all.pp
-
 
 Usage
 -----
@@ -76,7 +72,7 @@ Usage
 Author
 ------
 
-Puppet Labs & Canonical
+Puppet Labs, Canonical & Rackspace!
 
 License
 -------
