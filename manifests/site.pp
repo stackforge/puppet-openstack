@@ -44,6 +44,8 @@ node controller {
     image_service => 'nova.image.glance.GlanceImageService',
 
     glance_api_servers => 'glance:9292',
+    glance_host => 'glance',
+    glance_port => '9292',
 
     libvirt_type => 'qemu',
   }
