@@ -1,1 +1,94 @@
-This is the project for the Puppet implementation of openstack.
+Puppet Labs OpenStack
+=====================
+
+A collection of modules to install a single node OpenStack server.
+
+Thanks to Canonical and Rackspace for their assistance in developing these modules.
+
+Requirements
+------------
+
+* Currently only works on Ubuntu Natty
+* Puppet 2.6.8 or later
+* Nova PPA
+
+Installation
+------------
+
+1. Install Python software properties
+
+        $ sudo apt-get install -y python-software-properties 
+
+2. Install the Nova PPA
+
+        $ sudo add-apt-repository ppa:nova-core/trunk
+
+3. Update APT
+
+        $ sudo apt-get update
+
+4. Install Puppet
+
+        $ apt-get install puppet
+
+5. Download the Puppet OpenStack module
+
+        $ cd ~ && git clone --recurse git://github.com/puppetlabs/puppetlabs-openstack.git
+
+6. Copy the modules into the Puppet modulepath
+
+        $ sudo cp -R ~/puppetlabs-openstack/modules/* /etc/puppet/
+
+7. Run Puppet
+
+        $ sudo puppet apply --verbose ~/puppetlabs-openstack/manifests/all.pp
+
+Usage
+-----
+
+1. Add images using glance
+
+2. Extract credentials
+
+        $ cd ~
+        $ sudo nova-manage project zipfile nova novaadmin
+        $ unzip nova.zip
+        $ source novarc
+        $ euca-add-keypair openstack > ~/cert.pem
+
+3. You can list any images and flavours available.
+
+        $ nova flavor-list
+        $ nova image-list
+
+4. Run an instance
+
+        $ euca-run-instances ami-00000003 -k openstack -t m1.tiny
+
+5. You can see running instances
+
+        $ euca-describe-instances
+
+Author
+------
+
+Puppet Labs, Canonical & Rackspace!
+
+License
+-------
+
+    Author:: Puppet Labs (<info@puppetlabs.com>)
+    Copyright:: Copyright (c) 2011 Puppet Labs
+    License:: Apache License, Version 2.0
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
