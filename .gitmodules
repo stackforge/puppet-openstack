@@ -16,3 +16,6 @@
 [submodule "modules/nova"]
 	path = modules/nova
 	url = git://github.com/puppetlabs/puppetlabs-nova.git
+[submodule "modules/create_resources"]
+	path = modules/create_resources
+	url = git://github.com/puppetlabs/create_resources.git
