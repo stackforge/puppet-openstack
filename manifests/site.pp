@@ -30,8 +30,8 @@ node db {
   class { 'mysql::ruby': }
   class { 'nova::db':
     password      => $db_password,
-    dbname        => $db_user,
-    user          => $db_name,
+    dbname        => $db_name,
+    user          => $db_username,
     host          => $clientcert,
     # does glance need access?
     allowed_hosts => ['controller', 'glance', 'compute'],
@@ -68,7 +68,7 @@ node compute {
     api_port       => 8773,
     aws_address    => '169.254.169.254',
   }
-  class { 'nova::compute::libvirt': 
+  class { 'nova::compute::libvirt':
     libvirt_type                => 'qemu',
     flat_network_bridge         => 'br100',
     flat_network_bridge_ip      => '11.0.0.1',
@@ -76,7 +76,7 @@ node compute {
   }
   class { "nova":
     verbose             => $verbose,
-    sql_connection      => "mysql://${db_user}:${db_password}@${db_host}/${db_name}",
+    sql_connection      => "mysql://${db_username}:${db_password}@${db_host}/${db_name}",
     image_service       => $image_service,
     glance_api_servers  => $glance_api_servers,
     glance_host         => $glance_host,
