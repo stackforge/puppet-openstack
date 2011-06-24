@@ -9,22 +9,32 @@ $rabbit_vhost    = '/'
 $rabbit_host     = 'rabbitmq'
 $rabbit_port     = '5672'
 
+$glance_api_servers = 'glance:9292'
+$glance_host        = 'glance'
+$glance_port        = '9292'
+
+$api_server = 'controller'
+
 resources { 'nova_config':
   purge => true,
 }
 
 node db {
   class { 'mysql::server':
-    config_hash => {'bind_address' => '0.0.0.0'}
+    config_hash => {
+                     'bind_address' => '0.0.0.0'
+                     #'root_password' => 'foo',
+                     #'etc_root_password' => true
+                   }
   }
   class { 'mysql::ruby': }
   class { 'nova::db':
     password      => $db_password,
-    dbname        => $db_user,
-    user          => $db_name,
+    dbname        => $db_name,
+    user          => $db_username,
     host          => $clientcert,
     # does glance need access?
-    allowed_hosts => ['controller', 'glance'],
+    allowed_hosts => ['controller', 'glance', 'compute'],
   }
 }
 
@@ -43,16 +53,40 @@ node controller {
 
     image_service => 'nova.image.glance.GlanceImageService',
 
-    glance_api_servers => 'glance:9292',
-    glance_host => 'glance',
-    glance_port => '9292',
+    glance_api_servers => $glance_api_servers,
+    glance_host => $glance_host,
+    glance_port => $glance_port,
 
     libvirt_type => 'qemu',
   }
 }
 
 node compute {
-
+  class { 'nova::compute':
+    api_server     => $api_server,
+    enabled        => true,
+    api_port       => 8773,
+    aws_address    => '169.254.169.254',
+  }
+  class { 'nova::compute::libvirt':
+    libvirt_type                => 'qemu',
+    flat_network_bridge         => 'br100',
+    flat_network_bridge_ip      => '11.0.0.1',
+    flat_network_bridge_netmask => '255.255.255.0',
+  }
+  class { "nova":
+    verbose             => $verbose,
+    sql_connection      => "mysql://${db_username}:${db_password}@${db_host}/${db_name}",
+    image_service       => $image_service,
+    glance_api_servers  => $glance_api_servers,
+    glance_host         => $glance_host,
+    glance_port         => $glance_port,
+    rabbit_host         => $rabbit_host,
+    rabbit_port         => $rabbit_port,
+    rabbit_userid       => $rabbit_user,
+    rabbit_password     => $rabbit_password,
+    rabbit_virtual_host => $rabbit_virtual_host,
+  }
 }
 
 node glance {
