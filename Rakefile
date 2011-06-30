@@ -17,13 +17,13 @@ instances = [
 namespace :build do
   desc 'build out 5 node openstack cluster'
   task :multi do
-    instance.each do |instance|
+    instances.each do |instance|
       build(instance, env)
     end
   end
   desc 'build out openstack on one node'
-  task :all do
-    build(:all, env)
+  task :single do
+    build(:single, env)
   end
 end
 
@@ -57,7 +57,7 @@ namespace :test do
     end
   end
   desc 'test single node installation'
-  task :all do
+  task :single do
     test(:all, ['sudo /vagrant/ext/glance.sh', 'sudo /vagrant/ext/nova.sh'], env)
   end
 end

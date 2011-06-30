@@ -69,6 +69,34 @@ Usage
 
         $ euca-describe-instances
 
+Installing With Vagrant
+------------------------
+
+These examples assume that you have a suitable image that you can
+use for testing.
+
+1. Export the environment variable:
+
+Step one is to export an environment variable of the vagrant box.
+
+All of my testing has been done using a Natty image.
+
+2. Download glance images for testing:
+
+        $ mkdir images
+        $ cd images
+        $ curl -g -o ttylinux-uec-i686-12.1_2.6.35-22_1.tar.gz  http://smoser.brickies.net/ubuntu/ttylinux-uec/ttylinux-uec-i686-12.1_2.6.35-22_1.tar.gz
+
+2. Testing single node installation:
+
+This will install all of the currently supported openstack components into a single node.
+
+run the rake task:
+
+    $ rake build:all
+
+    $ 
+
 Author
 ------
 
@@ -92,3 +120,4 @@ License
     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
     See the License for the specific language governing permissions and
     limitations under the License.
+
