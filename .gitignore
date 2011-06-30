@@ -1,5 +1,5 @@
 *.swp
-images
+images/*
 facter
 puppet
 bashrc
