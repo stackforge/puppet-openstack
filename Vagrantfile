@@ -27,10 +27,10 @@ Vagrant::Config.run do |config|
     pm.vm.forward_port('ssh', 22, ssh_forward, :auto => true)
     # hard-coding this b/c it is important
     pm.vm.network("#{net_base}.10")
-    pm.vm.provision :puppet do |puppet|
-      puppet.manifest_file = "master.pp"
-      puppet.options = ["--certname","puppetmaster", '--modulepath', '/vagrant/modules']
-    end
+    #pm.vm.provision :puppet do |puppet|
+    #  puppet.manifest_file = "master.pp"
+    #  puppet.options = ["--certname","puppetmaster", '--modulepath', '/vagrant/modules']
+    #end
   end
 
   config.vm.define :all do |all|
