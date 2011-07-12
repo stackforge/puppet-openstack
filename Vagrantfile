@@ -11,7 +11,7 @@ Vagrant::Config.run do |config|
 
 
   config.vm.box = "#{box}"
-  config.vm.box_url = "#{remote_url_base}/#{box}.vbox"
+  config.vm.box_url = "http://faro.puppetlabs.lan/vagrant/#{box}.vbox"
   config.vm.customize do |vm|
     vm.memory_size = 768
     vm.cpu_count = 1
@@ -21,16 +21,10 @@ Vagrant::Config.run do |config|
 
   # the master runs apply to configure itself
   config.vm.define :puppetmaster do |pm|
-
-    pm.vm.forward_port("http", 8140, 8140)
     ssh_forward = ssh_forward + 1
     pm.vm.forward_port('ssh', 22, ssh_forward, :auto => true)
-    # hard-coding this b/c it is important
     pm.vm.network("#{net_base}.10")
-    #pm.vm.provision :puppet do |puppet|
-    #  puppet.manifest_file = "master.pp"
-    #  puppet.options = ["--certname","puppetmaster", '--modulepath', '/vagrant/modules']
-    #end
+    pm.vm.provision :shell, :path => 'scripts/run-puppetmaster.sh'
   end
 
   config.vm.define :all do |all|

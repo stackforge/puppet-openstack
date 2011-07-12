@@ -23,7 +23,7 @@ namespace :build do
   end
   desc 'build out openstack on one node'
   task :single do
-    build(:single, env)
+    build(:all, env)
   end
 end
 
