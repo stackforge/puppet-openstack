@@ -4,4 +4,3 @@ facter
 puppet
 bashrc
 .vagrant
-graphs/*
