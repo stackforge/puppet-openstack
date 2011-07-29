@@ -27,9 +27,18 @@ Installation
 
         $ sudo apt-get update
 
-4. Install Puppet
+4. Install Puppet -- On Oneiric Ocelot (11.10) the ubuntu repos have the correct version puppet but on Natty you have to manually get the 11.10 packages 
 
-        $ apt-get install puppet
+        $ sudo apt-get install libxmlrpc-ruby libopenssl-ruby libshadow-ruby1.8 libaugeas-ruby1.8
+	$ wget http://mirror.pnl.gov/ubuntu//pool/main/p/puppet/puppet_2.6.8-1ubuntu1_all.deb \
+   		http://mirror.pnl.gov/ubuntu//pool/main/p/puppet/puppet-common_2.6.8-1ubuntu1_all.deb \
+   		http://mirror.pnl.gov/ubuntu//pool/main/f/facter/facter_1.5.9-1ubuntu1_all.deb
+	$ sudo dpkg -i *.deb
+
+	make sure you have version 2.6.8
+	$ sudo puppet --version
+	2.6.8
+
 
 5. Download the Puppet OpenStack module
 
@@ -37,7 +46,7 @@ Installation
 
 6. Copy the modules into the Puppet modulepath
 
-        $ sudo cp -R ~/puppetlabs-openstack/modules/* /etc/puppet/
+        $ sudo cp -R ~/puppetlabs-openstack/modules/* /etc/puppet/modules/
 
 7. Run Puppet
 
