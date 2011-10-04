@@ -20,3 +20,5 @@ host { 'compute':
 host { 'glance':
   ip => '172.21.0.16',
 }
+class { 'apt': }
+class { 'openstack::repo::diablo': }

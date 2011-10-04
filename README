@@ -17,7 +17,7 @@ Installation
 
 1. Install Python software properties
 
-        $ sudo apt-get install -y python-software-properties 
+        $ sudo apt-get install -y python-software-properties
 
 2. Install the Nova PPA
 
@@ -102,9 +102,7 @@ This will install all of the currently supported openstack components into a sin
 
 run the rake task:
 
-    $ rake build:all
-
-    $ 
+    $ rake build:single
 
 Author
 ------
