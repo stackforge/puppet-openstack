@@ -39,7 +39,7 @@
 	url = git://github.com/ghoneycutt/xinetd
 [submodule "modules/swift"]
 	path = modules/swift
-	url = git://github.com/puppetlabs/puppetlabs-swft
+	url = git://github.com/puppetlabs/puppetlabs-swift
 [submodule "puppetlabs-keystone"]
 	path = puppetlabs-keystone
 	url = git://github.com/puppetlabs/puppetlabs-keystone
