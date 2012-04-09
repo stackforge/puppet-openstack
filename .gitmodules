@@ -27,7 +27,7 @@
 	url = git://github.com/puppetlabs/puppetlabs-keystone
 [submodule "modules/rsync"]
 	path = modules/rsync
-	url = git://github.com/puppetlabs/puppet-rsync
+	url = git://github.com/puppetlabs/puppetlabs-rsync
 [submodule "modules/ssh"]
 	path = modules/ssh
 	url = git://github.com/saz/puppet-ssh
