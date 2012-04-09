@@ -19,3 +19,30 @@
 [submodule "modules/create_resources"]
 	path = modules/create_resources
 	url = git://github.com/puppetlabs/puppetlabs-create_resources.git
+[submodule "modules/concat"]
+	path = modules/concat
+	url = git://github.com/puppetlabs/puppet-concat
+[submodule "modules/keystone"]
+	path = modules/keystone
+	url = git://github.com/puppetlabs/puppetlabs-keystone
+[submodule "modules/rsync"]
+	path = modules/rsync
+	url = git://github.com/puppetlabs/puppet-rsync
+[submodule "modules/ssh"]
+	path = modules/ssh
+	url = git://github.com/saz/puppet-ssh
+[submodule "modules/memcached"]
+	path = modules/memcached
+	url = git://github.com/saz/puppet-memcached
+[submodule "modules/xinetd"]
+	path = modules/xinetd
+	url = git://github.com/ghoneycutt/xinetd
+[submodule "modules/swift"]
+	path = modules/swift
+	url = git://github.com/puppetlabs/puppetlabs-swft
+[submodule "puppetlabs-keystone"]
+	path = puppetlabs-keystone
+	url = git://github.com/puppetlabs/puppetlabs-keystone
+[submodule "modules/vcsrepo"]
+	path = modules/vcsrepo
+	url = git://github.com/puppetlabs/puppet-vcsrepo
