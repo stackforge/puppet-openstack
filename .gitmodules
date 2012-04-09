@@ -3,7 +3,7 @@
 	url = git://github.com/puppetlabs/puppet-apt.git
 [submodule "modules/mysql"]
 	path = modules/mysql
-	url = git://github.com/puppetlabs/puppetlabs-mysql.git
+	url = git://github.com/bodepd/puppetlabs-mysql.git
 [submodule "modules/rabbitmq"]
 	path = modules/rabbitmq
 	url = git://github.com/puppetlabs/puppetlabs-rabbitmq.git
