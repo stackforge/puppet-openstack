@@ -36,7 +36,7 @@
 	url = git://github.com/saz/puppet-memcached
 [submodule "modules/xinetd"]
 	path = modules/xinetd
-	url = git://github.com/ghoneycutt/xinetd
+	url = git://github.com/ghoneycutt/puppet-xinetd
 [submodule "modules/swift"]
 	path = modules/swift
 	url = git://github.com/puppetlabs/puppetlabs-swift
