@@ -46,3 +46,6 @@
 [submodule "modules/vcsrepo"]
 	path = modules/vcsrepo
 	url = git://github.com/puppetlabs/puppet-vcsrepo
+[submodule "modules/horizon"]
+	path = modules/horizon
+	url = https://github.com/puppetlabs/puppetlabs-horizon.git
