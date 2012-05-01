@@ -27,41 +27,37 @@ They are also in the process of being verified against Fedora 17.
 
 1. Install Puppet
 
-  $ apt-get install puppet
+  `$ apt-get install puppet`
 
 2. Install other project dependencies:
 
-  $ apt-get install rake git
+  `$ apt-get install rake git`
 
 3. Download the Puppet OpenStack module
 
-  $ cd ~ && git clone git://github.com/puppetlabs/puppetlabs-openstack.git
+  `$ cd ~ && git clone git://github.com/puppetlabs/puppetlabs-openstack.git`
 
 4. Copy the module into the modulepath
 
-  $ sudo cp -R ~/puppetlabs-openstack/modules/* /etc/puppet/modules/
+  `$ sudo cp -R ~/puppetlabs-openstack /etc/puppet/modules/openstack`
 
 5. Use the rake task to install all other module dependencies:
 
-<pre>
-  rake modules:clone_all
-</pre>
+  `cd puppetlabs-openstack && sudo rake modules:clone`
 
-This rake task is driven by the following configuration file:
+  This rake task is driven by the following configuration file:
 
-<pre>
-  other_repos.yaml
-</pre>
+  `other_repos.yaml`
 
 ## Classes
 
 This module currently provides 3 classes that can be used to deploy openstack.
 
-openstack::all - can be used to deploy a single node all in one environemnt
+`openstack::all` - can be used to deploy a single node all in one environemnt
 
-openstack::controller - can be used to deploy an openstack controller
+`openstack::controller` - can be used to deploy an openstack controller
 
-openstack::compute - can be used to deploy an openstack compute node.
+`openstack::compute` - can be used to deploy an openstack compute node.
 
 ## Example Usage
 
