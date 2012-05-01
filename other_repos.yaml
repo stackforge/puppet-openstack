@@ -1,0 +1,25 @@
+repos:
+  repo_paths:
+    # openstack git repos
+    git://github.com/bodepd/puppetlabs-nova: /etc/puppet/modules/nova
+    git://github.com/puppetlabs/puppetlabs-glance: /etc/puppet/modules/glance
+    git://github.com/puppetlabs/puppetlabs-swift: /etc/puppet/modules/swift
+    git://github.com/puppetlabs/puppetlabs-keystone: /etc/puppet/modules/keystone
+    git://github.com/puppetlabs/puppetlabs-horizon: /etc/puppet/modules/horizon
+    # openstack middleware
+    git://github.com/puppetlabs/puppetlabs-rabbitmq: /etc/puppet/modules/rabbitmq
+    git://github.com/puppetlabs/puppetlabs-mysql: /etc/puppet/modules/mysql
+    git://github.com/puppetlabs/puppetlabs-git: /etc/puppet/modules/git
+    git://github.com/puppetlabs/puppet-vcsrepo: /etc/puppet/modules/vcsrepo
+    git://github.com/saz/puppet-memcached: /etc/puppet/modules/memcached
+    git://github.com/puppetlabs/puppetlabs-rsync: /etc/puppet/modules/rsync
+    # other deps
+    git://github.com/ghoneycutt/puppet-xinetd: /etc/puppet/modules/xinetd
+    git://github.com/saz/puppet-ssh: /etc/puppet/modules/ssh
+    git://github.com/puppetlabs/puppetlabs-stdlib: /etc/puppet/modules/stdlib
+    git://github.com/puppetlabs/puppet-apt: /etc/puppet/modules/apt
+    git://github.com/puppetlabs/puppet-concat: /etc/puppet/modules/concat
+  checkout_branches:
+#  /etc/puppet/modules/keystone: dev
+#  /etc/puppet/modules/glance: dev
+    /etc/puppet/modules/nova: dev

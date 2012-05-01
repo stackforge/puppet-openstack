@@ -1,77 +1,46 @@
-require 'vagrant'
+#
+# Rakefile to make management of module easier (I hope :) )
+#
+# I did not do this in puppet b/c it requires the vcsrepo!!
+#
+#
 
-env=Vagrant::Environment.new(:cwd => File.dirname(__FILE__))
-# this captures the regular output to stdout
-env.ui = Vagrant::UI::Shell.new(env, Thor::Base.shell.new)
-env.load!
+require 'puppet'
 
-# all of the instance to build out for multi-node
-instances = [
-  :db,
-  :rabbitmq,
-  :glance,
-  :controller,
-  :compute
-]
+repo_file = 'other_repos.yaml' 
 
-namespace :build do
-  desc 'build out 5 node openstack cluster'
-  task :multi do
-    instances.each do |instance|
-      build(instance, env)
+namespace :modules do
+  desc 'clone all required modules'
+  task :clone do
+    repo_hash = YAML.load_file(File.join(File.dirname(__FILE__), repo_file))
+    repos = (repo_hash['repos'] || {})
+    repos_to_clone = (repos['repo_paths'] || {})
+    branches_to_checkout = (repos['checkout_branches'] || {})
+    repos_to_clone.each do |remote, local|
+      # I should check to see if the file is there?
+      output = `git clone #{remote} #{local}`
+      Puppet.debug(output)
+    end
+    branches_to_checkout.each do |local, branch|
+      Dir.chdir(local) do
+        output = `git checkout #{branch}`
+      end
+      # Puppet.debug(output)
     end
   end
-  desc 'build out openstack on one node'
-  task :single do
-    build(:all, env)
-  end
-end
 
-# bring vagrant vm with image name up
-def build(instance, env)
-  unless vm = env.vms[instance]
-    puts "invalid VM: #{instance}"
-  else
-    if vm.created?
-      puts "VM: #{instance} was already created"
-    else
-      # be very fault tolerant :)
-      begin
-        # this will always fail
-        vm.up(:provision => true)
-      rescue Exception => e
-        puts e.class
-        puts e
+  desc 'see if any of the modules are not up-to-date'
+  task 'status' do
+    repo_hash = YAML.load_file(File.join(File.dirname(__FILE__), repo_file))
+    repos = (repo_hash['repos'] || {})
+    repos_to_clone = (repos['repo_paths'] || {})
+    branches_to_checkout = (repos['checkout_branches'] || {})
+    repos_to_clone.each do |remote, local|
+      # I should check to see if the file is there?
+      Dir.chdir(local) do
+        puts "Checking status of #{local}"
+        puts `git status`
       end
     end
   end
-end
-
-namespace :test do
-  desc 'test multi-node installation'
-  task :multi do
-    {:glance => ['sudo /vagrant/ext/glance.sh'],
-      :controller => ['sudo /vagrant/ext/nova.sh'],
-    }.each do |instance, commands|
-      test(instance, commands, env)
-    end
-  end
-  desc 'test single node installation'
-  task :single do
-    test(:all, ['sudo /vagrant/ext/glance.sh', 'sudo /vagrant/ext/nova.sh'], env)
-  end
-end
-
-def test(instance, commands, env)
-  unless vm = env.vms[instance]
-    puts "invalid VM: #{instance}"
-  else
-    puts "testing :#{instance}"
-    vm.ssh.execute do |ssh|
-      commands.each do |c|
-        #puts ssh.methods - Object.methods
-        puts ssh.exec!(c)
-      end
-    end
-  end
-end
+end 
