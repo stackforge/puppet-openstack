@@ -1,7 +1,7 @@
 repos:
   repo_paths:
     # openstack git repos
-    git://github.com/bodepd/puppetlabs-nova: /etc/puppet/modules/nova
+    git://github.com/puppetlabs/puppetlabs-nova: /etc/puppet/modules/nova
     git://github.com/puppetlabs/puppetlabs-glance: /etc/puppet/modules/glance
     git://github.com/puppetlabs/puppetlabs-swift: /etc/puppet/modules/swift
     git://github.com/puppetlabs/puppetlabs-keystone: /etc/puppet/modules/keystone
@@ -22,4 +22,4 @@ repos:
   checkout_branches:
 #  /etc/puppet/modules/keystone: dev
 #  /etc/puppet/modules/glance: dev
-    /etc/puppet/modules/nova: dev
+#    /etc/puppet/modules/nova: dev
