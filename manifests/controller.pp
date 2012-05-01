@@ -199,7 +199,6 @@ class openstack::controller(
 
   nova::manage::network { 'nova-vm-net':
     network       => '11.0.0.0/24',
-    available_ips => 128,
   }
 
   nova::manage::floating { 'nova-vm-floating':
