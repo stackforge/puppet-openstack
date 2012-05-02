@@ -178,7 +178,8 @@ class openstack::all(
   }
 
   class { 'nova::vncproxy':
-    host => $public_hostname,
+    enabled => true,
+    host    => $public_hostname,
   }
 
   class { 'nova::compute':
