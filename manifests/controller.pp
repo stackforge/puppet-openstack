@@ -8,6 +8,8 @@
 class openstack::controller(
   # my address
   $public_address,
+  $public_interface,
+  $private_interface,
   $internal_address,
   $admin_address           = $internal_address,
   # connection information
@@ -25,9 +27,17 @@ class openstack::controller(
   # network configuration
   # this assumes that it is a flat network manager
   $network_manager         = 'nova.network.manager.FlatDHCPManager',
+  # this number has been reduced for performance during testing
+  $fixed_range             = '10.0.0.0/16',
+  $floating_range          = false,
+  $create_networks         = true,
+  $num_networks            = 1,
+  $multi_host              = false,
+  # TODO need to reconsider this design...
+  # this is where the config options that are specific to the network
+  # types go. I am not extremely happy with this....
+  $network_config          = {},
   # I do not think that this needs a bridge?
-  $bridge_ip               = '192.168.188.1',
-  $bridge_netmask          = '255.255.255.0',
   $verbose                 = false,
   $export_resource         = false
 ) {
@@ -173,7 +183,6 @@ class openstack::controller(
     rabbit_password    => $rabbit_password,
     image_service      => 'nova.image.glance.GlanceImageService',
     glance_api_servers => $glance_connection,
-    network_manager    => 'nova.network.manager.FlatDHCPManager',
     verbose            => $verbose,
   }
 
@@ -193,19 +202,31 @@ class openstack::controller(
     'nova::cert',
     'nova::consoleauth',
     'nova::scheduler',
-    'nova::network',
     'nova::objectstore',
     'nova::vncproxy'
   ]:
     enabled => true,
   }
 
-  nova::manage::network { 'nova-vm-net':
-    network       => '11.0.0.0/24',
+  if $multi_host {
+    nova_config { 'multi_host':   value => 'True'; }
+    $enable_network_service = false
+  } else {
+    $enable_network_service = true
   }
 
-  nova::manage::floating { 'nova-vm-floating':
-    network       => '10.128.0.0/24',
+  # set up networking
+  class { 'nova::network':
+    private_interface => $private_interface,
+    public_interface  => $public_interface,
+    fixed_range       => $fixed_range,
+    floating_range    => $floating_range,
+    network_manager   => $network_manager,
+    config_overrides  => $network_config,
+    create_networks   => $create_networks,
+    num_networks      => $num_networks,
+    enabled           => $enable_network_service,
+    install_service   => $enable_network_service,
   }
 
   ######## Horizon ########
