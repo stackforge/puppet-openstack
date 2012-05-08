@@ -84,7 +84,9 @@ class openstack::controller(
   # set up keystone
   class { 'keystone':
     admin_token  => $keystone_admin_token,
-    bind_host    => '127.0.0.1',
+    # we are binding keystone on all interfaces
+    # the end user may want to be more restrictive
+    bind_host    => '0.0.0.0',
     log_verbose  => $verbose,
     log_debug    => $verbose,
     catalog_type => 'sql',
