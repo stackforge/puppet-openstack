@@ -34,6 +34,7 @@ class openstack::compute(
     image_service      => 'nova.image.glance.GlanceImageService',
     glance_api_servers => $glance_api_servers,
     network_manager    => 'nova.network.manager.FlatDHCPManager',
+    verbose            => $verbose,
   }
 
   class { 'nova::compute':
