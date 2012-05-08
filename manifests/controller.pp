@@ -174,6 +174,7 @@ class openstack::controller(
     image_service      => 'nova.image.glance.GlanceImageService',
     glance_api_servers => $glance_connection,
     network_manager    => 'nova.network.manager.FlatDHCPManager',
+    verbose            => $verbose,
   }
 
   class { 'nova::api':
