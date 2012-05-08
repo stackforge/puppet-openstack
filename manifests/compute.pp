@@ -24,6 +24,7 @@ class openstack::compute(
   $vnc_enabled        = 'true',
   $bridge_ip          = '11.0.0.1',
   $bridge_netmask     = '255.255.255.0',
+  $libvirt_type        = 'kvm',
 ) {
 
   class { 'nova':
