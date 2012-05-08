@@ -22,6 +22,7 @@ class openstack::all(
   # config
   $verbose              = true,
   $purge_nova_config    = true,
+  $libvirt_type         = 'kvm'
 ) {
 
 
@@ -190,7 +191,7 @@ class openstack::all(
   }
 
   class { 'nova::compute::libvirt':
-    libvirt_type     => 'qemu',
+    libvirt_type     => $libvirt_type,
     vncserver_listen => '127.0.0.1',
   }
 
