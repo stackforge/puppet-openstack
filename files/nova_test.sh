@@ -2,7 +2,7 @@
 #
 # assumes that resonable credentials have been stored at
 # /root/auth
-source /root/auth
+source /root/openrc
 
 # get an image to test with
 #wget http://uec-images.ubuntu.com/releases/11.10/release/ubuntu-11.10-server-cloudimg-amd64-disk1.img
