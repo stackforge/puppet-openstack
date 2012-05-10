@@ -39,7 +39,7 @@ class openstack::controller(
   $network_config          = {},
   # I do not think that this needs a bridge?
   $verbose                 = false,
-  $export_resource         = false
+  $export_resources        = true
 ) {
 
   $glance_api_servers = "${internal_address}:9292"
