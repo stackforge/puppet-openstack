@@ -38,6 +38,7 @@ class openstack::compute(
     rabbit_userid      => $rabbit_user,
     rabbit_password    => $rabbit_password,
     image_service      => 'nova.image.glance.GlanceImageService',
+    rabbit_host        => $rabbit_host,
     glance_api_servers => $glance_api_servers,
     verbose            => $verbose,
   }
