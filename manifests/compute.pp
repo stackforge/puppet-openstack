@@ -17,7 +17,6 @@ class openstack::compute(
   $fixed_range         = '10.0.0.0/16',
   $network_manager     = 'nova.network.manager.FlatDHCPManager',
   $multi_host          = false,
-  $network_host        = false,
   $network_config      = {},
   # my address
   # conection information
@@ -74,12 +73,8 @@ class openstack::compute(
     }
   } else {
     $enable_network_service = false
-    if ! $network_host {
-      fail('network_host must be defined for non multi host compute nodes')
-    }
     nova_config {
       'multi_host':   value => 'False';
-      'network_host': value => $network_host;
     }
   }
 
