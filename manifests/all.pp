@@ -6,6 +6,12 @@
 class openstack::all(
   # passing in the public ipaddress is required
   $public_address,
+  $public_interface,
+  $private_interface,
+  $floating_range       = false,
+  $fixed_range          = '10.0.0.0/16',
+  $network_manager      = 'nova.network.manager.FlatDHCPManager',
+  $network_config       = {},
   # middleware credentials
   $mysql_root_password  = 'sql_pass',
   $rabbit_password      = 'rabbit_pw',
@@ -138,7 +144,6 @@ class openstack::all(
     rabbit_password    => $rabbit_password,
     image_service      => 'nova.image.glance.GlanceImageService',
     glance_api_servers => '127.0.0.1:9292',
-    network_manager    => 'nova.network.manager.FlatDHCPManager',
   }
 
   class { 'nova::api':
@@ -146,35 +151,27 @@ class openstack::all(
     admin_password => $nova_user_password,
   }
 
-  class { 'nova::scheduler':
-    enabled => true
-  }
-
+  # set up networking
   class { 'nova::network':
-    enabled => true
+    private_interface => $private_interface,
+    public_interface  => $public_interface,
+    fixed_range       => $fixed_range,
+    floating_range    => $floating_range,
+    install_service   => true,
+    enabled           => true,
+    network_manager   => $network_manager,
+    config_overrides  => $network_config,
+    create_networks   => true,
   }
 
-  nova::manage::network { "nova-vm-net":
-    network       => '11.0.0.0/24',
-  }
-
-  nova::manage::floating { "nova-vm-floating":
-    network       => '10.128.0.0/24',
-  }
-
-  class { 'nova::objectstore':
-    enabled => true
-  }
-
-  class { 'nova::volume':
-    enabled => true
-  }
-
-  class { 'nova::cert':
-    enabled => true
-  }
-
-  class { 'nova::consoleauth':
+  # a bunch of nova services that require no configuration
+  class { [
+    'nova::scheduler',
+    'nova::objectstore',
+    'nova::volume',
+    'nova::cert',
+    'nova::consoleauth'
+  ]:
     enabled => true
   }
 
@@ -195,10 +192,10 @@ class openstack::all(
     vncserver_listen => '127.0.0.1',
   }
 
-  nova::network::bridge { 'br100':
-    ip      => '11.0.0.1',
-    netmask => '255.255.255.0',
-  }
+#  nova::network::bridge { 'br100':
+#    ip      => '11.0.0.1',
+#    netmask => '255.255.255.0',
+#  }
 
   ######## Horizon ########
 
