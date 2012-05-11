@@ -4,7 +4,33 @@
 #
 # $export_resources - rather resources should be exported
 #
-
+# [public_interface] Public interface used to route public traffic. Required.
+# [public_address] Public address for public endpoints. Required.
+# [private_interface] Interface used for vm networking connectivity. Required.
+# [internal_address] Internal address used for management. Required.
+# [mysql_root_password] Root password for mysql server.
+# [admin_email] Admin email.
+# [admin_password] Admin password.
+# [keystone_db_password] Keystone database password.
+# [keystone_admin_token] Admin token for keystone.
+# [glance_db_password] Glance DB password.
+# [glance_service_password] Glance service user password.
+# [nova_db_password] Nova DB password.
+# [nova_service_password] Nova service password.
+# [rabbit_password] Rabbit password.
+# [rabbit_user] Rabbit User.
+# [network_manager] Nova network manager to use.
+# [fixed_range] Range of ipv4 network for vms.
+# [floating_range] Floating ip range to create.
+# [create_networks] Rather network and floating ips should be created.
+# [num_networks] Number of networks that fixed range should be split into.
+# [multi_host] Rather node should support multi-host networking mode for HA.
+#   Optional. Defaults to false.
+# [network_config] Hash that can be used to pass implementation specifc
+#   network settings. Optioal. Defaults to {}
+# [verbose] Rahter to log services at verbose.
+# [export_resources] Rather to export resources.
+#
 class openstack::controller(
   # my address
   $public_address,
@@ -115,21 +141,21 @@ class openstack::controller(
   class { 'keystone::endpoint':
     public_address   => $public_address,
     internal_address => $internal_address,
-    admin_address    => $admin_address 
+    admin_address    => $admin_address,
   }
   # set up glance service,user,endpoint
   class { 'glance::keystone::auth':
     password         => $glance_service_password,
     public_address   => $public_address,
     internal_address => $internal_address,
-    admin_address    => $admin_address 
+    admin_address    => $admin_address,
   }
   # set up nova serice,user,endpoint
   class { 'nova::keystone::auth':
     password => $nova_service_password,
     public_address   => $public_address,
     internal_address => $internal_address,
-    admin_address    => $admin_address 
+    admin_address    => $admin_address,
   }
 
   ######## END KEYSTONE ##########
