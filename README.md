@@ -8,6 +8,9 @@ modules based on submodules, it has been moved to here:
 
   https://github.com/puppetlabs/puppetlabs-openstack_project
 
+All issues for this project can be found here:
+  http://projects.puppetlabs.com/projects/openstack
+
 
 # Puppet Module for Openstack
 
