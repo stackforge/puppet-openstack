@@ -20,6 +20,7 @@ repos:
     git://github.com/puppetlabs/puppetlabs-stdlib: stdlib
     git://github.com/puppetlabs/puppetlabs-apt: apt
     git://github.com/ripienaar/puppet-concat: concat
+    git://github.com/duritong/puppet-sysctl.git: sysctl
   checkout_branches:
 #  keystone: dev
 #  glance: dev
