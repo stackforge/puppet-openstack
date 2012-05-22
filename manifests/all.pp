@@ -144,6 +144,7 @@ class openstack::all(
     rabbit_password    => $rabbit_password,
     image_service      => 'nova.image.glance.GlanceImageService',
     glance_api_servers => '127.0.0.1:9292',
+    verbose            => $verbose,
   }
 
   class { 'nova::api':
