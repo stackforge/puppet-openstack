@@ -26,7 +26,7 @@ class openstack::all(
   $glance_db_password   = 'glance_pass',
   $glance_user_password = 'glance_pass',
   # config
-  $verbose              = true,
+  $verbose              = false,
   $purge_nova_config    = true,
   $libvirt_type         = 'kvm'
 ) {
