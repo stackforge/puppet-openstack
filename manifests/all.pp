@@ -9,7 +9,7 @@ class openstack::all(
   $public_interface,
   $private_interface,
   $floating_range       = false,
-  $fixed_range          = '10.0.0.0/16',
+  $fixed_range          = '10.0.0.0/24',
   $network_manager      = 'nova.network.manager.FlatDHCPManager',
   $network_config       = {},
   # middleware credentials
@@ -26,7 +26,7 @@ class openstack::all(
   $glance_db_password   = 'glance_pass',
   $glance_user_password = 'glance_pass',
   # config
-  $verbose              = true,
+  $verbose              = false,
   $purge_nova_config    = true,
   $libvirt_type         = 'kvm'
 ) {
@@ -144,6 +144,7 @@ class openstack::all(
     rabbit_password    => $rabbit_password,
     image_service      => 'nova.image.glance.GlanceImageService',
     glance_api_servers => '127.0.0.1:9292',
+    verbose            => $verbose,
   }
 
   class { 'nova::api':
@@ -190,6 +191,10 @@ class openstack::all(
   class { 'nova::compute::libvirt':
     libvirt_type     => $libvirt_type,
     vncserver_listen => '127.0.0.1',
+  }
+
+  class { 'nova::volume::iscsi':
+    iscsi_ip_address => '127.0.0.1',
   }
 
 #  nova::network::bridge { 'br100':
