@@ -193,6 +193,10 @@ class openstack::all(
     vncserver_listen => '127.0.0.1',
   }
 
+  class { 'nova::volume::iscsi':
+    iscsi_ip_address => '127.0.0.1',
+  }
+
 #  nova::network::bridge { 'br100':
 #    ip      => '11.0.0.1',
 #    netmask => '255.255.255.0',
