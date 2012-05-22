@@ -9,7 +9,7 @@ class openstack::all(
   $public_interface,
   $private_interface,
   $floating_range       = false,
-  $fixed_range          = '10.0.0.0/16',
+  $fixed_range          = '10.0.0.0/24',
   $network_manager      = 'nova.network.manager.FlatDHCPManager',
   $network_config       = {},
   # middleware credentials
