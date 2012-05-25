@@ -38,6 +38,10 @@
 #    Optional. Defaults to 'true',
 #  [verbose] Rather components should log verbosely.
 #    Optional. Defaults to false.
+#  [manage_volumes] Rather nova-volume should be enabled on this compute node.
+#    Optional. Defaults to false.
+#  [nova_volumes] Name of volume group in which nova-volume will create logical volumes.
+#    Optional. Defaults to nova-volumes.
 #
 class openstack::compute(
   $private_interface,
@@ -59,7 +63,9 @@ class openstack::compute(
   $libvirt_type        = 'kvm',
   $vncproxy_host       = false,
   $vnc_enabled         = 'true',
-  $verbose             = false
+  $verbose             = false,
+  $manage_volumes      = false,
+  $nova_volume         = 'nova-volumes'
 ) {
 
   class { 'nova':
@@ -119,6 +125,18 @@ class openstack::compute(
     create_networks   => false,
     enabled           => $enable_network_service,
     install_service   => $enable_network_service,
+  }
+
+  if $manage_volumes {
+
+    class { 'nova::volume':
+      enabled => true, 
+    }
+
+    class { 'nova::volume::iscsi':
+      volume_group     => $nova_volume,
+      iscsi_ip_address => $internal_address,
+    } 
   }
 
 }
