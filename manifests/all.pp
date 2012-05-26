@@ -28,7 +28,8 @@ class openstack::all(
   # config
   $verbose              = false,
   $purge_nova_config    = true,
-  $libvirt_type         = 'kvm'
+  $libvirt_type         = 'kvm',
+  $nova_volume          = 'nova-volumes'
 ) {
 
 
@@ -194,6 +195,7 @@ class openstack::all(
   }
 
   class { 'nova::volume::iscsi':
+    volume_group     => $nova_volume,
     iscsi_ip_address => '127.0.0.1',
   }
 
