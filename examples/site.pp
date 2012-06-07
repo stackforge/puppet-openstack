@@ -16,7 +16,6 @@ file { '/tmp/test_nova.sh':
 # environments
 
 # assumes that eth0 is the public interface
-$public_address    = $ipaddress_eth0
 $public_interface  = 'eth0'
 # assumes that eth1 is the interface that will be used for the vm network
 # this configuration assumes this interface is active but does not have an
@@ -31,6 +30,12 @@ $nova_db_password     = 'nova_pass'
 $nova_user_password   = 'nova_pass'
 $glance_db_password   = 'glance_pass'
 $glance_user_password = 'glance_pass'
+$rabbit_password      = 'openstack_rabbit_password',
+$rabbit_user          = 'openstack_rabbit_user',
+$fixed_network_range  = '10.0.0.0/24'
+# switch this to true to have all service log at verbose
+$verbose              = 'false',
+
 
 #### end shared variables #################
 
@@ -39,7 +44,7 @@ $glance_user_password = 'glance_pass'
 node /openstack_all/ {
 
   class { 'openstack::all':
-    public_address       => $public_address,
+    public_address       => $ipaddress_eth0,
     public_interface     => $public_interface,
     private_interface    => $private_interface,
     admin_email          => $admin_email,
@@ -50,7 +55,11 @@ node /openstack_all/ {
     nova_user_password   => $nova_user_password,
     glance_db_password   => $glance_db_password,
     glance_user_password => $glance_user_password,
+    rabbit_password      => $rabbit_password,
+    rabbit_user          => $rabbit_user,
     libvirt_type         => 'kvm',
+    fixed_range          => $fixed_network_range,
+    verbose              => $verbose,
   }
 
   class { 'openstack::auth_file':
@@ -61,11 +70,43 @@ node /openstack_all/ {
 
 }
 
+# multi-node specific parameters
+
+$controller_node_address  = '192.168.101.11'
+
+$controller_node_public   = $controller_node_address
+$controller_node_internal = $controller_node_address 
+
 node /openstack_controller/ {
 
+#  class { 'nova::volume': enabled => true }
+
+#  class { 'nova::volume::iscsi': }
+
   class { 'openstack::controller':
-    public_address   => $public_hostname,
-    internal_address => $ipaddress,
+    public_address          => $controller_node_public,
+    public_interface        => $public_interface,
+    private_interface       => $private_interface,
+    internal_address        => $controller_node_internal,
+    floating_range          => '192.168.101.64/28',
+    fixed_range             => $fixed_network_range,
+    # by default it does not enable multi-host mode
+    multi_host              => false,
+    # by default is assumes flat dhcp networking mode
+    network_manager         => 'nova.network.manager.FlatDHCPManager',
+    verbose                 => $verbose,
+    mysql_root_password     => $mysql_root_password,
+    admin_email             => $admin_email,
+    admin_password          => $admin_password,
+    keystone_db_password    => $keystone_db_password,
+    keystone_admin_token    => $keystone_admin_token,
+    glance_db_password      => $glance_db_password,
+    glance_user_password    => $glance_user_password,
+    nova_db_password        => $nova_db_password,
+    nova_user_password      => $nova_user_password,
+    rabbit_password         => $rabbit_password,
+    rabbit_user             => $rabbit_user,
+    export_resources        => false,
   }
 
 }
