@@ -1,7 +1,52 @@
 #
+# == Class: openstack::all
 #
-# This class can be used to perform
-# an openstack all-in-one installation.
+# Class that performs a basic openstack all in one installation.
+#
+# === Parameterrs
+#
+#  TODO public address should be optional.
+#  [public_address] Public address used by vnchost. Required.
+#  [public_interface] The interface used to route public traffic by the
+#    network service.
+#  [private_interface] The private interface used to bridge the VMs into a common network.
+#  [floating_range] The floating ip range to be created. If it is false, then no floating ip range is created.
+#    Optional. Defaults to false.
+#  [fixed_range] The fixed private ip range to be created for the private VM network. Optional. Defaults to '10.0.0.0/24'.
+#  [network_manager] The network manager to use for the nova network service.
+#    Optional. Defaults to 'nova.network.manager.FlatDHCPManager'.
+#  [network_config] Used to specify network manager specific parameters .Optional. Defualts to {}.
+#  [mysql_root_password] The root password to set for the mysql database. Optional. Defaults to sql_pass'.
+#  [rabbit_password] The password to use for the rabbitmq user. Optional. Defaults to rabbit_pw'
+#  [rabbit_user] The rabbitmq user to use for auth. Optional. Defaults to nova'.
+#  [admin_email] The admin's email address. Optional. Defaults to someuser@some_fake_email_address.foo'.
+#  [admin_password] The default password of the keystone admin. Optional. Defaults to ChangeMe'.
+#  [keystone_db_password] The default password for the keystone db user. Optional. Defaults to keystone_pass'.
+#  [keystone_admin_token] The default auth token for keystone. Optional. Defaults to keystone_admin_token'.
+#  [nova_db_password] The nova db password. Optional. Defaults to nova_pass'.
+#  [nova_user_password] The password of the keystone user for the nova service. Optional. Defaults to nova_pass'.
+#  [glance_db_password] The password for the db user for glance. Optional. Defaults to 'glance_pass'.
+#  [glance_user_password] The password of the glance service user. Optional. Defaults to 'glance_pass'.
+#  [verbose] If the services should log verbosely. Optional. Defaults to false.
+#  [purge_nova_config] Whether unmanaged nova.conf entries should be purged. Optional. Defaults to true.
+#  [libvirt_type] The virualization type being controlled by libvirt.  Optional. Defaults to 'kvm'.
+#  [nova_volume] The name of the volume group to use for nova volume allocation. Optional. Defaults to 'nova-volumes'.
+#
+# === Examples
+#
+#  class { 'openstack::all':
+#    public_address       => '192.168.0.3',
+#    public_interface     => eth0,
+#    private_interface    => eth1,
+#    admin_email          => my_email@mw.com,
+#    admin_password       => 'my_admin_password',
+#    libvirt_type         => 'kvm',
+#  }
+#
+# === Authors
+#
+# Dan Bode <bodepd@gmail.com>
+#
 #
 class openstack::all(
   # passing in the public ipaddress is required
@@ -18,7 +63,7 @@ class openstack::all(
   $rabbit_user          = 'nova',
   # opestack credentials
   $admin_email          = 'someuser@some_fake_email_address.foo',
-  $admin_user_password  = 'ChangeMe',
+  $admin_password       = 'ChangeMe',
   $keystone_db_password = 'keystone_pass',
   $keystone_admin_token = 'keystone_admin_token',
   $nova_db_password     = 'nova_pass',
@@ -73,7 +118,7 @@ class openstack::all(
   # set up keystone admin users
   class { 'keystone::roles::admin':
     email    => $admin_email,
-    password => $admin_user_password,
+    password => $admin_password,
   }
   # set up the keystone service and endpoint
   class { 'keystone::endpoint': }
