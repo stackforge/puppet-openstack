@@ -18,7 +18,7 @@ class openstack::all(
   $rabbit_user          = 'nova',
   # opestack credentials
   $admin_email          = 'someuser@some_fake_email_address.foo',
-  $admin_user_password  = 'ChangeMe',
+  $admin_password       = 'ChangeMe',
   $keystone_db_password = 'keystone_pass',
   $keystone_admin_token = 'keystone_admin_token',
   $nova_db_password     = 'nova_pass',
@@ -73,7 +73,7 @@ class openstack::all(
   # set up keystone admin users
   class { 'keystone::roles::admin':
     email    => $admin_email,
-    password => $admin_user_password,
+    password => $admin_password,
   }
   # set up the keystone service and endpoint
   class { 'keystone::endpoint': }
