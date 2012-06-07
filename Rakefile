@@ -5,7 +5,7 @@
 #
 #
 
-require 'puppet'
+require 'puppetlabs_spec_helper/rake_tasks'
 
 repo_file = 'other_repos.yaml'
 default_modulepath = '/etc/puppet/modules'
