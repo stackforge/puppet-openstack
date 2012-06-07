@@ -1,25 +1,63 @@
-
 #
-# any nodes whose certname matches nova_all should
-# become an openstack all-in-one node
-#
+# This document serves as an example of how to deploy
+# basic single and multi-node openstack environments.
 #
 
-Exec {
-  logoutput => true,
+# deploy a script that can be used to test nova
+file { '/tmp/test_nova.sh':
+  source => 'puppet:///modules/openstack/nova_test.sh',
 }
 
-resources { 'nova_config':
-  purge => true,
-}
+####### shared variables ##################
 
+
+# this section is used to specify global variables that will
+# be used in the deployment of multi and single node openstack
+# environments
+
+# assumes that eth0 is the public interface
+$public_address    = $ipaddress_eth0
+$public_interface  = 'eth0'
+# assumes that eth1 is the interface that will be used for the vm network
+# this configuration assumes this interface is active but does not have an
+# ip address allocated to it. 
+$private_interface = 'eth1'
+# credentials
+$admin_email          = 'root@localhost'
+$admin_password       = 'keystone_admin'
+$keystone_db_password = 'keystone_db_pass'
+$keystone_admin_token = 'keystone_admin_token'
+$nova_db_password     = 'nova_pass'
+$nova_user_password   = 'nova_pass'
+$glance_db_password   = 'glance_pass'
+$glance_user_password = 'glance_pass'
+
+#### end shared variables #################
+
+# all nodes whose certname matches openstack_all should be
+# deployed as all-in-one openstack installations.
 node /openstack_all/ {
 
   class { 'openstack::all':
-    public_address => $ipaddress_eth0
+    public_address       => $public_address,
+    public_interface     => $public_interface,
+    private_interface    => $private_interface,
+    admin_email          => $admin_email,
+    admin_password       => $admin_password,
+    keystone_db_password => $keystone_db_password,
+    keystone_admin_token => $keystone_admin_token,
+    nova_db_password     => $nova_db_password,
+    nova_user_password   => $nova_user_password,
+    glance_db_password   => $glance_db_password,
+    glance_user_password => $glance_user_password,
+    libvirt_type         => 'kvm',
   }
 
-  class { 'openstack_controller': }
+  class { 'openstack::auth_file':
+    admin_password       => $admin_password,
+    keystone_admin_token => $keystone_admin_token,
+    controller_node      => '127.0.0.1',
+  }
 
 }
 
@@ -29,43 +67,15 @@ node /openstack_controller/ {
     public_address   => $public_hostname,
     internal_address => $ipaddress,
   }
-  class { 'openstack_controller': }
 
 }
 
 node /openstack_compute/ {
 
   class { 'openstack::compute':
-    # setting to qemu b/c I still test in ec2 :(
     internal_address => $ipaddress,
-    libvirt_type     => 'qemu',
+    libvirt_type     => 'kvm',
   }
 
-}
-# this shows an example of the code needed to perform
-# an all in one installation
-
-#
-# sets up a few things that I use for testing
-#
-class openstack_controller {
-  #
-  # set up auth credntials so that we can authenticate easily
-  #
-  file { '/root/auth':
-    content =>
-  '
-  export OS_TENANT_NAME=openstack
-  export OS_USERNAME=admin
-  export OS_PASSWORD=ChangeMe
-  export OS_AUTH_URL="http://localhost:5000/v2.0/"
-  '
-  }
-  # this is a hack that I have to do b/c openstack nova
-  # sets up a route to reroute calls to the metadata server
-  # to its own server which fails
-  file { '/usr/lib/ruby/1.8/facter/ec2.rb':
-    ensure => absent,
-  }
 }
 
