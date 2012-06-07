@@ -14,9 +14,9 @@
 # [keystone_db_password] Keystone database password.
 # [keystone_admin_token] Admin token for keystone.
 # [glance_db_password] Glance DB password.
-# [glance_service_password] Glance service user password.
+# [glance_user_password] Glance service user password.
 # [nova_db_password] Nova DB password.
-# [nova_service_password] Nova service password.
+# [nova_user_password] Nova service password.
 # [rabbit_password] Rabbit password.
 # [rabbit_user] Rabbit User.
 # [network_manager] Nova network manager to use.
@@ -45,9 +45,9 @@ class openstack::controller(
   $keystone_db_password    = 'keystone_pass',
   $keystone_admin_token    = 'keystone_admin_token',
   $glance_db_password      = 'glance_pass',
-  $glance_service_password = 'glance_pass',
+  $glance_user_password = 'glance_pass',
   $nova_db_password        = 'nova_pass',
-  $nova_service_password   = 'nova_pass',
+  $nova_user_password      = 'nova_pass',
   $rabbit_password         = 'rabbit_pw',
   $rabbit_user             = 'nova',
   # network configuration
@@ -145,14 +145,14 @@ class openstack::controller(
   }
   # set up glance service,user,endpoint
   class { 'glance::keystone::auth':
-    password         => $glance_service_password,
+    password         => $glance_user_password,
     public_address   => $public_address,
     internal_address => $internal_address,
     admin_address    => $admin_address,
   }
   # set up nova serice,user,endpoint
   class { 'nova::keystone::auth':
-    password => $nova_service_password,
+    password         => $nova_user_password,
     public_address   => $public_address,
     internal_address => $internal_address,
     admin_address    => $admin_address,
@@ -171,7 +171,7 @@ class openstack::controller(
     auth_port         => '35357',
     keystone_tenant   => 'services',
     keystone_user     => 'glance',
-    keystone_password => $glance_service_password,
+    keystone_password => $glance_user_password,
     require => Keystone_user_role["glance@services"],
   }
   class { 'glance::backend::file': }
@@ -184,7 +184,7 @@ class openstack::controller(
     auth_port         => '35357',
     keystone_tenant   => 'services',
     keystone_user     => 'glance',
-    keystone_password => $glance_service_password,
+    keystone_password => $glance_user_password,
     sql_connection    => "mysql://glance:${glance_db_password}@127.0.0.1/glance",
     require           => [Class['Glance::Db::Mysql'], Keystone_user_role['glance@services']]
   }
@@ -220,7 +220,7 @@ class openstack::controller(
     #admin_password    => $admin_service_password,
     admin_tenant_name => 'services',
     admin_user        => 'nova',
-    admin_password    => $nova_service_password,
+    admin_password    => $nova_user_password,
     require => Keystone_user_role["nova@services"],
   }
 
