@@ -76,6 +76,7 @@ $controller_node_address  = '192.168.101.11'
 
 $controller_node_public   = $controller_node_address
 $controller_node_internal = $controller_node_address 
+$sql_connection         = "mysql://nova:${nova_db_password}@${controller_node_internal}/nova"
 
 node /openstack_controller/ {
 
@@ -109,13 +110,34 @@ node /openstack_controller/ {
     export_resources        => false,
   }
 
+  class { 'openstack::auth_file':
+    admin_password       => $admin_password,
+    keystone_admin_token => $keystone_admin_token,
+    controller_node      => $controller_node_internal,
+  }
+
+
 }
 
 node /openstack_compute/ {
 
   class { 'openstack::compute':
-    internal_address => $ipaddress,
-    libvirt_type     => 'kvm',
+    private_interface  => $private_interface,
+    internal_address   => $ipaddress_eth0,
+    libvirt_type       => 'kvm',
+    fixed_range        => $fixed_range,
+    network_manager    => 'nova.network.manager.FlatDHCPManager',
+    multi_host         => false,
+    sql_connection     => $sql_connection,
+    rabbit_host        => $controller_node_internal,
+    rabbit_password    => $rabbit_password,
+    rabbit_user        => $rabbit_user,
+    glance_api_servers => "${controller_node_internal}:9292",
+    vncproxy_host      => $controller_node_public,
+    vnc_enabled        => 'true',
+    verbose            => $verbose,
+    manage_volumes     => true,
+    nova_volume        => 'nova-volumes'
   }
 
 }
