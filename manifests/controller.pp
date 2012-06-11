@@ -45,7 +45,7 @@ class openstack::controller(
   $keystone_db_password    = 'keystone_pass',
   $keystone_admin_token    = 'keystone_admin_token',
   $glance_db_password      = 'glance_pass',
-  $glance_user_password = 'glance_pass',
+  $glance_user_password    = 'glance_pass',
   $nova_db_password        = 'nova_pass',
   $nova_user_password      = 'nova_pass',
   $rabbit_password         = 'rabbit_pw',
