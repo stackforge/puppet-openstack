@@ -26,7 +26,7 @@ and [object store](http://docs.openstack.org/essex/openstack-object-storage/admi
 
 ### Platforms:
 
-  These modules have been fully tested on Ubuntu Precise and Debian (Squeeze).
+  These modules have been fully tested on Ubuntu Precise and Debian (Wheezy).
 
   For instructions of how to use these modules on Debian, check
   out this excellent [link](http://wiki.debian.org/OpenStackPuppetHowto):
