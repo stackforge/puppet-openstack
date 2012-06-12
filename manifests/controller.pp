@@ -30,6 +30,11 @@
 #   network settings. Optioal. Defaults to {}
 # [verbose] Rahter to log services at verbose.
 # [export_resources] Rather to export resources.
+# Horizon related config - assumes puppetlabs-horizon code
+# [cache_server_ip]     local memcached instance ip
+# [cache_server_port]   local memcached instance port
+# [swift]               (bool) is swift installed
+# [quantum]             (bool) is quqntum installed
 #
 class openstack::controller(
   # my address
@@ -65,7 +70,14 @@ class openstack::controller(
   $network_config          = {},
   # I do not think that this needs a bridge?
   $verbose                 = false,
-  $export_resources        = true
+  $export_resources        = true,
+  $cache_server_ip         = '127.0.0.1',
+  $cache_server_port       = '11211',
+  $swift                   = false,
+  $quantum                 = false,
+  $app_mon                 = undef,
+  $comp_mon                = undef,
+  $stor_mon                = undef,
 ) {
 
   $glance_api_servers = "${internal_address}:9292"
@@ -261,7 +273,15 @@ class openstack::controller(
     listen_ip => '127.0.0.1',
   }
 
-  class { 'horizon': }
+  class { 'horizon':
+    cache_server_ip => $cache_server_ip,
+    cache_server_port => $cache_server_port,
+    swift => $swift,
+    quantum => $quantum,
+    app_mon => $app_mon,
+    comp_mon => $comp_mon,
+    stor_mon => $stor_mon,
+  }
 
 
   ######## End Horizon #####
