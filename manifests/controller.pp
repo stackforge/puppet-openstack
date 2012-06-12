@@ -35,6 +35,10 @@
 # [cache_server_port]   local memcached instance port
 # [swift]               (bool) is swift installed
 # [quantum]             (bool) is quqntum installed
+#   The next is an array of arrays, that can be used to add call-out links to the dashboard for other apps.
+#   There is no specific requirement for these apps to be for monitoring, that's just the defacto purpose.
+#   Each app is defined in two parts, the display name, and the URI
+# [horizon_app_links]     array as in '[ ["Nagios","http://nagios_addr:port/path"],["Ganglia","http://ganglia_addr"] ]'
 #
 class openstack::controller(
   # my address
@@ -75,9 +79,7 @@ class openstack::controller(
   $cache_server_port       = '11211',
   $swift                   = false,
   $quantum                 = false,
-  $app_mon                 = undef,
-  $comp_mon                = undef,
-  $stor_mon                = undef,
+  $horizon_app_links       = false,
 ) {
 
   $glance_api_servers = "${internal_address}:9292"
@@ -278,9 +280,7 @@ class openstack::controller(
     cache_server_port => $cache_server_port,
     swift => $swift,
     quantum => $quantum,
-    app_mon => $app_mon,
-    comp_mon => $comp_mon,
-    stor_mon => $stor_mon,
+    horizon_app_links => $horizon_app_links,
   }
 
 
