@@ -2,8 +2,8 @@
 
 ## Introduction
 
-The Openstack Puppet Modules are a flexible Puppet implementation
-capable of configuring the core [Openstack](http://docs.openstack.org/) services:
+The Openstack Puppet Modules are a flexible Puppet implementation capable of
+configuring the core [Openstack](http://docs.openstack.org/) services:
 
   * [nova](http://nova.openstack.org/)     (compute service)
   * [glance](http://glance.openstack.org/)   (image database)
@@ -11,22 +11,25 @@ capable of configuring the core [Openstack](http://docs.openstack.org/) services
   * [keystone](http://keystone.openstack.org/) (authentication/authorization)
   * [horizon](http://horizon.openstack.org/)  (web front end)
 
-A ['Puppet Module'](http://docs.puppetlabs.com/learning/modules1.html#modules) is a collection of related content that can be used to model
-the configuration of a discrete service.
+A ['Puppet Module'](http://docs.puppetlabs.com/learning/modules1.html#modules)
+is a collection of related content that can be used to model the configuration
+of a discrete service.
 
-These modules are based on the adminstrative guides for openstack [compute](http://docs.openstack.org/essex/openstack-compute/admin/content/)
-and [object store](http://docs.openstack.org/essex/openstack-object-storage/admin/content/)
+These modules are based on the adminstrative guides for openstack
+[compute](http://docs.openstack.org/essex/openstack-compute/admin/content/) and
+[object store](http://docs.openstack.org/essex/openstack-object-storage/admin/content/)
 
 ## Dependencies:
 
 ### Puppet:
 
   * [Puppet](http://docs.puppetlabs.com/puppet/) 2.7.12 or greater
-  * [Facter](http://www.puppetlabs.com/puppet/related-projects/facter/) 1.6.1 or greater (versions that support the osfamily fact)
+  * [Facter](http://www.puppetlabs.com/puppet/related-projects/facter/) 1.6.1 or
+    greater (versions that support the osfamily fact)
 
 ### Platforms:
 
-  These modules have been fully tested on Ubuntu Precise and Debian (Wheezy).
+  These modules have been fully tested on Ubuntu Precise and Debian Wheezy.
 
   For instructions of how to use these modules on Debian, check
   out this excellent [link](http://wiki.debian.org/OpenStackPuppetHowto):
@@ -35,7 +38,8 @@ and [object store](http://docs.openstack.org/essex/openstack-object-storage/admi
 
 ### Network:
 
-  Each of the machines running the Openstack services should have a minimum of 2 NICS.
+  Each of the machines running the Openstack services should have a minimum of 2
+  NICS.
 
   * One for the public/internal network
       - This nic should be assigned an IP address
@@ -47,17 +51,23 @@ and [object store](http://docs.openstack.org/essex/openstack-object-storage/admi
 
 ### Volumes:
 
-  Every node that is configured to be a nova volume service needs to have a
-  volume group called `nova-volumes`.
+  Every node that is configured to be a nova volume service must have a volume
+  group called `nova-volumes`.
 
 ### Compute nodes
 
   Compute nodes should be deployed onto physical hardware.
 
-  If compute nodes are deployed on virtual machines for testing,
-  the libvirt_type should be configured as 'qemu'.
+  If compute nodes are deployed on virtual machines for testing, the
+  libvirt_type must be configured as 'qemu'.
 
     class { 'openstack::compute':
+      ...
+      libvirt_type => 'qemu'
+      ...
+    }
+
+    class { 'openstack::all':
       ...
       libvirt_type => 'qemu'
       ...
@@ -78,13 +88,15 @@ and [object store](http://docs.openstack.org/essex/openstack-object-storage/admi
 
       `apt-get install puppetmaster`
 
-    * Rake and Git should be installed on the Puppet Master:
+    * Rake and Git should also be installed on the Puppet Master:
 
       `apt-get install rake git`
 
-    * Some features of the modules require [storeconfigs](http://projects.puppetlabs.com/projects/1/wiki/Using_Stored_Configuration) to be enabled on the Puppet Master.
+    * Some features of the modules require
+      [storeconfigs](http://projects.puppetlabs.com/projects/1/wiki/Using_Stored_Configuration)
+      to be enabled on the Puppet Master.
 
-    * A site manifest site.pp should be created on the master:
+    * Create a site manifest site.pp on the master:
 
             cat > /etc/puppet/manifests/site.pp << EOT
             node default {
@@ -92,30 +104,29 @@ and [object store](http://docs.openstack.org/essex/openstack-object-storage/admi
             }
             EOT
 
-    * The puppetmaster service should be restarted
+    * Restart the puppetmaster service:
 
       `service puppetmaster restart`
 
-    * Each client should be enabled to use pluginsync and configured to connect
-      to the master. The following lines should be configure in
-      /etc/puppet/puppet.conf:
+    * Configure each client to connect to the master and enable pluginsync. This
+      can be done by adding the following lines to /etc/puppet.conf:
 
             [agent]
-             pluginsync = true
-             server     = <CONTROLLER_HOSTNAME>
+              pluginsync = true
+              server     = <CONTROLLER_HOSTNAME>
 
-    * Each agent should connect to the master:
+    * Register each client with the puppetmaster:
 
       `puppet agent -t --waitforcert 60`
 
-    * The certificate of each agent should be manually signed:
+    * On the puppetmaster, sign the client certificates:
 
       `puppet cert sign <CERTNAME>`
 
 ### Install the Openstack modules
 
-  * The Openstack modules should be installed into the module path of your master
-    or on each node (if you are running puppet apply).
+  * The Openstack modules should be installed into the module path of your
+    master or on each node (if you are running puppet apply).
 
     Modulepath:
       * open source puppet - /etc/puppet/modules
@@ -125,7 +136,8 @@ and [object store](http://docs.openstack.org/essex/openstack-object-storage/admi
 
       `puppet module install puppetlabs-openstack`
 
-  * To install the latest revision of the modules from source (for developers/contributors):
+  * To install the latest revision of the modules from git (for developers/
+    contributors):
 
         cd <module_path>
         git clone git://github.com/puppetlabs/puppetlabs-openstack openstack
@@ -135,17 +147,16 @@ and [object store](http://docs.openstack.org/essex/openstack-object-storage/admi
 ## puppetlabs-openstack
 
 The 'puppetlabs-openstack' module was written for those who want to get up and
-going with a single or multi-node Openstack deployment as quickly as possible.
-It provides a simple way of deploying Openstack that is based on
-best practices shaped by companies that contributed to the design of these
-modules.
+running with a single or multi-node Openstack deployment as quickly as possible.
+It provides a simple way of deploying Openstack that is based on best practices
+shaped by companies that contributed to the design of these modules.
 
 ### Classes
 
 ####  openstack::all
 
-The openstack::all class provides a single configuration interface that can
-be used to deploy an Openstack all-in-one node.
+The openstack::all class provides a single configuration interface that can be
+used to deploy all Openstack services on a single host.
 
 This is a great starting place for people who are just kicking the tires with
 Openstack or with Puppet deployed OpenStack environments.
@@ -169,8 +180,8 @@ Openstack or with Puppet deployed OpenStack environments.
       fixed_range          => '10.0.0.0/24',
     }
 
-  For more information on the parameters, check out the inline documentation
-  in the manifest:
+  For more information on the parameters, check out the inline documentation in
+  the manifest:
 
     <module_path>/openstack/manifests/all.pp
 
@@ -187,7 +198,8 @@ The openstack::controller class deploys the following Openstack services:
   * keystone
   * horizon
   * glance
-  * nova (ommitting the nova compute service and nova network when multi_host is enabled)
+  * nova (ommitting the nova compute service and, when multi_host is enabled,
+    the nova network service)
   * mysql
   * rabbitmq
 
@@ -213,17 +225,17 @@ The openstack::controller class deploys the following Openstack services:
       rabbit_user             => 'rabbit_user',
     }
 
-  For more information on the parameters, check out the inline documentation
-  in the manifest:
+  For more information on the parameters, check out the inline documentation in
+  the manifest:
 
     <module_path>/openstack/manifests/controller.pp
 
 #### openstack::compute
 
-The Openstack compute role is used to manage the underlying hypervisor.
-A typical multi-host Openstack installation would consist of a single
-openstack::controller node and multiple openstack::compute nodes
-(based on the amount of resources being virtualized)
+The Openstack compute class is used to manage the underlying hypervisor.  A
+typical multi-host Openstack installation would consist of a single
+openstack::controller node and multiple openstack::compute nodes (based on the
+amount of resources being virtualized)
 
 The openstack::compute class deploys the following services:
   * nova
@@ -251,24 +263,22 @@ The openstack::compute class deploys the following services:
       manage_volumes     => true,
     }
 
-  For more information on the parameters, check out the inline documentation
-  in the manifest:
+  For more information on the parameters, check out the inline documentation in
+  the manifest:
 
     <module_path>/openstack/manifests/compute.pp
 
 ### Creating your deployment scenario
 
-So far, classes have just been mentioned as configuration interfaces
-used to deploy the openstack roles. The next section explains how to
-apply these class definitions as roles to nodes using a site manifest.
+So far, classes have been discussed as configuration interfaces used to deploy
+the openstack roles. This section explains how to apply these roles to actual
+nodes using a puppet site manifest.
 
-The default file name for the site manifest is site.pp.
+The default file name for the site manifest is site.pp. This file should be
+contained in the puppetmaster's manifestdir:
 
-The site manifest should be contained in the master's manifestdir:
-
-Manifestdir:
-* open source puppet - /etc/puppet/manifests
-* Puppet Enterprise - /etc/puppetlabs/puppet/manifests
+* open source puppet - /etc/puppet/manifests/site.pp
+* Puppet Enterprise - /etc/puppetlabs/puppet/manifests/site.pp
 
 Node blocks are used to map a node's certificate name to the classes
 that should be assigned to it.
@@ -282,11 +292,11 @@ Or they can use regular expression to match sets of hosts
 
     node /my_similar_hosts/ {...}
 
-Inside the site.pp file, Puppet resources declared within node blocks
-are applied to those specified nodes. Resources specified at top-scope
-are applied to all nodes.
+Inside the site.pp file, Puppet resources declared within node blocks are
+applied to those specified nodes. Resources specified at top-scope are applied
+to all nodes.
 
-### Deploying Openstack all-in-one environments
+### Deploying an Openstack all-in-one environment
 
 The easiest way to get started with the openstack::all class is to use the file
 
@@ -298,22 +308,21 @@ There is a node entry for
 
 that can be used to deploy a simple nova all-in-one environment.
 
-You can explicitly target this node entry by specifying a matching certname
-and targeting the manifest explicitly with:
+You can explicitly target this node entry by specifying a matching certname and
+targeting the manifest explicitly with:
 
     puppet apply /etc/puppet/modules/openstack/examples/site.pp --certname openstack_all
 
-You could also update the node name from site.pp to be the hostname of the
-node on which you wish to perform an all-in-one installation.
+You could also update site.pp with the hostname of the node on which you wish to
+perform an all-in-one installation:
 
     node /<my_node>/ {...}
 
-In order to use manifests on a remote Puppet Master, you can run the following
-command:
+If you wish to provision an all-in-one host from a remote puppetmaster, you can run the following command:
 
     puppet agent -td
 
-### Using multi-node example
+### Deploying an Openstack multi-node environment
 
 A Puppet Master should be used when deploying multi-node environments.
 
@@ -327,8 +336,8 @@ This file contains entries for:
 
 Which can be used to assign the respective roles.
 
-(As above, you can replace these default certificate names with the hostname
-of your nodes)
+(As above, you can replace these default certificate names with the hostnames of
+your nodes)
 
 The first step for building out a multi-node deployment scenario is to choose
 the IP address of the controller node.
@@ -342,8 +351,8 @@ In the example site.pp, replace the following line:
 with the IP address of your controller.
 
 It is also possible to use store configs in order for the compute hosts to
-automatically discover the address of the controller host. Documentation
-for this may not be available until a later release of the openstack modules.
+automatically discover the address of the controller host. Documentation for
+this may not be available until a later release of the openstack modules.
 
 Once everything is configured on the master, you can configure the nodes using:
 
@@ -358,8 +367,8 @@ your compute nodes:
 
 ## Verifying an OpenStack deployment
 
-Once you have installed openstack using Puppet (and assuming you experience
-no errors), the next step is to verify the installation:
+Once you have installed openstack using Puppet (and assuming you experience no
+errors), the next step is to verify the installation:
 
 ### openstack::auth_file
 
@@ -367,8 +376,8 @@ The optionstack::auth_file class creates the file:
 
     /root/openrc
 
-which stores environment variables that can be used for authentication
-of openstack command line utilities.
+which stores environment variables that can be used for authentication of
+openstack command line utilities.
 
 #### Usage Example:
 
@@ -411,31 +420,32 @@ of openstack command line utilities.
     This script will verify that an image can be inserted into glance, and that
     that image can be used to fire up a virtual machine instance.
 
-  6. Log into horizon on port 80 of your controller node and walk through a
-     few operations:
+  6. Log into horizon on port 80 of your controller node and walk through a few
+     operations:
 
-  - fire up a VM
-  - create a volume
-  - attach that volume to the VM
-  - allocate a floating IP address to a VM instance.
-  - verify that voluem is actually attached to the VM and that
-    it is reachable by its floating ip address (which will require
-    some security groups)
+     - fire up a VM
+     - create a volume
+     - attach that volume to the VM
+     - allocate a floating IP address to a VM instance.
+     - verify that voluem is actually attached to the VM and that
+       it is reachable by its floating ip address (which will require
+       some security groups)
 
 ## Building your own custom deployment scenario for Openstack
 
-The classes that we have discussed from the Openstack module are themselves
-composed from a large collection of modules that can be used to implement
-customized openstack deployments.
+The classes included in the Openstack module are implemented using a number of
+other modules. These modules can be used directly to create a customized
+openstack deployment.
 
-A list and location of the source code for all modules used by the
-puppetlabs-openstack module can be found in the following config file:
+A list of the modules used by puppetlabs-openstack and the source locations for
+those modules can be found in `other_repos.yaml` in the openstack module folder.
 
     other_repos.yaml
 
-These building block modules have been written to support a wide variety of specific
-configuration and deployment use cases. They also provide a lot of configuration
-options not available with the more constrained puppetlabs-openstack modules.
+These building block modules have been written to support a wide variety of
+specific configuration and deployment use cases. They also provide a lot of
+configuration options not available with the more constrained
+puppetlabs-openstack modules.
 
 The manifests in the Openstack module can serve as an example of how to use
 these base building block to compose custom deployments.
@@ -460,16 +470,16 @@ These files contain examples of how to deploy the following services:
 * message queue
   * examples currently only exist for rabbitmq
 
-Once you have selected which services need to be combined on which nodes, you should
-review the modules for all of these services and figure out how you can configure
-things like the pipelines and back-ends for these individual services.
+Once you have selected which services need to be combined on which nodes, you
+should review the modules for all of these services and figure out how you can
+configure things like the pipelines and back-ends for these individual services.
 
 This information should then be used to compose your own custom site.pp
 
 ## Deploying swift
 
-In order to deploy swift, you should use the example manifest that comes with the
-swift modules (examples/site.pp)
+In order to deploy swift, you should use the example manifest that comes with
+the swift modules (examples/site.pp)
 
 In this example, the following nodes are specified:
 
@@ -482,37 +492,39 @@ In this example, the following nodes are specified:
 * swift_storage_3
   - used as a storage node
 
-This swift configuration requires both a Puppet Master as well as
-storeconfigs to be enabled.
+This swift configuration requires both a puppetmaster with storeconfigs enabled.
 
-To fully configure an environment, the nodes must be configured in the following order:
+To fully configure a Swift environment, the nodes must be configured in the
+following order:
 
-* First the storage nodes need to be configured, this creates the storage services
-  (object, container, account) and exports all of the storage endpoints for the ring
-  builder into storeconfigs. (The replicator service fails to start in this initial
-  configuration)
-* Next, the ringbuild and swift proxy must be configured. The ringbuilder needs to
-  collect the storage endpoints and create the ring database before the proxy can be
-  installed. It also sets up an rsync server which is used to host the ring database.
-  Resources are exported that are used to rsync the ring database from this server.
+* First the storage nodes need to be configured. This creates the storage
+  services (object, container, account) and exports all of the storage endpoints
+  for the ring builder into storeconfigs. (The replicator service fails to start
+  in this initial configuration)
+* Next, the ringbuild and swift proxy must be configured. The ringbuilder needs
+  to collect the storage endpoints and create the ring database before the proxy
+  can be installed. It also sets up an rsync server which is used to host the
+  ring database.  Resources are exported that are used to rsync the ring
+  database from this server.
 * Finally, the storage nodes should be run again so that they can rsync the ring
   databases.
 
-This configuration of rsync create two loopback devices on every node. For more realistic
-scenarios, users should deploy their own volumes in combination with the other classes.
+This configuration of rsync create two loopback devices on every node. For more
+realistic scenarios, users should deploy their own volumes in combination with
+the other classes.
 
-Better examples of this should exist in the next version of these modules.
+Better examples of this will be provided in a future version of the module.
 
 ## Participating
 
 Need a feature? Found a bug? Let me know!
 
-We are extremely interested in growing a community of OpenStack experts and users
-around these modules. so they can serve as an example of consolidated
-best practices of how to deploy openstack.
+We are extremely interested in growing a community of OpenStack experts and
+users around these modules so they can serve as an example of consolidated best
+practices of how to deploy openstack.
 
-The best way to get help with this set of modules is to email the group associated
-with this project:
+The best way to get help with this set of modules is to email the group
+associated with this project:
 
   puppet-openstack@puppetlabs.com
 
@@ -534,16 +546,15 @@ The process for contributing code is as follows:
 
   * Validate module on Fedora 17 and RHEL
   * monitoring (basic system and Openstack application monitoring support
-    with Nagios/Ganglia)
-      - sensu is also being considered
-  * Redundancy/HA - implementation of modules to support Highly available and
-    redundant Openstack deployment.
+    with Nagios/Ganglia and/or sensu)
+  * Redundancy/HA - implementation of modules to support highly available and
+    redundant Openstack deployments.
   * These modules are currently intended to be classified and data-fied in a
     site.pp. Starting in version 3.0, it is possible to populate class
     parameters explicitly using puppet data bindings (which use hiera as the
     back-end). The decision not to use hiera was primarily based on the fact
-    that it requires explicit function calls in 2.7.x)
-  * implement provisioning automation that can be used to fully provision
+    that it requires explicit function calls in 2.7.x
+  * Implement provisioning automation that can be used to fully provision
     an entire environment from scratch
-  * Implement PuppetDB to allow service auto-discovery to simplify the
+  * Integrate with PuppetDB to allow service auto-discovery to simplify the
     configuration of service association
