@@ -30,6 +30,15 @@
 #   network settings. Optioal. Defaults to {}
 # [verbose] Rahter to log services at verbose.
 # [export_resources] Rather to export resources.
+# Horizon related config - assumes puppetlabs-horizon code
+# [cache_server_ip]     local memcached instance ip
+# [cache_server_port]   local memcached instance port
+# [swift]               (bool) is swift installed
+# [quantum]             (bool) is quantum installed
+#   The next is an array of arrays, that can be used to add call-out links to the dashboard for other apps.
+#   There is no specific requirement for these apps to be for monitoring, that's just the defacto purpose.
+#   Each app is defined in two parts, the display name, and the URI
+# [horizon_app_links]     array as in '[ ["Nagios","http://nagios_addr:port/path"],["Ganglia","http://ganglia_addr"] ]'
 #
 class openstack::controller(
   # my address
@@ -65,7 +74,12 @@ class openstack::controller(
   $network_config          = {},
   # I do not think that this needs a bridge?
   $verbose                 = false,
-  $export_resources        = true
+  $export_resources        = true,
+  $cache_server_ip         = '127.0.0.1',
+  $cache_server_port       = '11211',
+  $swift                   = false,
+  $quantum                 = false,
+  $horizon_app_links       = false,
 ) {
 
   $glance_api_servers = "${internal_address}:9292"
@@ -261,7 +275,13 @@ class openstack::controller(
     listen_ip => '127.0.0.1',
   }
 
-  class { 'horizon': }
+  class { 'horizon':
+    cache_server_ip => $cache_server_ip,
+    cache_server_port => $cache_server_port,
+    swift => $swift,
+    quantum => $quantum,
+    horizon_app_links => $horizon_app_links,
+  }
 
 
   ######## End Horizon #####
