@@ -19,7 +19,7 @@ file { '/tmp/test_nova.sh':
 $public_interface  = 'eth0'
 # assumes that eth1 is the interface that will be used for the vm network
 # this configuration assumes this interface is active but does not have an
-# ip address allocated to it. 
+# ip address allocated to it.
 $private_interface = 'eth1'
 # credentials
 $admin_email          = 'root@localhost'
@@ -75,7 +75,7 @@ node /openstack_all/ {
 $controller_node_address  = '192.168.101.11'
 
 $controller_node_public   = $controller_node_address
-$controller_node_internal = $controller_node_address 
+$controller_node_internal = $controller_node_address
 $sql_connection         = "mysql://nova:${nova_db_password}@${controller_node_internal}/nova"
 
 node /openstack_controller/ {
@@ -125,7 +125,7 @@ node /openstack_compute/ {
     private_interface  => $private_interface,
     internal_address   => $ipaddress_eth0,
     libvirt_type       => 'kvm',
-    fixed_range        => $fixed_range,
+    fixed_range        => $fixed_network_range,
     network_manager    => 'nova.network.manager.FlatDHCPManager',
     multi_host         => false,
     sql_connection     => $sql_connection,
