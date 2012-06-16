@@ -5,7 +5,13 @@
 #
 #
 
-require 'puppetlabs_spec_helper/rake_tasks'
+begin
+  require 'puppetlabs_spec_helper/rake_tasks'
+rescue LoadError
+  puts "!!!!!"
+  puts "puppetlabs_spec_helper not found. This may cause some rake tasks to be unavailable."
+  puts "!!!!!"
+end
 
 repo_file = 'other_repos.yaml'
 default_modulepath = '/etc/puppet/modules'
