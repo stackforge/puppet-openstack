@@ -28,7 +28,7 @@ namespace :modules do
       # I should check to see if the file is there?
       outpath = File.join(modulepath, local)
       output = `git clone #{remote} #{outpath}`
-      Puppet.debug(output)
+      puts output
     end
     branches_to_checkout.each do |local, branch|
       Dir.chdir(File.join(modulepath, local)) do
