@@ -6,6 +6,7 @@
 #
 
 begin
+  require 'yaml'
   require 'puppetlabs_spec_helper/rake_tasks'
 rescue LoadError
   puts "!!!!!"
