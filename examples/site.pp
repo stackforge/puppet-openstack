@@ -122,6 +122,7 @@ node /openstack_controller/ {
 node /openstack_compute/ {
 
   class { 'openstack::compute':
+    public_interface   => $public_interface,
     private_interface  => $private_interface,
     internal_address   => $ipaddress_eth0,
     libvirt_type       => 'kvm',
