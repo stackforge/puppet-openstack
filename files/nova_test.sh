@@ -5,12 +5,12 @@
 source /root/openrc
 
 # get an image to test with
-#wget http://uec-images.ubuntu.com/releases/11.10/release/ubuntu-11.10-server-cloudimg-amd64-disk1.img
+#wget http://uec-images.ubuntu.com/releases/12.04/release/ubuntu-12.04-server-cloudimg-amd64-disk1.img
 
 # import that image into glance
-#glance add name="Ubuntu 11.10 cloudimg amd64" is_public=true container_format=ovf disk_format=qcow2 < ubuntu-11.10-server-cloudimg-amd64-disk1.img
+#glance add name="Ubuntu 12.04 cloudimg amd64" is_public=true container_format=ovf disk_format=qcow2 < ubuntu-12.04-server-cloudimg-amd64-disk1.img
 
-#IMAGE_ID=`glance index | grep 'Ubuntu 11.10 cloudimg amd64' | head -1 |  awk -F' ' '{print $1}'`
+#IMAGE_ID=`glance index | grep 'Ubuntu 12.04 cloudimg amd64' | head -1 |  awk -F' ' '{print $1}'`
 
 wget https://launchpad.net/cirros/trunk/0.3.0/+download/cirros-0.3.0-i386-disk.img
 
