@@ -129,6 +129,7 @@ node /openstack_compute/ {
     network_manager    => 'nova.network.manager.FlatDHCPManager',
     multi_host         => false,
     sql_connection     => $sql_connection,
+    nova_user_password => $nova_user_password,
     rabbit_host        => $controller_node_internal,
     rabbit_password    => $rabbit_password,
     rabbit_user        => $rabbit_user,
