@@ -99,6 +99,7 @@ class openstack::compute(
     include keystone::python
 
     nova_config { 'multi_host':   value => 'True'; }
+    nova_config { 'send_arp_for_ha':   value => 'True'; }
     if ! $public_interface {
       fail('public_interface must be defined for multi host compute nodes')
     }
