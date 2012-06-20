@@ -15,6 +15,9 @@
 #  [fixed_range] The fixed private ip range to be created for the private VM network. Optional. Defaults to '10.0.0.0/24'.
 #  [network_manager] The network manager to use for the nova network service.
 #    Optional. Defaults to 'nova.network.manager.FlatDHCPManager'.
+#  [auto_assign_floating_ip] Rather configured to automatically allocate and 
+#   assign a floating IP address to virtual instances when they are launched.
+#   Defaults to false.
 #  [network_config] Used to specify network manager specific parameters .Optional. Defualts to {}.
 #  [mysql_root_password] The root password to set for the mysql database. Optional. Defaults to sql_pass'.
 #  [rabbit_password] The password to use for the rabbitmq user. Optional. Defaults to rabbit_pw'
@@ -53,28 +56,29 @@ class openstack::all(
   $public_address,
   $public_interface,
   $private_interface,
-  $floating_range       = false,
-  $fixed_range          = '10.0.0.0/24',
-  $network_manager      = 'nova.network.manager.FlatDHCPManager',
-  $network_config       = {},
+  $floating_range          = false,
+  $fixed_range             = '10.0.0.0/24',
+  $network_manager         = 'nova.network.manager.FlatDHCPManager',
+  $network_config          = {},
   # middleware credentials
-  $mysql_root_password  = 'sql_pass',
-  $rabbit_password      = 'rabbit_pw',
-  $rabbit_user          = 'nova',
+  $mysql_root_password     = 'sql_pass',
+  $rabbit_password         = 'rabbit_pw',
+  $rabbit_user             = 'nova',
   # opestack credentials
-  $admin_email          = 'someuser@some_fake_email_address.foo',
-  $admin_password       = 'ChangeMe',
-  $keystone_db_password = 'keystone_pass',
-  $keystone_admin_token = 'keystone_admin_token',
-  $nova_db_password     = 'nova_pass',
-  $nova_user_password   = 'nova_pass',
-  $glance_db_password   = 'glance_pass',
-  $glance_user_password = 'glance_pass',
+  $admin_email             = 'someuser@some_fake_email_address.foo',
+  $admin_password          = 'ChangeMe',
+  $keystone_db_password    = 'keystone_pass',
+  $keystone_admin_token    = 'keystone_admin_token',
+  $nova_db_password        = 'nova_pass',
+  $nova_user_password      = 'nova_pass',
+  $glance_db_password      = 'glance_pass',
+  $glance_user_password    = 'glance_pass',
   # config
-  $verbose              = false,
-  $purge_nova_config    = true,
-  $libvirt_type         = 'kvm',
-  $nova_volume          = 'nova-volumes'
+  $verbose                 = false,
+  $auto_assign_floating_ip = false,
+  $purge_nova_config       = true,
+  $libvirt_type            = 'kvm',
+  $nova_volume             = 'nova-volumes'
 ) {
 
 
@@ -209,6 +213,10 @@ class openstack::all(
     network_manager   => $network_manager,
     config_overrides  => $network_config,
     create_networks   => true,
+  }
+
+  if $auto_assign_floating_ip {
+    nova_config { 'auto_assign_floating_ip':   value => 'True'; }
   }
 
   # a bunch of nova services that require no configuration
