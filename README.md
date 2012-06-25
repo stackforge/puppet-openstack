@@ -49,6 +49,18 @@ These modules are based on the adminstrative guides for openstack
   If machines only have one NIC, it is necessary to manually create a bridge
   called br100 that bridges into the ip address specified on that NIC
 
+  All interfaces that are used to bridge traffic for the internal network
+  need to have permiscous mode set.
+
+  Below is an example of setting permiscuos mode on an interface on Ubuntu.
+
+
+        #/etc/network/interfaces   
+        auto eth1
+        iface eth1 inet manual
+          up ifconfig $IFACE 0.0.0.0 up
+          up ifconfig $IFACE promisc
+
 ### Volumes:
 
   Every node that is configured to be a nova volume service must have a volume
