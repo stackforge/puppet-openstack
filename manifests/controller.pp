@@ -26,6 +26,9 @@
 # [num_networks] Number of networks that fixed range should be split into.
 # [multi_host] Rather node should support multi-host networking mode for HA.
 #   Optional. Defaults to false.
+# [auto_assign_floating_ip] Rather configured to automatically allocate and 
+#   assign a floating IP address to virtual instances when they are launched.
+#   Defaults to false.
 # [network_config] Hash that can be used to pass implementation specifc
 #   network settings. Optioal. Defaults to {}
 # [verbose] Rahter to log services at verbose.
@@ -68,6 +71,7 @@ class openstack::controller(
   $create_networks         = true,
   $num_networks            = 1,
   $multi_host              = false,
+  $auto_assign_floating_ip = false,
   # TODO need to reconsider this design...
   # this is where the config options that are specific to the network
   # types go. I am not extremely happy with this....
@@ -267,6 +271,10 @@ class openstack::controller(
     num_networks      => $num_networks,
     enabled           => $enable_network_service,
     install_service   => $enable_network_service,
+  }
+
+  if $auto_assign_floating_ip {
+    nova_config { 'auto_assign_floating_ip':   value => 'True'; }
   }
 
   ######## Horizon ########

@@ -16,25 +16,27 @@ file { '/tmp/test_nova.sh':
 # environments
 
 # assumes that eth0 is the public interface
-$public_interface  = 'eth0'
+$public_interface        = 'eth0'
 # assumes that eth1 is the interface that will be used for the vm network
 # this configuration assumes this interface is active but does not have an
 # ip address allocated to it.
-$private_interface = 'eth1'
+$private_interface       = 'eth1'
 # credentials
-$admin_email          = 'root@localhost'
-$admin_password       = 'keystone_admin'
-$keystone_db_password = 'keystone_db_pass'
-$keystone_admin_token = 'keystone_admin_token'
-$nova_db_password     = 'nova_pass'
-$nova_user_password   = 'nova_pass'
-$glance_db_password   = 'glance_pass'
-$glance_user_password = 'glance_pass'
-$rabbit_password      = 'openstack_rabbit_password'
-$rabbit_user          = 'openstack_rabbit_user'
-$fixed_network_range  = '10.0.0.0/24'
+$admin_email             = 'root@localhost'
+$admin_password          = 'keystone_admin'
+$keystone_db_password    = 'keystone_db_pass'
+$keystone_admin_token    = 'keystone_admin_token'
+$nova_db_password        = 'nova_pass'
+$nova_user_password      = 'nova_pass'
+$glance_db_password      = 'glance_pass'
+$glance_user_password    = 'glance_pass'
+$rabbit_password         = 'openstack_rabbit_password'
+$rabbit_user             = 'openstack_rabbit_user'
+$fixed_network_range     = '10.0.0.0/24'
 # switch this to true to have all service log at verbose
-$verbose              = 'false'
+$verbose                 = 'false'
+# by default it does not enable atomatically adding floating IPs
+$auto_assign_floating_ip = 'false'
 
 
 #### end shared variables #################
@@ -44,22 +46,23 @@ $verbose              = 'false'
 node /openstack_all/ {
 
   class { 'openstack::all':
-    public_address       => $ipaddress_eth0,
-    public_interface     => $public_interface,
-    private_interface    => $private_interface,
-    admin_email          => $admin_email,
-    admin_password       => $admin_password,
-    keystone_db_password => $keystone_db_password,
-    keystone_admin_token => $keystone_admin_token,
-    nova_db_password     => $nova_db_password,
-    nova_user_password   => $nova_user_password,
-    glance_db_password   => $glance_db_password,
-    glance_user_password => $glance_user_password,
-    rabbit_password      => $rabbit_password,
-    rabbit_user          => $rabbit_user,
-    libvirt_type         => 'kvm',
-    fixed_range          => $fixed_network_range,
-    verbose              => $verbose,
+    public_address          => $ipaddress_eth0,
+    public_interface        => $public_interface,
+    private_interface       => $private_interface,
+    admin_email             => $admin_email,
+    admin_password          => $admin_password,
+    keystone_db_password    => $keystone_db_password,
+    keystone_admin_token    => $keystone_admin_token,
+    nova_db_password        => $nova_db_password,
+    nova_user_password      => $nova_user_password,
+    glance_db_password      => $glance_db_password,
+    glance_user_password    => $glance_user_password,
+    rabbit_password         => $rabbit_password,
+    rabbit_user             => $rabbit_user,
+    libvirt_type            => 'kvm',
+    fixed_range             => $fixed_network_range,
+    verbose                 => $verbose,
+    auto_assign_floating_ip => $auto_assign_floating_ip,
   }
 
   class { 'openstack::auth_file':
@@ -96,6 +99,7 @@ node /openstack_controller/ {
     # by default is assumes flat dhcp networking mode
     network_manager         => 'nova.network.manager.FlatDHCPManager',
     verbose                 => $verbose,
+    auto_assign_floating_ip => $auto_assign_floating_ip,
     mysql_root_password     => $mysql_root_password,
     admin_email             => $admin_email,
     admin_password          => $admin_password,
