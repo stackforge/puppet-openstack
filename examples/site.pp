@@ -4,9 +4,7 @@
 #
 
 # deploy a script that can be used to test nova
-file { '/tmp/test_nova.sh':
-  source => 'puppet:///modules/openstack/nova_test.sh',
-}
+class { 'openstack::test_file': }
 
 ####### shared variables ##################
 
