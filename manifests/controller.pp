@@ -107,7 +107,7 @@ class openstack::controller(
   } else {
     $sql_connection    = $nova_db
     $glance_connection = $glance_api_servers
-    $rabbit_connection = $rabbit_host
+    $rabbit_connection = $internal_address
   }
 
   ####### DATABASE SETUP ######
