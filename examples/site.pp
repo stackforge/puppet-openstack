@@ -31,6 +31,7 @@ $glance_user_password    = 'glance_pass'
 $rabbit_password         = 'openstack_rabbit_password'
 $rabbit_user             = 'openstack_rabbit_user'
 $fixed_network_range     = '10.0.0.0/24'
+$floating_network_range  = '192.168.101.64/28'
 # switch this to true to have all service log at verbose
 $verbose                 = false
 # by default it does not enable atomatically adding floating IPs
@@ -58,6 +59,7 @@ node /openstack_all/ {
     rabbit_password         => $rabbit_password,
     rabbit_user             => $rabbit_user,
     libvirt_type            => 'kvm',
+    floating_range          => $floating_network_range,
     fixed_range             => $fixed_network_range,
     verbose                 => $verbose,
     auto_assign_floating_ip => $auto_assign_floating_ip,
@@ -90,7 +92,7 @@ node /openstack_controller/ {
     public_interface        => $public_interface,
     private_interface       => $private_interface,
     internal_address        => $controller_node_internal,
-    floating_range          => '192.168.101.64/28',
+    floating_range          => $floating_network_range,
     fixed_range             => $fixed_network_range,
     # by default it does not enable multi-host mode
     multi_host              => false,
