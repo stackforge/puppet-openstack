@@ -32,7 +32,7 @@ $rabbit_password         = 'openstack_rabbit_password'
 $rabbit_user             = 'openstack_rabbit_user'
 $fixed_network_range     = '10.0.0.0/24'
 # switch this to true to have all service log at verbose
-$verbose                 = 'false'
+$verbose                 = false
 # by default it does not enable atomatically adding floating IPs
 $auto_assign_floating_ip = false
 
