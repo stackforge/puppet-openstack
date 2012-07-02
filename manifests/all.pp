@@ -134,6 +134,7 @@ class openstack::all(
   # set up keystone user, endpoint, service
   class { 'glance::keystone::auth':
     password => $glance_user_password,
+    public_address => $public_address,
   }
 
   # creat glance db/user/grants
@@ -176,6 +177,7 @@ class openstack::all(
 
   class { 'nova::keystone::auth':
     password => $nova_user_password,
+    public_address => $public_address,
   }
 
   class { 'nova::rabbitmq':
