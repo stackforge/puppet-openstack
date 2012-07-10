@@ -15,7 +15,7 @@
 #  [fixed_range] The fixed private ip range to be created for the private VM network. Optional. Defaults to '10.0.0.0/24'.
 #  [network_manager] The network manager to use for the nova network service.
 #    Optional. Defaults to 'nova.network.manager.FlatDHCPManager'.
-#  [auto_assign_floating_ip] Rather configured to automatically allocate and 
+#  [auto_assign_floating_ip] Rather configured to automatically allocate and
 #   assign a floating IP address to virtual instances when they are launched.
 #   Defaults to false.
 #  [network_config] Used to specify network manager specific parameters .Optional. Defualts to {}.
@@ -30,6 +30,7 @@
 #  [nova_user_password] The password of the keystone user for the nova service. Optional. Defaults to nova_pass'.
 #  [glance_db_password] The password for the db user for glance. Optional. Defaults to 'glance_pass'.
 #  [glance_user_password] The password of the glance service user. Optional. Defaults to 'glance_pass'.
+#  [secret_key] The secret key for horizon. Optional. Defaults to 'dummy_secret_key'.
 #  [verbose] If the services should log verbosely. Optional. Defaults to false.
 #  [purge_nova_config] Whether unmanaged nova.conf entries should be purged. Optional. Defaults to true.
 #  [libvirt_type] The virualization type being controlled by libvirt.  Optional. Defaults to 'kvm'.
@@ -73,6 +74,7 @@ class openstack::all(
   $nova_user_password      = 'nova_pass',
   $glance_db_password      = 'glance_pass',
   $glance_user_password    = 'glance_pass',
+  $secret_key              = 'dummy_secret_key',
   # config
   $verbose                 = false,
   $auto_assign_floating_ip = false,
@@ -265,7 +267,9 @@ class openstack::all(
     listen_ip => '127.0.0.1',
   }
 
-  class { 'horizon': }
+  class { 'horizon':
+    secret_key => $secret_key,
+  }
 
   ######## End Horizon #####
 
