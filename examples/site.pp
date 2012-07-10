@@ -95,7 +95,7 @@ node /openstack_controller/ {
     floating_range          => $floating_network_range,
     fixed_range             => $fixed_network_range,
     # by default it does not enable multi-host mode
-    multi_host              => false,
+    multi_host              => true,
     # by default is assumes flat dhcp networking mode
     network_manager         => 'nova.network.manager.FlatDHCPManager',
     verbose                 => $verbose,
@@ -132,7 +132,7 @@ node /openstack_compute/ {
     libvirt_type       => 'kvm',
     fixed_range        => $fixed_network_range,
     network_manager    => 'nova.network.manager.FlatDHCPManager',
-    multi_host         => false,
+    multi_host         => true,
     sql_connection     => $sql_connection,
     nova_user_password => $nova_user_password,
     rabbit_host        => $controller_node_internal,
