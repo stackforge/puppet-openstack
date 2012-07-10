@@ -26,7 +26,7 @@
 # [num_networks] Number of networks that fixed range should be split into.
 # [multi_host] Rather node should support multi-host networking mode for HA.
 #   Optional. Defaults to false.
-# [auto_assign_floating_ip] Rather configured to automatically allocate and 
+# [auto_assign_floating_ip] Rather configured to automatically allocate and
 #   assign a floating IP address to virtual instances when they are launched.
 #   Defaults to false.
 # [network_config] Hash that can be used to pass implementation specifc
@@ -34,6 +34,7 @@
 # [verbose] Rahter to log services at verbose.
 # [export_resources] Rather to export resources.
 # Horizon related config - assumes puppetlabs-horizon code
+# [secret_key]          secret key to encode cookies, …
 # [cache_server_ip]     local memcached instance ip
 # [cache_server_port]   local memcached instance port
 # [swift]               (bool) is swift installed
@@ -81,6 +82,7 @@ class openstack::controller(
   # I do not think that this needs a bridge?
   $verbose                 = false,
   $export_resources        = true,
+  $secret_key              = 'dummy_secret_key',
   $cache_server_ip         = '127.0.0.1',
   $cache_server_port       = '11211',
   $swift                   = false,
@@ -158,7 +160,7 @@ class openstack::controller(
   class { 'keystone::config::mysql':
     password => $keystone_db_password,
   }
-  
+
   if ($enabled) {
     # set up keystone admin users
     class { 'keystone::roles::admin':
@@ -277,7 +279,7 @@ class openstack::controller(
   }
 
   if $enabled {
-    $really_create_networks = $create_networks 
+    $really_create_networks = $create_networks
   } else {
     $really_create_networks = false
   }
@@ -309,6 +311,7 @@ class openstack::controller(
   }
 
   class { 'horizon':
+    secret_key => $secret_key,
     cache_server_ip => $cache_server_ip,
     cache_server_port => $cache_server_port,
     swift => $swift,
