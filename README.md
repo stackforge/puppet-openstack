@@ -50,9 +50,9 @@ These modules are based on the adminstrative guides for openstack
   called br100 that bridges into the ip address specified on that NIC
 
   All interfaces that are used to bridge traffic for the internal network
-  need to have permiscous mode set.
+  need to have promiscuous mode set.
 
-  Below is an example of setting permiscuos mode on an interface on Ubuntu.
+  Below is an example of setting promiscuous mode on an interface on Ubuntu.
 
 
         #/etc/network/interfaces   
