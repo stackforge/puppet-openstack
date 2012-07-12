@@ -140,7 +140,7 @@ node /openstack_compute/ {
     rabbit_user        => $rabbit_user,
     glance_api_servers => "${controller_node_internal}:9292",
     vncproxy_host      => $controller_node_public,
-    vnc_enabled        => 'true',
+    vnc_enabled        => true,
     verbose            => $verbose,
     manage_volumes     => true,
     nova_volume        => 'nova-volumes'
