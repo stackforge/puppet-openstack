@@ -15,7 +15,7 @@ repos:
     git://github.com/saz/puppet-memcached: memcached
     git://github.com/puppetlabs/puppetlabs-rsync: rsync
     # other deps
-    git://github.com/ghoneycutt/puppet-xinetd: xinetd
+    git://github.com/puppetlabs/puppetlabs-xinetd: xinetd
     git://github.com/saz/puppet-ssh: ssh
     git://github.com/puppetlabs/puppetlabs-stdlib: stdlib
     git://github.com/puppetlabs/puppetlabs-apt: apt
