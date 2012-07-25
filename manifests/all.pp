@@ -10,12 +10,18 @@
 # === Examples
 #
 #  class { 'openstack::all':
-#    public_address       => '192.168.0.3',
-#    public_interface     => 'eth0',
-#    private_interface    => 'eth1',
+#    public_address       => '192.168.1.1',
+#    mysql_root_password  => 'changeme',
+#    rabbit_password      => 'changeme',
+#    keystone_db_password => 'changeme',
+#    keystone_admin_token => '12345',
 #    admin_email          => 'my_email@mw.com',
 #    admin_password       => 'my_admin_password',
-#    libvirt_type         => 'kvm',
+#    nova_db_password     => 'changeme',
+#    nova_user_password   => 'changeme',
+#    glance_db_password   => 'changeme',
+#    glance_user_password => 'changeme',
+#    secret_key           => 'dummy_secret_key',
 #  }
 #
 # === Authors
@@ -25,57 +31,65 @@
 #
 class openstack::all (
   # Network
-  $public_address          = $::openstack::params::public_address,
-  $public_interface        = $::openstack::params::public_interface,
-  $private_interface       = $::openstack::params::private_interface,
-  $fixed_range             = $::openstack::params::fixed_range,
-  $network_manager         = $::openstack::params::network_manager,
-  $network_config          = $::openstack::params::network_config,
-  $auto_assign_floating_ip = $::openstack::params::auto_assign_floating_ip,
-  $floating_range          = $::openstack::params::floating_range,
-  $create_networks         = $::openstack::params::create_networks,
-  $num_networks            = $::openstack::params::num_networks,
+  $public_interface        = 'eth0',
+  $private_interface       = 'eth1',
+  $fixed_range             = '10.0.0.0/24',
+  $network_manager         = 'nova.network.manager.FlatDHCPManager',
+  $network_config          = {},
+  $auto_assign_floating_ip = false,
+  $floating_range          = false,
+  $create_networks         = true,
+  $num_networks            = 1,
   # MySQL
-  $db_type                 = $::openstack::params::db_type,
-  $mysql_root_password     = $::openstack::params::mysql_root_password,
-  $mysql_account_security  = $::openstack::params::mysql_account_security,
+  $db_type                 = 'mysql',
+  $mysql_account_security  = true,
+  $allowed_hosts           = ['127.0.0.%'],
   # Rabbit
-  $rabbit_password         = $::openstack::params::rabbit_password,
-  $rabbit_user             = $::openstack::params::rabbit_user,
+  $rabbit_user             = 'nova',
   # Keystone
-  $admin_email             = $::openstack::params::admin_email,
-  $admin_password          = $::openstack::params::admin_password,
-  $keystone_db_user        = $::openstack::params::keystone_db_user,
-  $keystone_db_password    = $::openstack::params::keystone_db_password,
-  $keystone_db_dbname      = $::openstack::params::keystone_db_dbname,
-  $keystone_admin_token    = $::openstack::params::keystone_admin_token,
+  $keystone_db_user        = 'keystone',
+  $keystone_db_dbname      = 'keystone',
   # Nova
-  $nova_db_user            = $::openstack::params::nova_db_user,
-  $nova_db_password        = $::openstack::params::nova_db_password,
-  $nova_user_password      = $::openstack::params::nova_user_password,
-  $nova_db_dbname          = $::openstack::params::nova_db_dbname,
-  $purge_nova_config       = $::openstack::params::purge_nova_config,
+  $nova_db_user            = 'nova',
+  $nova_db_dbname          = 'nova',
+  $purge_nova_config       = true,
   # Glance
-  $glance_db_user          = $::openstack::params::glance_db_user,
-  $glance_db_password      = $::openstack::params::glance_db_password,
-  $glance_db_dbname        = $::openstack::params::glance_db_dbname,
-  $glance_user_password    = $::openstack::params::glance_user_password,
+  $glance_db_user          = 'glance',
+  $glance_db_dbname        = 'glance',
   # Horizon
-  $secret_key              = $::openstack::params::secret_key,
-  $cache_server_ip         = $::openstack::params::cache_server_ip,
-  $cache_server_port       = $::openstack::params::cache_server_port,
-  $swift                   = $::openstack::params::swift,
-  $quantum                 = $::openstack::params::quantum,
-  $horizon_app_links       = $::openstack::params::horizon_app_links,
+  $cache_server_ip         = '127.0.0.1',
+  $cache_server_port       = '11211',
+  $swift                   = false,
+  $quantum                 = false,
+  $horizon_app_links       = undef,
   # Virtaulization
-  $libvirt_type            = $::openstack::params::libvirt_type,
+  $libvirt_type            = 'kvm',
   # Volume
-  $nova_volume             = $::openstack::params::nova_volume,
+  $nova_volume             = 'nova-volumes',
   # VNC
-  $vnc_enabled             = $::openstack::params::vnc_enabled,
+  $vnc_enabled             = true,
   # General
-  $enabled                 = $::openstack::params::enabled,
-  $verbose                 = $::openstack::params::verbose
+  $enabled                 = true,
+  $verbose                 = false,
+  # Network Required
+  $public_address,
+  # MySQL Required
+  $mysql_root_password,
+  # Rabbit Required
+  $rabbit_password,
+  # Keystone Required
+  $keystone_db_password,
+  $keystone_admin_token,
+  $admin_email,
+  $admin_password,
+  # Nova Required
+  $nova_db_password,
+  $nova_user_password,
+  # Glance Required
+  $glance_db_password,
+  $glance_user_password,
+  # Horizon Required
+  $secret_key,
 ) inherits openstack::params {
 
   # set up mysql server
@@ -94,6 +108,7 @@ class openstack::all (
         nova_db_user           => $nova_db_user,
         nova_db_password       => $nova_db_password,
         nova_db_dbname         => $nova_db_dbname,
+        allowed_hosts          => $allowed_hosts,
       }
     }
   }
@@ -154,6 +169,8 @@ class openstack::all (
     create_networks         => $create_networks,
     num_networks            => $num_networks,
     multi_host              => false,
+    # Database
+    db_host                 => '127.0.0.1',
     # Nova
     nova_user_password      => $nova_user_password,
     nova_db_password        => $nova_db_password,
@@ -181,6 +198,7 @@ class openstack::all (
     network_manager               => $network_manager,
     network_config                => $network_config,
     multi_host                    => false,
+    internal_address              => '127.0.0.1',
     # Virtualization
     libvirt_type                  => $libvirt_type,
     # Volumes

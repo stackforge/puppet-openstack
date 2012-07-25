@@ -10,30 +10,42 @@
 # === Example
 #
 # class { 'openstack::keystone':
-#   db_password      => 'changeme',
-#   admin_token      => '12345',
-#   admin_email      => 'root@localhost',
-#   admin_password   => 'changeme',
-#   public_address   => '192.168.1.1',
-#   admin_addresss   => '192.168.1.1',
-#   internal_address => '192.168.1.1',
+#   db_host               => '127.0.0.1',
+#   keystone_db_password  => 'changeme',
+#   keystone_admin_token  => '12345',
+#   admin_email           => 'root@localhost',
+#   admin_password        => 'changeme',
+#   public_address        => '192.168.1.1',
 #  }
 
 class openstack::keystone (
-  $db_type               = $::openstack::params::db_type,
-  $db_host               = $::openstack::params::db_host,
-  $keystone_db_user      = $::openstack::params::keystone_db_user,
-  $keystone_db_password  = $::openstack::params::keystone_db_password,
-  $keystone_db_dbname    = $::openstack::params::keystone_db_dbname,
-  $keystone_admin_tenant = $::openstack::params::keystone_admin_tenant,
-  $keystone_admin_token  = $::openstack::params::keystone_admin_token,
-  $admin_email           = $::openstack::params::admin_email,
-  $admin_password        = $::openstack::params::admin_password,
-  $public_address        = $::openstack::params::public_address,
-  $admin_address         = $::openstack::params::admin_address,
-  $internal_address      = $::openstack::params::internal_address,
-  $verbose               = $::openstack::params::verbose
+  $db_type               = 'mysql',
+  $keystone_db_user      = 'keystone',
+  $keystone_db_dbname    = 'keystone',
+  $keystone_admin_tenant = 'admin',
+  $admin_address         = undef,
+  $internal_address      = undef,
+  $verbose               = false,
+  $db_host,
+  $keystone_db_password,
+  $keystone_admin_token,
+  $admin_email,
+  $admin_password,
+  $public_address
 ) inherits openstack::params {
+
+  # Configure admin_address and internal address if needed.
+  if (admin_address == undef) {
+    $real_admin_address = $public_address
+  } else {
+    $real_admin_address = $admin_address
+  }
+
+  if (internal_address == undef) {
+    $real_internal_address = $public_address
+  } else {
+    $real_internal_address = $internal_address
+  }
 
   # Install and configure Keystone
   class { '::keystone':
@@ -53,13 +65,12 @@ class openstack::keystone (
   # Setup the Keystone Identity Endpoint
   class { 'keystone::endpoint':
     public_address   => $public_address,
-    admin_address    => $admin_address,
-    internal_address => $internal_address,
+    admin_address    => $real_admin_address,
+    internal_address => $real_internal_address,
   }
 
   # Configure the Keystone database
   case $db_type {
-
     'mysql': {
       class { 'keystone::config::mysql':
         user     => $keystone_db_user,
@@ -68,7 +79,6 @@ class openstack::keystone (
         dbname   => $keystone_db_dbname,
       }
     }
-
   }
 
 }

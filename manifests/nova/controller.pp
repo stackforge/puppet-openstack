@@ -8,42 +8,70 @@
 #
 # See params.pp
 #
+# === Examples
+#
+# class { 'openstack::nova::controller':
+#   public_address     => '192.168.1.1',
+#   db_host            => '127.0.0.1',
+#   rabbit_password    => 'changeme',
+#   nova_user_password => 'changeme',
+#   nova_db_password   => 'changeme',
+# }
+#
 
 class openstack::nova::controller (
   # Network
-  $network_manager           = $::openstack::params::network_manager,
-  $network_config            = $::openstack::params::network_config,
-  $private_interface         = $::openstack::params::private_interface,
-  $public_interface          = $::openstack::params::public_interface,
-  $floating_range            = $::openstack::params::floating_range,
-  $fixed_range               = $::openstack::params::fixed_range,
-  $public_address            = $::openstack::params::public_address,
-  $admin_address             = $::openstack::params::admin_address,
-  $internal_address          = $::openstack::params::internal_address,
-  $auto_assign_floating_ip   = $::openstack::params::auto_assign_floating_ip,
-  $create_networks           = $::openstack::params::create_networks,
-  $num_networks              = $::openstack::params::num_networks,
-  $multi_host                = $::openstack::params::multi_host,
+  $network_manager           = 'nova.network.manager.FlatDHCPManager',
+  $network_config            = {},
+  $public_interface          = 'eth0',
+  $private_interface         = 'eth1',
+  $fixed_range               = '10.0.0.0/24',
+  $floating_range            = false,
+  $admin_address             = undef,
+  $internal_address          = undef,
+  $auto_assign_floating_ip   = false,
+  $create_networks           = true,
+  $num_networks              = 1,
+  $multi_host                = false,
   # Nova
-  $nova_user_password        = $::openstack::params::nova_user_password,
-  $nova_db_user              = $::openstack::params::nova_db_user,
-  $nova_db_password          = $::openstack::params::nova_db_password,
-  $nova_db_dbname            = $::openstack::params::nova_db_dbname,
+  $nova_db_user              = 'nova',
+  $nova_db_dbname            = 'nova',
   # Rabbit
-  $rabbit_user               = $::openstack::params::rabbit_user,
-  $rabbit_password           = $::openstack::params::rabbit_password,
+  $rabbit_user               = 'nova',
   # Database
-  $db_type                   = $::openstack::params::db_type,
-  $db_host                   = $::openstack::params::db_host,
+  $db_type                   = 'mysql',
   # Glance
-  $glance_api_servers        = $::openstack::params::glance_api_servers,
+  $glance_api_servers        = undef,
   # VNC
-  $vnc_enabled               = $::openstack::params::vnc_enabled,
+  $vnc_enabled               = true,
   # General
-  $verbose                   = $::openstack::params::verbose,
-  $enabled                   = $::openstack::params::enabled,
-  $exported_resources        = $::openstack::params::exported_resources
+  $verbose                   = false,
+  $enabled                   = true,
+  $exported_resources        = true,
+  # Network Required
+  $public_address,
+  # Database Required
+  $db_host,
+  # Rabbit Required
+  $rabbit_password,
+  # Nova Required
+  $nova_user_password,
+  $nova_db_password,
+
 ) inherits openstack::params {
+
+  # Configure admin_address and internal address if needed.
+  if (admin_address == undef) {
+    $real_admin_address = $public_address
+  } else {
+    $real_admin_address = $admin_address
+  }
+
+  if (internal_address == undef) {
+    $real_internal_address = $public_address
+  } else {
+    $real_internal_address = $internal_address
+  }
 
   # Configure the db string
   case $db_type {
@@ -52,8 +80,11 @@ class openstack::nova::controller (
     }
   }
 
-  # Might need fixed
-  # $glance_api_servers = "${internal_address}:9292"
+  if ($glance_api_servers == undef) {
+    $real_glance_api_servers = "${public_address}:9292"
+  } else {
+    $real_glance_api_servers = $glance_api_servers
+  }
  
   if ($export_resources) {
     # export all of the things that will be needed by the clients
@@ -63,7 +94,7 @@ class openstack::nova::controller (
     @@nova_config { 'sql_connection': value => $nova_db }
     Nova_config <| title == 'sql_connection' |>
 
-    @@nova_config { 'glance_api_servers': value => $glance_api_servers }
+    @@nova_config { 'glance_api_servers': value => $real_glance_api_servers }
     Nova_config <| title == 'glance_api_servers' |>
 
     @@nova_config { 'novncproxy_base_url': value => "http://${public_address}:6080/vnc_auto.html" }
@@ -73,7 +104,7 @@ class openstack::nova::controller (
     $rabbit_connection = false
   } else {
     $sql_connection    = $nova_db
-    $glance_connection = $glance_api_servers
+    $glance_connection = $real_glance_api_servers
     $rabbit_connection = $internal_address
   }
 
@@ -148,7 +179,6 @@ class openstack::nova::controller (
   class { [
     'nova::scheduler',
     'nova::objectstore',
-    'nova::volume',
     'nova::cert',
     'nova::consoleauth'
   ]:

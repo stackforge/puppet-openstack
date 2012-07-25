@@ -18,22 +18,34 @@
 #   glance_user_password => 'changeme',
 #   db_password          => 'changeme',
 #   public_address       => '192.168.1.1',
-#   admin_addresss       => '192.168.1.1',
-#   internal_address     => '192.168.1.1',
+#   db_host              => '127.0.0.1',
 # }
 
 class openstack::glance (
-  $db_type              = $::openstack::params::db_type,
-  $db_host              = $::openstack::params::db_host,
-  $glance_db_user       = $::openstack::params::glance_db_user,
-  $glance_db_dbname     = $::openstack::params::glance_db_dbname,
-  $glance_user_password = $::openstack::params::glance_user_password,
-  $glance_db_password   = $::openstack::params::glance_db_password,
-  $public_address       = $::openstack::params::public_address,
-  $admin_address        = $::openstack::params::admin_address,
-  $internal_address     = $::openstack::params::internal_address,
-  $verbose              = $::openstack::params::verbose
+  $db_type              = 'mysql',
+  $glance_db_user       = 'glance',
+  $glance_db_dbname     = 'glance',
+  $admin_address        = undef,
+  $internal_address     = undef,
+  $verbose              = false,
+  $db_host,
+  $glance_user_password,
+  $glance_db_password,
+  $public_address,
 ) inherits openstack::params {
+
+  # Configure admin_address and internal address if needed.
+  if (admin_address == undef) {
+    $real_admin_address = $public_address
+  } else {
+    $real_admin_address = $admin_address
+  }
+
+  if (internal_address == undef) {
+    $real_internal_address = $public_address
+  } else {
+    $real_internal_address = $internal_address
+  }
 
   # Configure the db string
   case $db_type {
@@ -70,8 +82,8 @@ class openstack::glance (
   class { 'glance::keystone::auth':
     password         => $glance_user_password,
     public_address   => $public_address,
-    admin_address    => $admin_address,
-    internal_address => $internal_address,
+    admin_address    => $real_admin_address,
+    internal_address => $real_internal_address,
   }
 
 }

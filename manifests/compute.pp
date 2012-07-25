@@ -16,44 +16,51 @@
 # === Examples
 #
 # class { 'openstack::compute': 
-#   libvirt_type => 'kvm',
+#   internal_address   => '192.168.1.12',
+#   vncproxy_host      => '192.168.1.1',
+#   nova_user_password => 'changeme',
+#   rabbit_password    => 'changeme',
 # }
 #
 
 class openstack::compute (
   # Network
-  $public_address      = $::openstack::params::public_address,
-  $public_interface    = $::openstack::params::public_interface,
-  $private_interface   = $::openstack::params::private_interface,
-  $internal_address    = $::openstack::params::internal_address,
-  $fixed_range         = $::openstack::params::fixed_range,
-  $network_manager     = $::openstack::params::network_manager,
-  $multi_host          = $::openstack::params::multi_host,
-  $network_config      = $::openstack::params::network_config,
+  $public_address      = undef,
+  $public_interface    = 'eth0',
+  $private_interface   = 'eth1',
+  $fixed_range         = '10.0.0.0/24',
+  $network_manager     = 'nova.network.manager.FlatDHCPManager',
+  $multi_host          = false,
+  $network_config      = {},
   # DB
-  $sql_connection      = $::openstack::params::sql_connection,
+  $sql_connection      = false,
   # Nova
-  $nova_user_password  = $::openstack::params::nova_user_password,
-  $purge_nova_config   = $::openstack::params::purge_nova_config,
+  $purge_nova_config   = true,
   # Rabbit
-  $rabbit_host         = $::openstack::params::rabbit_host,
-  $rabbit_password     = $::openstack::params::rabbit_password,
-  $rabbit_user         = $::openstack::params::rabbit_user,
+  $rabbit_host         = false,
+  $rabbit_user         = 'nova',
   # Glance
   $glance_api_servers  = false,
   # Virtualization
-  $libvirt_type        = $::openstack::params::libvirt_type,
+  $libvirt_type        = 'kvm',
   # VNC
-  $vncproxy_host       = $::openstack::params::vncproxy_host,
-  $vnc_enabled         = $::openstack::params::vnc_enabled,
-  $vncserver_proxyclient_address = $::openstack::params::vncserver_proxyclient_address,
+  $vnc_enabled         = true,
+  $vncserver_listen    = undef,
+  $vncproxy_host       = undef,
+  $vncserver_proxyclient_address = undef,
   # Volumes
-  $manage_volumes      = $::openstack::params::manage_volumes,
-  $nova_volume         = $::openstack::params::nova_volume,
+  $manage_volumes      = true,
+  $nova_volume         = 'nova-volumes',
   # General
-  $verbose             = $::openstack::params::verbose,
-  $exported_resources  = $::openstack::params::exported_resources,
-  $enabled             = $::openstack::params::enabled
+  $verbose             = false,
+  $exported_resources  = true,
+  $enabled             = true,
+  # Required Network
+  $internal_address,
+  # Required Nova
+  $nova_user_password,
+  # Required Rabbit
+  $rabbit_password
 ) inherits openstack::params {
 
   #
@@ -90,10 +97,41 @@ class openstack::compute (
     }
   }
 
+  # Configure VNC variables
+  if ($vnc_enabled == true) {
+    if ($vncserver_listen == undef) {
+      $real_vncserver_listen = $internal_address
+    } else {
+      $real_vncserver_listen = $vncserver_listen
+    }
+
+    if ($vncserver_proxyclient_address == undef) {
+      $real_vncserver_proxyclient_address = $internal_address
+    } else {
+      $real_vncserver_proxyclient_address = $vncserver_proxyclient_address
+    }
+
+    if ($vncproxy_host == undef) {
+      if ($multi_host == true and $public_address != undef) {
+        $real_vncproxy_host = $public_address
+      } else {
+        fail('vncproxy_host must be set.')
+      }
+    } else {
+      # This should be the public IP of the cloud controller...
+      $real_vncproxy_host = $vncproxy_host
+    }
+  } else {
+    $real_vncserver_listen = undef
+    $real_vncserver_proxyclient_address = undef
+    $real_vncproxy_host = undef
+  }
+
   if $enabled {
     class { 'openstack::nova::compute':
       # Network
       public_address                => $public_address,
+      internal_address              => $internal_address,
       private_interface             => $private_interface,
       public_interface              => $public_interface,
       fixed_range                   => $fixed_range,
@@ -108,9 +146,9 @@ class openstack::compute (
       iscsi_ip_address              => $iscsi_ip_address,
       # VNC
       vnc_enabled                   => $vnc_enabled,
-      vncserver_listen              => $vnc_server_listen,
-      vncserver_proxyclient_address => $vncserver_proxyclient_address,
-      vncproxy_host                 => $vncproxy_host,
+      vncserver_listen              => $real_vncserver_listen,
+      vncserver_proxyclient_address => $real_vncserver_proxyclient_address,
+      vncproxy_host                 => $real_vncproxy_host,
       # Nova 
       nova_user_password            => $nova_user_password,
       # General

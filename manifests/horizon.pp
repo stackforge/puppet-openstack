@@ -8,14 +8,20 @@
 #
 # See params.pp
 #
+# === Examples
+#
+# class { 'openstack::horizon': 
+#   secret_key => 'dummy_secret_key',
+# }
+#
 
 class openstack::horizon (
-  $secret_key        = $::openstack::params::secret_key,
-  $cache_server_ip   = $::openstack::params::cache_server_ip,
-  $cache_server_port = $::openstack::params::cache_server_port,
-  $swift             = $::openstack::params::swift,
-  $quantum           = $::openstack::params::quantum,
-  $horizon_app_links = $::openstack::params::horizon_app_links
+  $cache_server_ip   = '127.0.0.1',
+  $cache_server_port = '11211',
+  $swift             = false,
+  $quantum           = false,
+  $horizon_app_links = undef,
+  $secret_key
 ) {
 
   class { 'memcached':

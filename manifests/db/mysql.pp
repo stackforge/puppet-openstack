@@ -11,7 +11,7 @@
 # === Example
 #
 # class { 'openstack::db::mysql':
-#    mysql_root_password       => 'changeme',
+#    mysql_root_password  => 'changeme',
 #    keystone_db_password => 'changeme',
 #    glance_db_password   => 'changeme',
 #    nova_db_password     => 'changeme',
@@ -21,22 +21,24 @@
 
 class openstack::db::mysql (
     # MySQL
-    $mysql_bind_address     = $::openstack::params::mysql_bind_address,
-    $allowed_hosts          = $::openstack::params::mysql_allowed_hosts,
-    $mysql_root_password    = $::openstack::params::mysql_root_password,
-    $mysql_account_security = $::openstack::params::mysql_account_security,
+    $mysql_bind_address     = '0.0.0.0',
+    $mysql_account_security = true,
     # Keystone
-    $keystone_db_user       = $::openstack::params::keystone_db_user,
-    $keystone_db_dbname     = $::openstack::params::keystone_db_dbname,
-    $keystone_db_password   = $::openstack::params::keystone_db_password,
+    $keystone_db_user       = 'keystone',
+    $keystone_db_dbname     = 'keystone',
     # Glance
-    $glance_db_user         = $::openstack::params::glance_db_user,
-    $glance_db_dbname       = $::openstack::params::glance_db_dbname,
-    $glance_db_password     = $::openstack::params::glance_db_password,
+    $glance_db_user         = 'glance',
+    $glance_db_dbname       = 'glance',
     # Nova
-    $nova_db_user           = $::openstack::params::nova_db_user,
-    $nova_db_dbname         = $::openstack::params::nova_db_dbname,
-    $nova_db_password       = $::openstack::params::nova_db_password
+    $nova_db_user           = 'nova',
+    $nova_db_dbname         = 'nova',
+    # Required MySQL
+    $allowed_hosts,
+    # Passwords
+    $mysql_root_password,
+    $keystone_db_password,
+    $glance_db_password,
+    $nova_db_password
 ) {
 
   # Install and configure MySQL Server
