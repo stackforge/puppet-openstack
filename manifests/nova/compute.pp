@@ -15,7 +15,18 @@
 #   nova_user_password => 'changeme',
 # }
 
+# NOTE this file should not actually change from the old openstack::compute
+# class its worth doing a diff of the old file to better understadn the differneces
+
+#
+# NOTE move this to openstack::compute
+# NOTE grab all of the missing logic from openstack::compute
+
 class openstack::nova::compute (
+  # Required Network
+  $internal_address,
+  # Required Nova
+  $nova_user_password,
   # Network
   $public_address                = undef,
   $public_interface              = 'eth0',
@@ -29,65 +40,23 @@ class openstack::nova::compute (
   # Volumes
   $nova_volume                   = 'nova-volumes',
   $manage_volumes                = true,
-  $iscsi_ip_address              = undef,
+  $iscsi_ip_address              = $internal_address,
   # VNC
   $vnc_enabled                   = true,
-  $vncserver_listen              = undef,
   $vncserver_proxyclient_address = undef,
   $vncproxy_host                 = undef,
   # General
   $verbose                       = false,
   $exported_resources            = true,
-  $enabled                       = true,
-  # Required Network
-  $internal_address,
-  # Required Nova
-  $nova_user_password
-) inherits openstack::params {
-
-  # Set iscsi ip address if not set
-  if ($iscsi_ip_address == undef) {
-    $real_iscsi_ip_address = $internal_address
-  } else {
-    $real_iscsi_ip_address = $iscsi_ip_address
-  }
-
-  # Configure VNC variables
-  if ($vnc_enabled == true) {
-    if ($vncserver_listen == undef) {
-      $real_vncserver_listen = $internal_address
-    } else {
-      $real_vncserver_listen = $vncserver_listen
-    }
-
-    if ($vncserver_proxyclient_address == undef) {
-      $real_vncserver_proxyclient_address = $internal_address
-    } else {
-      $real_vncserver_proxyclient_address = $vncserver_proxyclient_address
-    }
-
-    if ($vncproxy_host == undef) {
-      if ($multi_host == true and $public_address != undef) {
-        $real_vncproxy_host = $public_address
-      } else {
-        fail('vncproxy_host must be set.')
-      }
-    } else {
-      # This should be the public IP of the cloud controller...
-      $real_vncproxy_host = $vncproxy_host
-    }
-  } else {
-    $real_vncserver_listen = undef
-    $real_vncserver_proxyclient_address = undef
-    $real_vncproxy_host = undef
-  }
+  $enabled                       = true
+) {
 
   # Install / configure nova-compute
   class { '::nova::compute':
     enabled                       => true,
     vnc_enabled                   => $vnc_enabled,
-    vncserver_proxyclient_address => $real_vncserver_proxyclient_address,
-    vncproxy_host                 => $real_vncproxy_host,
+    vncserver_proxyclient_address => $internal_address,
+    vncproxy_host                 => $vncproxy_host,
   }
 
   # Configure libvirt for nova-compute
@@ -109,7 +78,7 @@ class openstack::nova::compute (
     }
     $enable_network_service = true
     class { 'nova::api':
-      enabled => $enabled,
+      enabled           => true,
       admin_tenant_name => 'services',
       admin_user        => 'nova',
       admin_password    => $nova_user_password,
@@ -128,10 +97,10 @@ class openstack::nova::compute (
       private_interface => $private_interface,
       public_interface  => $public_interface,
       fixed_range       => $fixed_range,
-      floating_range    => false,  # double check
+      floating_range    => false,
       network_manager   => $network_manager,
       config_overrides  => $network_config,
-      create_networks   => false,  # double check
+      create_networks   => false,
       enabled           => $enable_network_service,
       install_service   => $enable_network_service,
     }
@@ -145,7 +114,7 @@ class openstack::nova::compute (
     if $enabled {
       class { 'nova::volume::iscsi':
         volume_group     => $nova_volume,
-        iscsi_ip_address => $internal_address,
+        iscsi_ip_address => $iscsi_ip_address,
       }
     }
   }

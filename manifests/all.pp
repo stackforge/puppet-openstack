@@ -30,6 +30,25 @@
 #
 #
 class openstack::all (
+  # Network Required
+  $public_address,
+  # MySQL Required
+  $mysql_root_password,
+  # Rabbit Required
+  $rabbit_password,
+  # Keystone Required
+  $keystone_db_password,
+  $keystone_admin_token,
+  $admin_email,
+  $admin_password,
+  # Nova Required
+  $nova_db_password,
+  $nova_user_password,
+  # Glance Required
+  $glance_db_password,
+  $glance_user_password,
+  # Horizon Required
+  $secret_key,
   # Network
   $public_interface        = 'eth0',
   $private_interface       = 'eth1',
@@ -70,26 +89,7 @@ class openstack::all (
   $vnc_enabled             = true,
   # General
   $enabled                 = true,
-  $verbose                 = false,
-  # Network Required
-  $public_address,
-  # MySQL Required
-  $mysql_root_password,
-  # Rabbit Required
-  $rabbit_password,
-  # Keystone Required
-  $keystone_db_password,
-  $keystone_admin_token,
-  $admin_email,
-  $admin_password,
-  # Nova Required
-  $nova_db_password,
-  $nova_user_password,
-  # Glance Required
-  $glance_db_password,
-  $glance_user_password,
-  # Horizon Required
-  $secret_key,
+  $verbose                 = false
 ) inherits openstack::params {
 
   # set up mysql server
@@ -112,6 +112,7 @@ class openstack::all (
       }
     }
   }
+
   ####### KEYSTONE ###########
   class { 'openstack::keystone':
     verbose                   => $verbose,

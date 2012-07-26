@@ -69,6 +69,14 @@ class openstack::keystone (
     internal_address => $real_internal_address,
   }
 
+  # Configure Glance to use Keystone
+  class { 'glance::keystone::auth':
+    password         => $glance_user_password,
+    public_address   => $public_address,
+    admin_address    => $real_admin_address,
+    internal_address => $real_internal_address,
+  }
+
   # Configure the Keystone database
   case $db_type {
     'mysql': {

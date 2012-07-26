@@ -85,7 +85,6 @@ class openstack::nova::controller (
   } else {
     $real_glance_api_servers = $glance_api_servers
   }
- 
   if ($export_resources) {
     # export all of the things that will be needed by the clients
     @@nova_config { 'rabbit_host': value => $internal_address }
@@ -108,11 +107,11 @@ class openstack::nova::controller (
     $rabbit_connection = $internal_address
   }
 
-
   # Install / configure rabbitmq
   class { 'nova::rabbitmq':
     userid   => $rabbit_user,
     password => $rabbit_password,
+    enabled  => $enabled,
   }
 
   # Configure Nova to use Keystone
@@ -148,7 +147,7 @@ class openstack::nova::controller (
     if $enabled == true {
       $enable_network_service = true
     } else {
-      $enable_network-service = false
+      $enable_network_service = false
     }
   }
 

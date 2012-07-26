@@ -10,7 +10,7 @@
 #
 # === Examples
 #
-# class { 'openstack::horizon': 
+# class { 'openstack::horizon':
 #   secret_key => 'dummy_secret_key',
 # }
 #

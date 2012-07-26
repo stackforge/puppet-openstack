@@ -84,6 +84,11 @@ class openstack::controller (
   $secret_key
 ) inherits openstack::params {
 
+
+  ## NOTE Class['glance::db::mysql'] -> Class['glance::registry']
+  ## this dependency needs to exist (I forgot exactly why?)
+  # the db migration needs to happen after the dbs are created
+
   # Configure admin_address and internal address if needed.
   if (admin_address == undef) {
     $real_admin_address = $public_address

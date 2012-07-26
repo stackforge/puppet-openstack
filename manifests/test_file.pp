@@ -23,6 +23,6 @@ class openstack::test_file(
 
   file { $path:
     content => template('openstack/test_nova.sh.erb'),
-  }  
+  }
 
 }

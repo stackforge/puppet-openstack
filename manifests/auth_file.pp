@@ -4,11 +4,11 @@
 # against a keystone server.
 #
 class openstack::auth_file(
-  $admin_password       = $::openstack::params::admin_password,
-  $public_address       = $::openstack::params::public_address,
-  $keystone_admin_token = $::openstack::params::keystone_admin_token,
-  $admin_tenant         = $::openstack::params::keystone_admin_tenant,
-  $admin_user           = 'admin'
+  $admin_password,
+  $controller_node      = '127.0.0.1',
+  $keystone_admin_token = 'keystone_admin_token',
+  $admin_user           = 'admin',
+  $admin_tenant         = 'openstack'
 ) {
   file { '/root/openrc':
     content =>
