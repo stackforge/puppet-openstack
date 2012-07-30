@@ -58,7 +58,7 @@ class openstack::nova::controller (
   $nova_user_password,
   $nova_db_password,
 
-) inherits openstack::params {
+) {
 
   # Configure admin_address and internal address if needed.
   if (admin_address == undef) {
@@ -112,14 +112,6 @@ class openstack::nova::controller (
     userid   => $rabbit_user,
     password => $rabbit_password,
     enabled  => $enabled,
-  }
-
-  # Configure Nova to use Keystone
-  class { 'nova::keystone::auth':
-    password         => $nova_user_password,
-    public_address   => $public_address,
-    admin_address    => $admin_address,
-    internal_address => $internal_address,
   }
 
   # Configure Nova
@@ -181,9 +173,10 @@ class openstack::nova::controller (
     'nova::cert',
     'nova::consoleauth'
   ]:
-    enabled => true
+    enabled => $enabled,
   }
 
+  # NOTE should this just be enabled => $vnc_enabled? -jtopjian
   if $vnc_enabled {
     class { 'nova::vncproxy':
       enabled => true,

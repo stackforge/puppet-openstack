@@ -23,11 +23,28 @@
 # }
 #
 class openstack::controller (
+  # Required Network
+  $public_address,
+  # Required Database
+  $mysql_root_password,
+  # Required Keystone
+  $admin_email,
+  $admin_password,
+  $keystone_db_password,
+  $keystone_admin_token,
+  # Required Glance
+  $glance_db_password,
+  $glance_user_password,
+  # Required Nova
+  $nova_db_password,
+  $nova_user_password,
+  # Required Horizon
+  $secret_key,
   # Network
   $public_interface        = 'eth0',
   $private_interface       = 'eth1',
-  $internal_address        = undef,
-  $admin_address           = undef,
+  $internal_address        = $public_address,
+  $admin_address           = $public_address,
   $network_manager         = 'nova.network.manager.FlatDHCPManager',
   $fixed_range             = '10.0.0.0/24',
   $floating_range          = false,
@@ -44,6 +61,7 @@ class openstack::controller (
   # Keystone
   $keystone_db_user        = 'keystone',
   $keystone_db_dbname      = 'keystone',
+  $keystone_admin_tenant   = 'admin',
   # Glance
   $glance_db_user          = 'glance',
   $glance_db_dbname        = 'glance',
@@ -64,100 +82,66 @@ class openstack::controller (
   # General
   $verbose                 = false,
   $exported_resources      = true,
-  $enabled                 = true,
-  # Required Network
-  $public_address,
-  # Required Database
-  $mysql_root_password,
-  # Required Keystone
-  $admin_email,
-  $admin_password,
-  $keystone_db_password,
-  $keystone_admin_token,
-  # Required Glance
-  $glance_db_password,
-  $glance_user_password,
-  # Required Nova
-  $nova_db_password,
-  $nova_user_password,
-  # Required Horizon
-  $secret_key
-) inherits openstack::params {
+  $enabled                 = true
+) {
 
-
-  ## NOTE Class['glance::db::mysql'] -> Class['glance::registry']
-  ## this dependency needs to exist (I forgot exactly why?)
-  # the db migration needs to happen after the dbs are created
-
-  # Configure admin_address and internal address if needed.
-  if (admin_address == undef) {
-    $real_admin_address = $public_address
-  } else {
-    $real_admin_address = $admin_address
-  }
-
-  if (internal_address == undef) {
-    $real_internal_address = $public_address
-  } else {
-    $real_internal_address = $internal_address
-  }
+  # Ensure things are run in order
+  Class['openstack::db::mysql'] -> Class['openstack::keystone']
+  Class['openstack::db::mysql'] -> Class['openstack::glance']
+  Class['openstack::db::mysql'] -> Class['openstack::nova::controller']
 
   ####### DATABASE SETUP ######
-  if $enabled {
-    # set up mysql server
-    case $db_type {
-      'mysql': {
-        class { 'openstack::db::mysql':
-          mysql_root_password    => $mysql_root_password,
-          mysql_bind_address     => $mysql_bind_address,
-          mysql_account_security => $mysql_account_security,
-          allowed_hosts          => $allowed_hosts,
-          keystone_db_user       => $keystone_db_user,
-          keystone_db_password   => $keystone_db_password,
-          keystone_db_dbname     => $keystone_db_dbname,
-          glance_db_user         => $glance_db_user,
-          glance_db_password     => $glance_db_password,
-          glance_db_dbname       => $glance_db_dbname,
-          nova_db_user           => $nova_db_user,
-          nova_db_password       => $nova_db_password,
-          nova_db_dbname         => $nova_db_dbname,
-        }
+  # set up mysql server
+  case $db_type {
+    'mysql': {
+      class { 'openstack::db::mysql':
+        mysql_root_password    => $mysql_root_password,
+        mysql_bind_address     => $mysql_bind_address,
+        mysql_account_security => $mysql_account_security,
+        keystone_db_user       => $keystone_db_user,
+        keystone_db_password   => $keystone_db_password,
+        keystone_db_dbname     => $keystone_db_dbname,
+        glance_db_user         => $glance_db_user,
+        glance_db_password     => $glance_db_password,
+        glance_db_dbname       => $glance_db_dbname,
+        nova_db_user           => $nova_db_user,
+        nova_db_password       => $nova_db_password,
+        nova_db_dbname         => $nova_db_dbname,
+        allowed_hosts          => $allowed_hosts,
       }
     }
   }
 
   ####### KEYSTONE ###########
-  if ($enabled) {
-    class { 'openstack::keystone':
-      verbose                   => $verbose,
-      db_type                   => $db_type,
-      db_host                   => '127.0.0.1',
-      keystone_db_password      => $keystone_db_password,
-      keystone_db_dbname        => $keystone_db_dbname,
-      keystone_db_user          => $keystone_db_user,
-      keystone_admin_token      => $keystone_admin_token,
-      admin_email               => $admin_email,
-      admin_password            => $admin_password,
-      public_address            => $public_address,
-      internal_address          => $internal_address,
-      admin_address             => $admin_address,
-    }
+  class { 'openstack::keystone':
+    verbose                   => $verbose,
+    db_type                   => $db_type,
+    db_host                   => '127.0.0.1',
+    keystone_db_password      => $keystone_db_password,
+    keystone_db_dbname        => $keystone_db_dbname,
+    keystone_db_user          => $keystone_db_user,
+    keystone_admin_token      => $keystone_admin_token,
+    keystone_admin_tenant     => $keystone_admin_tenant,
+    admin_email               => $admin_email,
+    admin_password            => $admin_password,
+    public_address            => $public_address,
+    internal_address          => $internal_address,
+    admin_address             => $admin_address,
+    glance_user_password      => $glance_user_password,
+    nova_user_password        => $nova_user_password,
+    enabled                   => $enabled,
   }
 
   ######## BEGIN GLANCE ##########
-  if ($enabled) {
-    class { 'openstack::glance':
-      verbose                   => $verbose,
-      db_type                   => $db_type,
-      db_host                   => '127.0.0.1',
-      glance_db_user            => $glance_db_user,
-      glance_db_dbname          => $glance_db_dbname,
-      glance_db_password        => $glance_db_password,
-      glance_user_password      => $glance_user_password,
-      public_address            => $public_address,
-      admin_address             => $admin_address,
-      internal_address          => $internal_addrss,
-    }
+  class { 'openstack::glance':
+    verbose                   => $verbose,
+    db_type                   => $db_type,
+    db_host                   => '127.0.0.1',
+    glance_db_user            => $glance_db_user,
+    glance_db_dbname          => $glance_db_dbname,
+    glance_db_password        => $glance_db_password,
+    glance_user_password      => $glance_user_password,
+    enabled                   => $enabled,
   }
 
   ######## BEGIN NOVA ###########
@@ -171,39 +155,37 @@ class openstack::controller (
     }
   }
 
-  if $enabled {
-    class { 'openstack::nova::controller':
-      # Database
-      db_host                 => '127.0.0.1',
-      # Network
-      network_manager         => $network_manager,
-      network_config          => $network_config,
-      private_interface       => $private_interface,
-      public_interface        => $public_interface,
-      floating_range          => $floating_range,
-      fixed_range             => $fixed_range,
-      public_address          => $public_address,
-      admin_address           => $admin_address,
-      internal_address        => $internal_address,
-      auto_assign_floating_ip => $auto_assign_floating_ip,
-      create_networks         => $create_networks,
-      num_networks            => $num_networks,
-      multi_host              => $multi_host,
-      # Nova
-      nova_user_password      => $nova_user_password,
-      nova_db_password        => $nova_db_password,
-      nova_db_user            => $nova_db_user,
-      nova_db_dbname          => $nova_db_dbname,
-      # Rabbit
-      rabbit_user             => $rabbit_user,
-      rabbit_password         => $rabbit_password,
-      # Glance
-      glance_api_servers      => $glance_api_servers,
-      # General
-      verbose                 => $verbose,
-      enabled                 => $enabled,
-      exported_resources      => $exported_resources,
-    }
+  class { 'openstack::nova::controller':
+    # Database
+    db_host                 => '127.0.0.1',
+    # Network
+    network_manager         => $network_manager,
+    network_config          => $network_config,
+    private_interface       => $private_interface,
+    public_interface        => $public_interface,
+    floating_range          => $floating_range,
+    fixed_range             => $fixed_range,
+    public_address          => $public_address,
+    admin_address           => $admin_address,
+    internal_address        => $internal_address,
+    auto_assign_floating_ip => $auto_assign_floating_ip,
+    create_networks         => $create_networks,
+    num_networks            => $num_networks,
+    multi_host              => $multi_host,
+    # Nova
+    nova_user_password      => $nova_user_password,
+    nova_db_password        => $nova_db_password,
+    nova_db_user            => $nova_db_user,
+    nova_db_dbname          => $nova_db_dbname,
+    # Rabbit
+    rabbit_user             => $rabbit_user,
+    rabbit_password         => $rabbit_password,
+    # Glance
+    glance_api_servers      => $glance_api_servers,
+    # General
+    verbose                 => $verbose,
+    enabled                 => $enabled,
+    exported_resources      => $exported_resources,
   }
 
   ######## Horizon ########
@@ -217,5 +199,10 @@ class openstack::controller (
   }
 
   ######## auth file ########
-  class { 'openstack::auth_file': }
+  class { 'openstack::auth_file': 
+    public_address       => $public_address,
+    admin_password       => $admin_password,
+    keystone_admin_token => $keystone_admin_token,
+    admin_tenant         => $keystone_admin_tenant,
+  }
 }

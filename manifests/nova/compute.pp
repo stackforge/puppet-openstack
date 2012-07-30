@@ -1,5 +1,5 @@
 #
-# == Class: openstack::nova::compute
+# == Class: openstack::compute
 #
 # Manifest to install/configure nova-compute and nova-volume
 #
@@ -15,18 +15,13 @@
 #   nova_user_password => 'changeme',
 # }
 
-# NOTE this file should not actually change from the old openstack::compute
-# class its worth doing a diff of the old file to better understadn the differneces
-
-#
-# NOTE move this to openstack::compute
-# NOTE grab all of the missing logic from openstack::compute
-
 class openstack::nova::compute (
   # Required Network
   $internal_address,
   # Required Nova
   $nova_user_password,
+  # Required Rabbit
+  $rabbit_password,
   # Network
   $public_address                = undef,
   $public_interface              = 'eth0',
@@ -35,6 +30,15 @@ class openstack::nova::compute (
   $network_manager               = 'nova.network.manager.FlatDHCPManager',
   $network_config                = {},
   $multi_host                    = false,
+  # DB
+  $sql_connection                = false,
+  # Nova
+  $purge_nova_config              = true,
+  # Rabbit
+  $rabbit_host                   = false,
+  $rabbit_user                   = 'nova',
+  # Glance
+  $glance_api_servers            = false,
   # Virtualization
   $libvirt_type                  = 'kvm',
   # Volumes
@@ -43,7 +47,6 @@ class openstack::nova::compute (
   $iscsi_ip_address              = $internal_address,
   # VNC
   $vnc_enabled                   = true,
-  $vncserver_proxyclient_address = undef,
   $vncproxy_host                 = undef,
   # General
   $verbose                       = false,
@@ -51,9 +54,45 @@ class openstack::nova::compute (
   $enabled                       = true
 ) {
 
+  #
+  # indicates that all nova config entries that we did
+  # not specifify in Puppet should be purged from file
+  #
+  if ! defined( Resources[nova_config] ) {
+    if ($purge_nova_config) {
+      resources { 'nova_config':
+        purge => true,
+      }
+    }
+  }
+
+  if $exported_resources {
+    Nova_config <<||>>
+    $final_sql_connection = false
+    $glance_connection = false
+    $rabbit_connection = false
+  } else {
+    $final_sql_connection = $sql_connection
+    $glance_connection = $glance_api_servers
+    $rabbit_connection = $rabbit_host
+  }
+
+  # Configure Nova
+  if ! defined( Class[nova] ) {
+    class { 'nova':
+      sql_connection     => $final_sql_connection,
+      rabbit_userid      => $rabbit_user,
+      rabbit_password    => $rabbit_password,
+      image_service      => 'nova.image.glance.GlanceImageService',
+      glance_api_servers => $glance_connection,
+      verbose            => $verbose,
+      rabbit_host        => $rabbit_connection,
+    }
+  }
+
   # Install / configure nova-compute
   class { '::nova::compute':
-    enabled                       => true,
+    enabled                       => $enabled,
     vnc_enabled                   => $vnc_enabled,
     vncserver_proxyclient_address => $internal_address,
     vncproxy_host                 => $vncproxy_host,
@@ -62,7 +101,7 @@ class openstack::nova::compute (
   # Configure libvirt for nova-compute
   class { 'nova::compute::libvirt':
     libvirt_type     => $libvirt_type,
-    vncserver_listen => $real_vncserver_listen,
+    vncserver_listen => $internal_address,
   }
 
   # if the compute node should be configured as a multi-host
@@ -92,6 +131,7 @@ class openstack::nova::compute (
   }
 
   # set up configuration for networking
+  # NOTE should the if block be removed? -jtopjian
   if $enable_network_service {
     class { 'nova::network':
       private_interface => $private_interface,

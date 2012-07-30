@@ -19,33 +19,26 @@
 #  }
 
 class openstack::keystone (
-  $db_type               = 'mysql',
-  $keystone_db_user      = 'keystone',
-  $keystone_db_dbname    = 'keystone',
-  $keystone_admin_tenant = 'admin',
-  $admin_address         = undef,
-  $internal_address      = undef,
-  $verbose               = false,
   $db_host,
   $keystone_db_password,
   $keystone_admin_token,
   $admin_email,
   $admin_password,
-  $public_address
-) inherits openstack::params {
-
-  # Configure admin_address and internal address if needed.
-  if (admin_address == undef) {
-    $real_admin_address = $public_address
-  } else {
-    $real_admin_address = $admin_address
-  }
-
-  if (internal_address == undef) {
-    $real_internal_address = $public_address
-  } else {
-    $real_internal_address = $internal_address
-  }
+  $glance_user_password,
+  $nova_user_password,
+  $public_address,
+  $db_type               = 'mysql',
+  $keystone_db_user      = 'keystone',
+  $keystone_db_dbname    = 'keystone',
+  $keystone_admin_tenant = 'admin',
+  $verbose               = 'False',
+  $bind_host             = '0.0.0.0',
+  $admin_address         = $public_address,
+  $internal_address      = $public_address,
+  $glance                = true,
+  $nova                  = true,
+  $enabled               = true,
+) {
 
   # Install and configure Keystone
   class { '::keystone':
@@ -53,6 +46,7 @@ class openstack::keystone (
     log_debug    => $verbose,
     catalog_type => 'sql',
     admin_token  => $keystone_admin_token,
+    enabled      => $enabled,
   }
 
   # Setup the admin user
@@ -65,16 +59,28 @@ class openstack::keystone (
   # Setup the Keystone Identity Endpoint
   class { 'keystone::endpoint':
     public_address   => $public_address,
-    admin_address    => $real_admin_address,
-    internal_address => $real_internal_address,
+    admin_address    => $admin_address,
+    internal_address => $internal_address,
   }
 
-  # Configure Glance to use Keystone
-  class { 'glance::keystone::auth':
-    password         => $glance_user_password,
-    public_address   => $public_address,
-    admin_address    => $real_admin_address,
-    internal_address => $real_internal_address,
+  # Configure Glance endpoint in Keystone
+  if $glance {
+    class { 'glance::keystone::auth':
+      password         => $glance_user_password,
+      public_address   => $public_address,
+      admin_address    => $admin_address,
+      internal_address => $internal_address,
+    }
+  }
+
+  # Configure Nova endpoint in Keystone
+  if $nova {
+    class { 'nova::keystone::auth':
+      password         => $nova_user_password,
+      public_address   => $public_address,
+      admin_address    => $admin_address,
+      internal_address => $internal_address,
+    }
   }
 
   # Configure the Keystone database

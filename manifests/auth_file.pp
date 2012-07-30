@@ -5,10 +5,11 @@
 #
 class openstack::auth_file(
   $admin_password,
+  $public_address,
   $controller_node      = '127.0.0.1',
   $keystone_admin_token = 'keystone_admin_token',
   $admin_user           = 'admin',
-  $admin_tenant         = 'openstack'
+  $admin_tenant         = 'admin'
 ) {
   file { '/root/openrc':
     content =>

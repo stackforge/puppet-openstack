@@ -68,6 +68,7 @@ class openstack::all (
   # Keystone
   $keystone_db_user        = 'keystone',
   $keystone_db_dbname      = 'keystone',
+  $keystone_admin_tenant   = 'admin',
   # Nova
   $nova_db_user            = 'nova',
   $nova_db_dbname          = 'nova',
@@ -89,8 +90,13 @@ class openstack::all (
   $vnc_enabled             = true,
   # General
   $enabled                 = true,
-  $verbose                 = false
-) inherits openstack::params {
+  $verbose                 = 'False'
+) {
+
+  # Ensure things are run in order
+  Class['openstack::db::mysql'] -> Class['openstack::keystone']
+  Class['openstack::db::mysql'] -> Class['openstack::glance']
+  Class['openstack::db::mysql'] -> Class['openstack::nova::controller']
 
   # set up mysql server
   case $db_type {
@@ -122,11 +128,14 @@ class openstack::all (
     keystone_db_dbname        => $keystone_db_dbname,
     keystone_db_user          => $keystone_db_user,
     keystone_admin_token      => $keystone_admin_token,
+    keystone_admin_tenant     => $keystone_admin_tenant,
     admin_email               => $admin_email,
     admin_password            => $admin_password,
     public_address            => $public_address,
     internal_address          => '127.0.0.1',
-    admin_address             => '127.0.0.1',
+    admin_address             => '127.0.0.1', 
+    glance_user_password      => $glance_user_password,
+    nova_user_password        => $nova_user_password,
   }
 
   ######## GLANCE ##########
@@ -138,9 +147,6 @@ class openstack::all (
     glance_db_dbname          => $glance_db_dbname,
     glance_db_password        => $glance_db_password,
     glance_user_password      => $glance_user_password,
-    public_address            => $public_address,
-    admin_address             => '127.0.0.1',
-    internal_address          => '127.0.0.1',
   }
 
   ######## NOVA ###########
@@ -208,11 +214,11 @@ class openstack::all (
     iscsi_ip_address              => '127.0.0.1',
     # VNC
     vnc_enabled                   => $vnc_enabled,
-    vncserver_listen              => $vnc_server_listen,
-    vncserver_proxyclient_address => '127.0.0.1',
-    vncproxy_host                 => '127.0.0.1',
+    vncproxy_host                 => $public_address,
     # Nova
     nova_user_password            => $nova_user_password,
+    # Rabbit
+    rabbit_password               => $rabbit_password,
     # General
     verbose                       => $verbose,
     exported_resources            => false,
@@ -230,6 +236,11 @@ class openstack::all (
   }
 
   ######## auth file ########
-  class { 'openstack::auth_file': }
+  class { 'openstack::auth_file': 
+    public_address       => $public_address,
+    admin_password       => $admin_password,
+    keystone_admin_token => $keystone_admin_token,
+    admin_tenant         => $keystone_admin_tenant,
+  }
 
 }
