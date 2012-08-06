@@ -116,7 +116,7 @@ class openstack::all(
   # set up keystone
   class { 'keystone':
     admin_token  => $keystone_admin_token,
-    bind_host    => '127.0.0.1',
+    bind_host    => '0.0.0.0',
     log_verbose  => $verbose,
     log_debug    => $verbose,
     catalog_type => 'sql',
