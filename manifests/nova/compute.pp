@@ -49,7 +49,7 @@ class openstack::nova::compute (
   $vnc_enabled                   = true,
   $vncproxy_host                 = undef,
   # General
-  $verbose                       = false,
+  $verbose                       = 'False',
   $exported_resources            = true,
   $enabled                       = true
 ) {

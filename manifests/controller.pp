@@ -54,6 +54,7 @@ class openstack::controller (
   $auto_assign_floating_ip = false,
   $network_config          = {},
   # Database
+  $db_host                 = '127.0.0.1',
   $db_type                 = 'mysql',
   $mysql_account_security  = true,
   $mysql_bind_address      = '0.0.0.0',
@@ -116,7 +117,7 @@ class openstack::controller (
   class { 'openstack::keystone':
     verbose                   => $verbose,
     db_type                   => $db_type,
-    db_host                   => '127.0.0.1',
+    db_host                   => $db_host,
     keystone_db_password      => $keystone_db_password,
     keystone_db_dbname        => $keystone_db_dbname,
     keystone_db_user          => $keystone_db_user,
@@ -136,7 +137,7 @@ class openstack::controller (
   class { 'openstack::glance':
     verbose                   => $verbose,
     db_type                   => $db_type,
-    db_host                   => '127.0.0.1',
+    db_host                   => $db_host,
     glance_db_user            => $glance_db_user,
     glance_db_dbname          => $glance_db_dbname,
     glance_db_password        => $glance_db_password,
@@ -157,7 +158,7 @@ class openstack::controller (
 
   class { 'openstack::nova::controller':
     # Database
-    db_host                 => '127.0.0.1',
+    db_host                 => $db_host,
     # Network
     network_manager         => $network_manager,
     network_config          => $network_config,

@@ -20,6 +20,15 @@
 #
 
 class openstack::nova::controller (
+  # Network Required
+  $public_address,
+  # Database Required
+  $db_host,
+  # Rabbit Required
+  $rabbit_password,
+  # Nova Required
+  $nova_user_password,
+  $nova_db_password,
   # Network
   $network_manager           = 'nova.network.manager.FlatDHCPManager',
   $network_config            = {},
@@ -27,8 +36,8 @@ class openstack::nova::controller (
   $private_interface         = 'eth1',
   $fixed_range               = '10.0.0.0/24',
   $floating_range            = false,
-  $admin_address             = undef,
-  $internal_address          = undef,
+  $internal_address          = $public_address,
+  $admin_address             = $public_address,
   $auto_assign_floating_ip   = false,
   $create_networks           = true,
   $num_networks              = 1,
@@ -45,33 +54,10 @@ class openstack::nova::controller (
   # VNC
   $vnc_enabled               = true,
   # General
-  $verbose                   = false,
+  $verbose                   = 'False',
   $enabled                   = true,
-  $exported_resources        = true,
-  # Network Required
-  $public_address,
-  # Database Required
-  $db_host,
-  # Rabbit Required
-  $rabbit_password,
-  # Nova Required
-  $nova_user_password,
-  $nova_db_password,
-
+  $exported_resources        = true
 ) {
-
-  # Configure admin_address and internal address if needed.
-  if (admin_address == undef) {
-    $real_admin_address = $public_address
-  } else {
-    $real_admin_address = $admin_address
-  }
-
-  if (internal_address == undef) {
-    $real_internal_address = $public_address
-  } else {
-    $real_internal_address = $internal_address
-  }
 
   # Configure the db string
   case $db_type {
@@ -85,7 +71,7 @@ class openstack::nova::controller (
   } else {
     $real_glance_api_servers = $glance_api_servers
   }
-  if ($export_resources) {
+  if ($exported_resources) {
     # export all of the things that will be needed by the clients
     @@nova_config { 'rabbit_host': value => $internal_address }
     Nova_config <| title == 'rabbit_host' |>
@@ -95,8 +81,6 @@ class openstack::nova::controller (
 
     @@nova_config { 'glance_api_servers': value => $real_glance_api_servers }
     Nova_config <| title == 'glance_api_servers' |>
-
-    @@nova_config { 'novncproxy_base_url': value => "http://${public_address}:6080/vnc_auto.html" }
 
     $sql_connection    = false
     $glance_connection = false
