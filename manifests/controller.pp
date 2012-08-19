@@ -82,7 +82,7 @@ class openstack::controller (
   $horizon_app_links       = undef,
   # General
   $verbose                 = false,
-  $exported_resources      = true,
+  $export_resources        = true,
   $enabled                 = true
 ) {
 
@@ -186,7 +186,7 @@ class openstack::controller (
     # General
     verbose                 => $verbose,
     enabled                 => $enabled,
-    exported_resources      => $exported_resources,
+    exported_resources      => $export_resources,
   }
 
   ######## Horizon ########
