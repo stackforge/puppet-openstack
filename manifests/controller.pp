@@ -93,23 +93,25 @@ class openstack::controller (
 
   ####### DATABASE SETUP ######
   # set up mysql server
-  case $db_type {
-    'mysql': {
-      class { 'openstack::db::mysql':
-        mysql_root_password    => $mysql_root_password,
-        mysql_bind_address     => $mysql_bind_address,
-        mysql_account_security => $mysql_account_security,
-        keystone_db_user       => $keystone_db_user,
-        keystone_db_password   => $keystone_db_password,
-        keystone_db_dbname     => $keystone_db_dbname,
-        glance_db_user         => $glance_db_user,
-        glance_db_password     => $glance_db_password,
-        glance_db_dbname       => $glance_db_dbname,
-        nova_db_user           => $nova_db_user,
-        nova_db_password       => $nova_db_password,
-        nova_db_dbname         => $nova_db_dbname,
-        allowed_hosts          => $allowed_hosts,
-      }
+  if ($db_type == 'mysql') {
+    if ($enabled) {
+      Class['glance::db::mysql'] -> Class['glance::registry']
+    }
+    class { 'openstack::db::mysql':
+      mysql_root_password    => $mysql_root_password,
+      mysql_bind_address     => $mysql_bind_address,
+      mysql_account_security => $mysql_account_security,
+      keystone_db_user       => $keystone_db_user,
+      keystone_db_password   => $keystone_db_password,
+      keystone_db_dbname     => $keystone_db_dbname,
+      glance_db_user         => $glance_db_user,
+      glance_db_password     => $glance_db_password,
+      glance_db_dbname       => $glance_db_dbname,
+      nova_db_user           => $nova_db_user,
+      nova_db_password       => $nova_db_password,
+      nova_db_dbname         => $nova_db_dbname,
+      allowed_hosts          => $allowed_hosts,
+      enabled                => $enabled,
     }
   }
 
