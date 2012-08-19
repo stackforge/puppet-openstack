@@ -50,7 +50,6 @@ class openstack::nova::compute (
   $vncproxy_host                 = undef,
   # General
   $verbose                       = 'False',
-  $exported_resources            = true,
   $enabled                       = true
 ) {
 
@@ -66,16 +65,9 @@ class openstack::nova::compute (
     }
   }
 
-  if $exported_resources {
-    Nova_config <<||>>
-    $final_sql_connection = false
-    $glance_connection = false
-    $rabbit_connection = false
-  } else {
-    $final_sql_connection = $sql_connection
-    $glance_connection = $glance_api_servers
-    $rabbit_connection = $rabbit_host
-  }
+  $final_sql_connection = $sql_connection
+  $glance_connection = $glance_api_servers
+  $rabbit_connection = $rabbit_host
 
   # Configure Nova
   if ! defined( Class[nova] ) {
