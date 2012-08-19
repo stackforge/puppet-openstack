@@ -49,37 +49,39 @@ class openstack::keystone (
     enabled      => $enabled,
   }
 
-  # Setup the admin user
-  class { 'keystone::roles::admin':
-    email        => $admin_email,
-    password     => $admin_password,
-    admin_tenant => $keystone_admin_tenant,
-  }
+  if ($enabled) {
+    # Setup the admin user
+    class { 'keystone::roles::admin':
+      email        => $admin_email,
+      password     => $admin_password,
+      admin_tenant => $keystone_admin_tenant,
+    }
 
-  # Setup the Keystone Identity Endpoint
-  class { 'keystone::endpoint':
-    public_address   => $public_address,
-    admin_address    => $admin_address,
-    internal_address => $internal_address,
-  }
-
-  # Configure Glance endpoint in Keystone
-  if $glance {
-    class { 'glance::keystone::auth':
-      password         => $glance_user_password,
+    # Setup the Keystone Identity Endpoint
+    class { 'keystone::endpoint':
       public_address   => $public_address,
       admin_address    => $admin_address,
       internal_address => $internal_address,
     }
-  }
 
-  # Configure Nova endpoint in Keystone
-  if $nova {
-    class { 'nova::keystone::auth':
-      password         => $nova_user_password,
-      public_address   => $public_address,
-      admin_address    => $admin_address,
-      internal_address => $internal_address,
+    # Configure Glance endpoint in Keystone
+    if $glance {
+      class { 'glance::keystone::auth':
+        password         => $glance_user_password,
+        public_address   => $public_address,
+        admin_address    => $admin_address,
+        internal_address => $internal_address,
+      }
+    }
+
+    # Configure Nova endpoint in Keystone
+    if $nova {
+      class { 'nova::keystone::auth':
+        password         => $nova_user_password,
+        public_address   => $public_address,
+        admin_address    => $admin_address,
+        internal_address => $internal_address,
+      }
     }
   }
 
