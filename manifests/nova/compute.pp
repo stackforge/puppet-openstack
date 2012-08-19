@@ -123,7 +123,7 @@ class openstack::nova::compute (
       admin_password    => $nova_user_password,
     }
   } else {
-    $enable_network-service = false
+    $enable_network_service = false
     nova_config {
       'multi_host':      value => 'False';
       'send_arp_for_ha': value => 'False';
