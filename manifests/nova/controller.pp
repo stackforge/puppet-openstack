@@ -160,11 +160,10 @@ class openstack::nova::controller (
     enabled => $enabled,
   }
 
-  # NOTE should this just be enabled => $vnc_enabled? -jtopjian
   if $vnc_enabled {
     class { 'nova::vncproxy':
-      enabled => true,
       host    => $public_address,
+      enabled => $enabled,
     }
   }
 
