@@ -25,26 +25,25 @@
 class openstack::controller (
   # Required Network
   $public_address,
+  $public_interface,
+  $private_interface,
   # Required Database
-  $mysql_root_password,
+  $mysql_root_password     = 'sql_pass',
   # Required Keystone
-  $admin_email,
-  $admin_password,
-  $keystone_db_password,
-  $keystone_admin_token,
+  $admin_email             = 'some_user@some_fake_email_address.foo',
+  $admin_password          = 'ChangeMe',
+  $keystone_db_password    = 'keystone_pass',
+  $keystone_admin_token    = 'keystone_admin_token',
   # Required Glance
-  $glance_db_password,
-  $glance_user_password,
+  $glance_db_password      = 'glance_pass',
+  $glance_user_password    = 'glance_pass',
   # Required Nova
-  $nova_db_password,
-  $nova_user_password,
+  $nova_db_password        = 'nova_pass',
+  $nova_user_password      = 'nova_pass',
   # Required Horizon
-  $secret_key,
-  # Network
-  $public_interface        = 'eth0',
-  $private_interface       = 'eth1',
+  $secret_key              = 'dummy_secret_key',
   $internal_address        = $public_address,
-  $admin_address           = $public_address,
+  $admin_address           = $internal_address,
   $network_manager         = 'nova.network.manager.FlatDHCPManager',
   $fixed_range             = '10.0.0.0/24',
   $floating_range          = false,
@@ -58,7 +57,7 @@ class openstack::controller (
   $db_type                 = 'mysql',
   $mysql_account_security  = true,
   $mysql_bind_address      = '0.0.0.0',
-  $allowed_hosts           = ['127.0.0.%'],
+  $allowed_hosts           = '%',
   # Keystone
   $keystone_db_user        = 'keystone',
   $keystone_db_dbname      = 'keystone',
@@ -72,13 +71,13 @@ class openstack::controller (
   $nova_db_dbname          = 'nova',
   $purge_nova_config       = true,
   # Rabbit
-  $rabbit_password,
+  $rabbit_password         = 'rabbit_pw',
   $rabbit_user             = 'nova',
   # Horizon
   $cache_server_ip         = '127.0.0.1',
   $cache_server_port       = '11211',
   $swift                   = false,
-  $quantum                 = false, 
+  $quantum                 = false,
   $horizon_app_links       = undef,
   # General
   $verbose                 = false,
@@ -134,6 +133,7 @@ class openstack::controller (
     nova_user_password        => $nova_user_password,
     enabled                   => $enabled,
   }
+
 
   ######## BEGIN GLANCE ##########
   class { 'openstack::glance':
@@ -202,7 +202,7 @@ class openstack::controller (
   }
 
   ######## auth file ########
-  class { 'openstack::auth_file': 
+  class { 'openstack::auth_file':
     public_address       => $public_address,
     admin_password       => $admin_password,
     keystone_admin_token => $keystone_admin_token,
