@@ -40,6 +40,8 @@ class openstack::horizon (
   }
 
   class { '::horizon':
+    cache_server_ip       => $cache_server_ip,
+    cache_server_port     => $cache_server_port,
     secret_key            => $secret_key,
     swift                 => $swift,
     quantum               => $quantum,
