@@ -17,8 +17,6 @@
 #    nova_db_password     => 'changeme',
 #    allowed_hosts        => ['127.0.0.1', '10.0.0.%'],
 #  }
-
-
 class openstack::db::mysql (
     # Required MySQL
     # passwords
@@ -56,27 +54,29 @@ class openstack::db::mysql (
     class { 'mysql::server::account_security': }
   }
 
-  # Create the Keystone db
-  class { 'keystone::db::mysql':
-    user          => $keystone_db_user,
-    password      => $keystone_db_password,
-    dbname        => $keystone_db_dbname,
-    allowed_hosts => $allowed_hosts,
-  }
+  if ($enabled) {
+    # Create the Keystone db
+    class { 'keystone::db::mysql':
+      user          => $keystone_db_user,
+      password      => $keystone_db_password,
+      dbname        => $keystone_db_dbname,
+      allowed_hosts => $allowed_hosts,
+    }
 
-  # Create the Glance db
-  class { 'glance::db::mysql':
-    user          => $glance_db_user,
-    password      => $glance_db_password,
-    dbname        => $glance_db_dbname,
-    allowed_hosts => $allowed_hosts,
-  }
+    # Create the Glance db
+    class { 'glance::db::mysql':
+      user          => $glance_db_user,
+      password      => $glance_db_password,
+      dbname        => $glance_db_dbname,
+      allowed_hosts => $allowed_hosts,
+    }
 
-  # Create the Nova db
-  class { 'nova::db::mysql':
-    user          => $nova_db_user,
-    password      => $nova_db_password,
-    dbname        => $nova_db_dbname,
-    allowed_hosts => $allowed_hosts,
+    # Create the Nova db
+    class { 'nova::db::mysql':
+      user          => $nova_db_user,
+      password      => $nova_db_password,
+      dbname        => $nova_db_dbname,
+      allowed_hosts => $allowed_hosts,
+    }
   }
 }
