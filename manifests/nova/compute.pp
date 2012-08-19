@@ -119,20 +119,16 @@ class openstack::nova::compute (
     }
   }
 
-  # set up configuration for networking
-  # NOTE should the if block be removed? -jtopjian
-  if $enable_network_service {
-    class { 'nova::network':
-      private_interface => $private_interface,
-      public_interface  => $public_interface,
-      fixed_range       => $fixed_range,
-      floating_range    => false,
-      network_manager   => $network_manager,
-      config_overrides  => $network_config,
-      create_networks   => false,
-      enabled           => $enable_network_service,
-      install_service   => $enable_network_service,
-    }
+  class { 'nova::network':
+    private_interface => $private_interface,
+    public_interface  => $public_interface,
+    fixed_range       => $fixed_range,
+    floating_range    => false,
+    network_manager   => $network_manager,
+    config_overrides  => $network_config,
+    create_networks   => false,
+    enabled           => $enable_network_service,
+    install_service   => $enable_network_service,
   }
 
   if $manage_volumes {
