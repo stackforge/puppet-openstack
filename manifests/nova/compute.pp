@@ -24,7 +24,7 @@ class openstack::nova::compute (
   $rabbit_password,
   # Network
   $public_address                = undef,
-  $public_interface              = 'eth0',
+  $public_interface              = undef,
   $private_interface             = 'eth1',
   $fixed_range                   = '10.0.0.0/24',
   $network_manager               = 'nova.network.manager.FlatDHCPManager',
