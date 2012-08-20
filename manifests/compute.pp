@@ -7,9 +7,6 @@
 #   - flatdhcp networking is used
 #   - glance is used as the backend for the image service
 #
-# TODO - I need to make the choise of networking configurable
-#
-#
 # [private_interface] Interface used for vm networking connectivity. Required.
 # [internal_address] Internal address used for management. Required.
 # [public_interface] Public interface used to route public traffic. Optional.

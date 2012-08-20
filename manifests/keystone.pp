@@ -4,8 +4,27 @@
 # Installs and configures Keystone
 #
 # === Parameters
-# 
-# See params.pp
+#
+# [db_host] Host where DB resides. Required.
+# [keystone_db_password] Password for keystone DB. Required.
+# [keystone_admin_token]. Auth token for keystone admin. Required.
+# [admin_email] Email address of system admin. Required.
+# [admin_password] 
+# [glance_user_password] Auth password for glance user. Required.
+# [nova_user_password] Auth password for nova user. Required.
+# [public_address] Public address where keystone can be accessed. Required.
+# [db_type] Type of DB used. Currently only supports mysql. Optional. Defaults to  'mysql'
+# [keystone_db_user] Name of keystone db user. Optional. Defaults to  'keystone'
+# [keystone_db_dbname] Name of keystone DB. Optional. Defaults to  'keystone'
+# [keystone_admin_tenant] Name of keystone admin tenant. Optional. Defaults to  'admin'
+# [verbose] Log verbosely. Optional. Defaults to  'False'
+# [bind_host] Address that keystone binds to. Optional. Defaults to  '0.0.0.0'
+# [internal_address] Internal address for keystone. Optional. Defaults to  $public_address
+# [admin_address] Keystone admin address. Optional. Defaults to  $internal_address
+# [glance] Set up glance endpoints and auth. Optional. Defaults to  true
+# [nova] Set up nova endpoints and auth. Optional. Defaults to  true
+# [enabled] If the service is active (true) or passive (false).
+#   Optional. Defaults to  true
 #
 # === Example
 #

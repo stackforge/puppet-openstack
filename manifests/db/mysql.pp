@@ -6,7 +6,20 @@
 #
 # === Parameters
 #
-# See params.pp
+# [mysql_root_password] Root password for mysql. Required.
+# [keystone_db_password] Password for keystone database. Required.
+# [glance_db_password] Password for glance database. Required.
+# [nova_db_password] Password for nova database. Required.
+# [mysql_bind_address] Address that mysql will bind to. Optional .Defaults to '0.0.0.0'.
+# [mysql_account_security] If a secure mysql db should be setup. Optional .Defaults to true.
+# [keystone_db_user] DB user for keystone. Optional. Defaults to 'keystone'.
+# [keystone_db_dbname] DB name for keystone. Optional. Defaults to 'keystone'.
+# [glance_db_user] DB user for glance. Optional. Defaults to 'glance'.
+# [glance_db_dbname]. Name of glance DB. Optional. Defaults to 'glance'.
+# [nova_db_user]. Name of nova DB user. Optional. Defaults to 'nova'.
+# [nova_db_dbname]. Name of nova DB. Optional. Defaults to 'nova'.
+# [allowed_hosts] List of hosts that are allowed access. Optional. Defaults to false.
+# [enabled] If the db service should be started. Optional. Defaults to true.
 #
 # === Example
 #

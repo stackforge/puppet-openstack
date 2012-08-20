@@ -3,7 +3,47 @@
 #
 # === Parameters
 #
-# See params.pp
+# [public_interface] Public interface used to route public traffic. Required.
+# [public_address] Public address for public endpoints. Required.
+# [private_interface] Interface used for vm networking connectivity. Required.
+# [internal_address] Internal address used for management. Required.
+# [mysql_root_password] Root password for mysql server.
+# [admin_email] Admin email.
+# [admin_password] Admin password.
+# [keystone_db_password] Keystone database password.
+# [keystone_admin_token] Admin token for keystone.
+# [glance_db_password] Glance DB password.
+# [glance_user_password] Glance service user password.
+# [nova_db_password] Nova DB password.
+# [nova_user_password] Nova service password.
+# [rabbit_password] Rabbit password.
+# [rabbit_user] Rabbit User.
+# [network_manager] Nova network manager to use.
+# [fixed_range] Range of ipv4 network for vms.
+# [floating_range] Floating ip range to create.
+# [create_networks] Rather network and floating ips should be created.
+# [num_networks] Number of networks that fixed range should be split into.
+# [multi_host] Rather node should support multi-host networking mode for HA.
+#   Optional. Defaults to false.
+# [auto_assign_floating_ip] Rather configured to automatically allocate and
+#   assign a floating IP address to virtual instances when they are launched.
+#   Defaults to false.
+# [network_config] Hash that can be used to pass implementation specifc
+#   network settings. Optioal. Defaults to {}
+# [verbose] Rahter to log services at verbose.
+# [export_resources] Rather to export resources.
+# Horizon related config - assumes puppetlabs-horizon code
+# [secret_key]          secret key to encode cookies, …
+# [cache_server_ip]     local memcached instance ip
+# [cache_server_port]   local memcached instance port
+# [swift]               (bool) is swift installed
+# [quantum]             (bool) is quantum installed
+#   The next is an array of arrays, that can be used to add call-out links to the dashboard for other apps.
+#   There is no specific requirement for these apps to be for monitoring, that's just the defacto purpose.
+#   Each app is defined in two parts, the display name, and the URI
+# [horizon_app_links]     array as in '[ ["Nagios","http://nagios_addr:port/path"],["Ganglia","http://ganglia_addr"] ]'
+# [enabled] Whether services should be enabled. This parameter can be used to
+#   implement services in active-passive modes for HA. Optional. Defaults to true.
 #
 # === Examples
 #

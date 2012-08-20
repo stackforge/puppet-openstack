@@ -4,7 +4,7 @@
 # Class to install / configure horizon.
 # Will eventually include apache and ssl.
 #
-# NOTE: Will the inclusion of memcache be an issue? 
+# NOTE: Will the inclusion of memcache be an issue?
 #       Such as if the server already has memcache installed?
 #       -jtopjian
 #
