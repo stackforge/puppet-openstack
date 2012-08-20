@@ -241,11 +241,4 @@ class openstack::controller (
     horizon_app_links => $horizon_app_links,
   }
 
-  ######## auth file ########
-  class { 'openstack::auth_file':
-    public_address       => $public_address,
-    admin_password       => $admin_password,
-    keystone_admin_token => $keystone_admin_token,
-    admin_tenant         => $keystone_admin_tenant,
-  }
 }
