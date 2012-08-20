@@ -60,22 +60,22 @@ class openstack::all (
   # Network Required
   $public_address,
   # MySQL Required
-  $mysql_root_password,
+  $mysql_root_password     = 'sql_pass',
   # Rabbit Required
-  $rabbit_password,
+  $rabbit_password         = 'rabbitpw',
   # Keystone Required
-  $keystone_db_password,
-  $keystone_admin_token,
-  $admin_email,
-  $admin_password,
+  $keystone_db_password    = 'keystone_pass',
+  $keystone_admin_token    = 'keystone_admin_token',
+  $admin_email             = 'some_user@some_fake_email_address.foo',
+  $admin_password          = 'ChangeMe',
   # Nova Required
-  $nova_db_password,
-  $nova_user_password,
+  $nova_db_password        = 'nova_pass',
+  $nova_user_password      = 'nova_pass',
   # Glance Required
-  $glance_db_password,
-  $glance_user_password,
+  $glance_db_password      = 'glance_pass',
+  $glance_user_password    = 'glance_pass',
   # Horizon Required
-  $secret_key,
+  $secret_key              = 'dummy_secret_key',
   # Network
   $public_interface        = 'eth0',
   $private_interface       = 'eth1',
@@ -160,7 +160,7 @@ class openstack::all (
     admin_password            => $admin_password,
     public_address            => $public_address,
     internal_address          => '127.0.0.1',
-    admin_address             => '127.0.0.1', 
+    admin_address             => '127.0.0.1',
     glance_user_password      => $glance_user_password,
     nova_user_password        => $nova_user_password,
   }
