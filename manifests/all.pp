@@ -62,7 +62,7 @@ class openstack::all(
   $network_manager         = 'nova.network.manager.FlatDHCPManager',
   $network_config          = {},
   # middleware credentials
-  $mysql_root_password     = 'sql_pass',
+  $mysql_root_password     = undef,
   $rabbit_password         = 'rabbit_pw',
   $rabbit_user             = 'nova',
   # opestack credentials
@@ -70,6 +70,7 @@ class openstack::all(
   $admin_password          = 'ChangeMe',
   $keystone_db_password    = 'keystone_pass',
   $keystone_admin_token    = 'keystone_admin_token',
+  $keystone_admin_tenant   = 'openstack',
   $nova_db_password        = 'nova_pass',
   $nova_user_password      = 'nova_pass',
   $glance_db_password      = 'glance_pass',
@@ -98,7 +99,7 @@ class openstack::all(
   class { 'mysql::server':
     config_hash => {
       # the priv grant fails on precise if I set a root password
-      # 'root_password' => $mysql_root_password,
+      'root_password' => $mysql_root_password,
       'bind_address'  => '127.0.0.1'
     }
   }
@@ -123,8 +124,9 @@ class openstack::all(
   }
   # set up keystone admin users
   class { 'keystone::roles::admin':
-    email    => $admin_email,
-    password => $admin_password,
+    email        => $admin_email,
+    password     => $admin_password,
+    admin_tenant => $keystone_admin_tenant,
   }
   # set up the keystone service and endpoint
   class { 'keystone::endpoint': }

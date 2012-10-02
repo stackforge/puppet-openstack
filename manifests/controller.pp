@@ -54,11 +54,12 @@ class openstack::controller(
   $internal_address,
   $admin_address           = $internal_address,
   # connection information
-  $mysql_root_password     = 'sql_pass',
+  $mysql_root_password     = undef,
   $admin_email             = 'some_user@some_fake_email_address.foo',
   $admin_password          = 'ChangeMe',
   $keystone_db_password    = 'keystone_pass',
   $keystone_admin_token    = 'keystone_admin_token',
+  $keystone_admin_tenant   = 'openstack',
   $glance_db_password      = 'glance_pass',
   $glance_user_password    = 'glance_pass',
   $nova_db_password        = 'nova_pass',
@@ -119,7 +120,7 @@ class openstack::controller(
     config_hash => {
       # the priv grant fails on precise if I set a root password
       # TODO I should make sure that this works
-      # 'root_password' => $mysql_root_password,
+      'root_password' => $mysql_root_password,
       'bind_address'  => '0.0.0.0'
     },
     enabled => $enabled,
@@ -164,8 +165,9 @@ class openstack::controller(
   if ($enabled) {
     # set up keystone admin users
     class { 'keystone::roles::admin':
-      email    => $admin_email,
-      password => $admin_password,
+      email        => $admin_email,
+      password     => $admin_password,
+      admin_tenant => $keystone_admin_tenant,
     }
     # set up the keystone service and endpoint
     class { 'keystone::endpoint':
