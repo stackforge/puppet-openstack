@@ -1,2 +1,11 @@
+* 2012-10-08 0.1.0
+- testing improvements
+- compute.pp's admin_password should sync with $nova_user_password of controller.pp
+- Add missing send_arp_for_ha for multi_host mode
+- add enable parameter
+- fix rabbitmq connection
+- enable floating ip for all in one
+- add secret key for horizon
+- add swift manifests
 * 2012-06-08 0.1.0
 - initial release
