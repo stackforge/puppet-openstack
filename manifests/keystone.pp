@@ -9,7 +9,7 @@
 # [keystone_db_password] Password for keystone DB. Required.
 # [keystone_admin_token]. Auth token for keystone admin. Required.
 # [admin_email] Email address of system admin. Required.
-# [admin_password] 
+# [admin_password]
 # [glance_user_password] Auth password for glance user. Required.
 # [nova_user_password] Auth password for nova user. Required.
 # [public_address] Public address where keystone can be accessed. Required.
@@ -39,16 +39,13 @@
 
 class openstack::keystone (
   $db_host,
-  $keystone_db_password,
-  $keystone_admin_token,
+  $db_password,
+  $admin_token,
   $admin_email,
   $admin_password,
   $glance_user_password,
   $nova_user_password,
   $public_address,
-  $db_type               = 'mysql',
-  $keystone_db_user      = 'keystone',
-  $keystone_db_dbname    = 'keystone',
   $keystone_admin_tenant = 'admin',
   $verbose               = 'False',
   $bind_host             = '0.0.0.0',
@@ -57,6 +54,9 @@ class openstack::keystone (
   $glance                = true,
   $nova                  = true,
   $enabled               = true,
+  $db_type                 = 'mysql',
+  $db_user                 = 'keystone',
+  $db_name                 = 'keystone',
 ) {
 
   # Install and configure Keystone
