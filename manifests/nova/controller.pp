@@ -54,6 +54,7 @@ class openstack::nova::controller (
   # VNC
   $vnc_enabled               = true,
   # General
+  $keystone_host             = '127.0.0.1',
   $verbose                   = 'False',
   $enabled                   = true,
   $exported_resources        = true
@@ -111,8 +112,9 @@ class openstack::nova::controller (
 
   # Configure nova-api
   class { 'nova::api':
-    enabled        => $enabled,
-    admin_password => $nova_user_password,
+    enabled           => $enabled,
+    admin_password    => $nova_user_password,
+    auth_host         => $keystone_host,
   }
 
   # Configure nova-network
