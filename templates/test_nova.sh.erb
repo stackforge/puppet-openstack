@@ -32,36 +32,36 @@ login_user='ubuntu'
 ssh-keygen -f /tmp/id_rsa -t rsa -N ''
 
 #add the public key to nova.
-nova keypair-add --pub_key /tmp/id_rsa.pub key_cirros
+nova --no-cache keypair-add --pub_key /tmp/id_rsa.pub key_cirros
 
 <% if floating_ip -%>
 # create a security group so that we can allow ssh, http, and ping traffic
 # when we add a floating IP (assuming you are adding floating IPs)
-nova secgroup-create nova_test 'Cirros test security group'
-nova secgroup-add-rule nova_test tcp 22 22 0.0.0.0/0
-nova secgroup-add-rule nova_test tcp 80 80 0.0.0.0/0
-nova secgroup-add-rule nova_test icmp -1 -1 0.0.0.0/0
+nova --no-cache secgroup-create nova_test 'Cirros test security group'
+nova --no-cache secgroup-add-rule nova_test tcp 22 22 0.0.0.0/0
+nova --no-cache secgroup-add-rule nova_test tcp 80 80 0.0.0.0/0
+nova --no-cache secgroup-add-rule nova_test icmp -1 -1 0.0.0.0/0
 
 # request a floating IP address, and extract the address from the results message
-floating_ip=`nova floating-ip-create | grep None | awk '{print $2}'`
+floating_ip=`nova --no-cache floating-ip-create | grep None | awk '{print $2}'`
 <% end -%>
 
 instance_name='<%= image_type %>_test_vm'
 # Boot the added image against the "1" flavor which by default maps to a micro instance.  <% if floating_ip -%> Include the cirros_test group so our address will work when we add it later <% end %>
-nova boot --flavor 1 <% if floating_ip -%>--security_groups nova_test<% end %> --image ${IMAGE_ID} --key_name key_cirros $instance_name
+nova --no-cache boot --flavor 1 <% if floating_ip -%>--security_groups nova_test<% end %> --image ${IMAGE_ID} --key_name key_cirros $instance_name
 
 # let the system catch up
 sleep <%= sleep_time %>
 
 # Show the state of the system we just requested.
-nova show $instance_name
+nova --no-cache show $instance_name
 
 # wait for the server to boot
 sleep <%= sleep_time %>
 
 <% if floating_ip -%>
 # Now add the floating IP we reserved earlier to the machine.
-nova add-floating-ip $instance_name $floating_ip
+nova --no-cache add-floating-ip $instance_name $floating_ip
 # Wait  and then try to SSH to the node, leveraging the private key
 # we generated earlier.
 sleep <%= sleep_time %>
