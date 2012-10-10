@@ -82,8 +82,9 @@ class openstack::controller (
   $nova_user_password      = 'nova_pass',
   # Required Horizon
   $secret_key              = 'dummy_secret_key',
+  # not sure if this works correctly
   $internal_address        = $public_address,
-  $admin_address           = $internal_address,
+  $admin_address           = $public_address,
   $network_manager         = 'nova.network.manager.FlatDHCPManager',
   $fixed_range             = '10.0.0.0/24',
   $floating_range          = false,

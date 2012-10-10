@@ -35,7 +35,7 @@ class openstack::glance (
   $glance_user_password,
   $glance_db_password,
   $keystone_host        = '127.0.0.1',
-  $auth_uri             = "http://${keystone_host}:5000/",
+  $auth_uri             = "http://127.0.0.1:5000/",
   $db_type              = 'mysql',
   $glance_db_user       = 'glance',
   $glance_db_dbname     = 'glance',
@@ -61,6 +61,7 @@ class openstack::glance (
     keystone_tenant   => 'services',
     keystone_user     => 'glance',
     keystone_password => $glance_user_password,
+    sql_connection    => $sql_connection,
     enabled           => $enabled,
   }
 

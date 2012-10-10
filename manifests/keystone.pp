@@ -46,26 +46,72 @@ class openstack::keystone (
   $glance_user_password,
   $nova_user_password,
   $public_address,
-  $keystone_admin_tenant = 'admin',
-  $verbose               = 'False',
-  $bind_host             = '0.0.0.0',
-  $internal_address      = $public_address,
-  $admin_address         = $internal_address,
-  $glance                = true,
-  $nova                  = true,
-  $enabled               = true,
   $db_type                 = 'mysql',
   $db_user                 = 'keystone',
   $db_name                 = 'keystone',
+  $admin_tenant            = 'admin',
+  $verbose                 = 'False',
+  $bind_host               = '0.0.0.0',
+  $internal_address        = $public_address,
+  $admin_address           = false,
+  $glance_public_address   = $public_address,
+  $glance_internal_address = false,
+  $glance_admin_address    = false,
+  $nova_public_address     = $public_address,
+  $nova_internal_address   = false,
+  $nova_admin_address      = false,
+  $glance                  = true,
+  $nova                    = true,
+  $enabled                 = true,
 ) {
 
   # Install and configure Keystone
+  if $db_type == 'mysql' {
+    $sql_conn = "mysql://${$db_user}:${db_password}@${db_host}/${db_name}"
+  } else {
+    fail("db_type ${db_type} is not supported")
+  }
+
+  # I have to do all of this crazy munging b/c parameters are not
+  # set procedurally in Pupet
+  if($internal_address) {
+    $internal_real = $internal_address
+  } else {
+    $internal_real = $public_address
+  }
+  if($admin_address) {
+    $admin_real = $admin_address
+  } else {
+    $admin_real = $internal_real
+  }
+  if($glance_internal_address) {
+    $glance_internal_real = $glance_internal_address
+  } else {
+    $glance_internal_real = $glance_public_address
+  }
+  if($glance_admin_address) {
+    $glance_admin_real = $glance_admin_address
+  } else {
+    $glance_admin_real = $glance_internal_real
+  }
+  if($nova_internal_address) {
+    $nova_internal_real = $nova_internal_address
+  } else {
+    $nova_internal_real = $nova_public_address
+  }
+  if($nova_admin_address) {
+    $nova_admin_real = $nova_admin_address
+  } else {
+    $nova_admin_real = $nova_internal_real
+  }
+
   class { '::keystone':
-    log_verbose  => $verbose,
-    log_debug    => $verbose,
-    catalog_type => 'sql',
-    admin_token  => $keystone_admin_token,
-    enabled      => $enabled,
+    log_verbose    => $verbose,
+    log_debug      => $verbose,
+    catalog_type   => 'sql',
+    admin_token    => $admin_token,
+    enabled        => $enabled,
+    sql_connection => $sql_conn,
   }
 
   if ($enabled) {
@@ -73,23 +119,23 @@ class openstack::keystone (
     class { 'keystone::roles::admin':
       email        => $admin_email,
       password     => $admin_password,
-      admin_tenant => $keystone_admin_tenant,
+      admin_tenant => $admin_tenant,
     }
 
     # Setup the Keystone Identity Endpoint
     class { 'keystone::endpoint':
       public_address   => $public_address,
-      admin_address    => $admin_address,
-      internal_address => $internal_address,
+      admin_address    => $admin_real,
+      internal_address => $internal_real,
     }
 
     # Configure Glance endpoint in Keystone
     if $glance {
       class { 'glance::keystone::auth':
         password         => $glance_user_password,
-        public_address   => $public_address,
-        admin_address    => $admin_address,
-        internal_address => $internal_address,
+        public_address   => $glance_public_address,
+        admin_address    => $glance_admin_real,
+        internal_address => $glance_internal_real,
       }
     }
 
@@ -97,21 +143,9 @@ class openstack::keystone (
     if $nova {
       class { 'nova::keystone::auth':
         password         => $nova_user_password,
-        public_address   => $public_address,
-        admin_address    => $admin_address,
-        internal_address => $internal_address,
-      }
-    }
-  }
-
-  # Configure the Keystone database
-  case $db_type {
-    'mysql': {
-      class { 'keystone::config::mysql':
-        user     => $keystone_db_user,
-        password => $keystone_db_password,
-        host     => $db_host,
-        dbname   => $keystone_db_dbname,
+        public_address   => $nova_public_address,
+        admin_address    => $nova_admin_real,
+        internal_address => $nova_internal_real,
       }
     }
   }
