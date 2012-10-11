@@ -37,6 +37,7 @@ class openstack::db::mysql (
     $keystone_db_password,
     $glance_db_password,
     $nova_db_password,
+    $cinder_db_password,
     # MySQL
     $mysql_bind_address     = '0.0.0.0',
     $mysql_account_security = true,
@@ -50,13 +51,16 @@ class openstack::db::mysql (
     $nova_db_user           = 'nova',
     $nova_db_dbname         = 'nova',
     $allowed_hosts          = false,
+    # Cinder
+    $cinder_db_user         = 'cinder',
+    $cinder_db_dbname       = 'cinder',
     $enabled                = true
 ) {
 
   # Install and configure MySQL Server
   class { 'mysql::server':
     config_hash => {
-      'root_password' => $mysql_root_password,
+      #'root_password' => $mysql_root_password,
       'bind_address'  => $mysql_bind_address,
     },
     enabled     => $enabled,
@@ -89,6 +93,14 @@ class openstack::db::mysql (
       user          => $nova_db_user,
       password      => $nova_db_password,
       dbname        => $nova_db_dbname,
+      allowed_hosts => $allowed_hosts,
+    }
+
+    # create cinder db
+    class { 'cinder::db::mysql':
+      user          => $cinder_db_user,
+      password      => $cinder_db_password,
+      dbname        => $cinder_db_dbname,
       allowed_hosts => $allowed_hosts,
     }
   }

@@ -1,7 +1,7 @@
 #
 # == Class: openstack::compute
 #
-# Manifest to install/configure nova-compute and nova-volume
+# Manifest to install/configure nova-compute
 #
 # === Parameters
 #
@@ -41,11 +41,6 @@ class openstack::compute (
   $glance_api_servers            = false,
   # Virtualization
   $libvirt_type                  = 'kvm',
-  # Volumes
-  $nova_volume                   = 'nova-volumes',
-  $manage_volumes                = true,
-  # TODO - not sure if using a variable as a default really works
-  $iscsi_ip_address              = $internal_address,
   # VNC
   $vnc_enabled                   = true,
   $vncproxy_host                 = undef,
@@ -111,6 +106,7 @@ class openstack::compute (
       admin_tenant_name => 'services',
       admin_user        => 'nova',
       admin_password    => $nova_user_password,
+      # TODO override enabled_apis
     }
   } else {
     $enable_network_service = false
@@ -130,19 +126,6 @@ class openstack::compute (
     create_networks   => false,
     enabled           => $enable_network_service,
     install_service   => $enable_network_service,
-  }
-
-  if $manage_volumes {
-    # Install / configure nova-volume
-    class { 'nova::volume':
-      enabled => $enabled,
-    }
-    if $enabled {
-      class { 'nova::volume::iscsi':
-        volume_group     => $nova_volume,
-        iscsi_ip_address => $iscsi_ip_address,
-      }
-    }
   }
 
 }

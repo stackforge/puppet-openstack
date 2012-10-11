@@ -30,7 +30,7 @@
 #   Defaults to false.
 # [network_config] Hash that can be used to pass implementation specifc
 #   network settings. Optioal. Defaults to {}
-# [verbose] Rahter to log services at verbose.
+# [verbose] Whether to log services at verbose.
 # [export_resources] Rather to export resources.
 # Horizon related config - assumes puppetlabs-horizon code
 # [secret_key]          secret key to encode cookies, …
@@ -121,8 +121,13 @@ class openstack::controller (
   $quantum                 = false,
   $horizon_app_links       = undef,
   # General
-  $verbose                 = false,
+  $verbose                 = 'False',
   $export_resources        = true,
+  # if the cinder management components should be installed
+  $cinder_user_password    = 'cinder_user_pass',
+  $cinder_db_password      = 'cinder_db_pass',
+  $cinder_db_user          = 'cinder',
+  $cinder_db_dbname        = 'cinder',
   $enabled                 = true
 ) {
 
@@ -150,6 +155,9 @@ class openstack::controller (
       nova_db_user           => $nova_db_user,
       nova_db_password       => $nova_db_password,
       nova_db_dbname         => $nova_db_dbname,
+      cinder_db_user         => $cinder_db_user,
+      cinder_db_password     => $cinder_db_password,
+      cinder_db_dbname       => $cinder_db_dbname,
       allowed_hosts          => $allowed_hosts,
       enabled                => $enabled,
     }
@@ -172,6 +180,7 @@ class openstack::controller (
     admin_address        => $admin_address,
     glance_user_password => $glance_user_password,
     nova_user_password   => $nova_user_password,
+    cinder_user_password => $cinder_user_password,
     enabled              => $enabled,
   }
 
@@ -231,6 +240,19 @@ class openstack::controller (
     enabled                 => $enabled,
     exported_resources      => $export_resources,
   }
+
+  ######### Cinder Controller Services ########
+  class { "cinder::base":
+    verbose         => $verbose,
+    sql_connection  => "mysql://${cinder_db_user}:${cinder_db_password}@${db_host}/${cinder_db_dbname}?charset=utf8",
+    rabbit_password => $rabbit_password,
+  }
+
+  class { 'cinder::api':
+    keystone_password => $cinder_user_password,
+  }
+
+  class { 'cinder::scheduler': }
 
   ######## Horizon ########
   class { 'openstack::horizon':

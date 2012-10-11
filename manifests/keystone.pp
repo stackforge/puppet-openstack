@@ -45,6 +45,7 @@ class openstack::keystone (
   $admin_password,
   $glance_user_password,
   $nova_user_password,
+  $cinder_user_password,
   $public_address,
   $db_type                 = 'mysql',
   $db_user                 = 'keystone',
@@ -60,9 +61,13 @@ class openstack::keystone (
   $nova_public_address     = $public_address,
   $nova_internal_address   = false,
   $nova_admin_address      = false,
+  $cinder_public_address   = false,
+  $cinder_internal_address = false,
+  $cinder_admin_address    = false,
   $glance                  = true,
   $nova                    = true,
   $enabled                 = true,
+  $cinder                  = true,
 ) {
 
   # Install and configure Keystone
@@ -103,6 +108,21 @@ class openstack::keystone (
     $nova_admin_real = $nova_admin_address
   } else {
     $nova_admin_real = $nova_internal_real
+  }
+  if($cinder_public_address) {
+    $cinder_public_real = $cinder_public_address
+  } else {
+    $cinder_public_real = $public_address
+  }
+  if($cinder_internal_address) {
+    $cinder_internal_real = $cinder_internal_address
+  } else {
+    $cinder_internal_real = $cinder_public_real
+  }
+  if($cinder_admin_address) {
+    $cinder_admin_real = $cinder_admin_address
+  } else {
+    $cinder_admin_real = $cinder_internal_real
   }
 
   class { '::keystone':
@@ -146,6 +166,16 @@ class openstack::keystone (
         public_address   => $nova_public_address,
         admin_address    => $nova_admin_real,
         internal_address => $nova_internal_real,
+      }
+    }
+
+    # Configure Nova endpoint in Keystone
+    if $cinder {
+      class { 'cinder::keystone::auth':
+        password         => $cinder_user_password,
+        public_address   => $cinder_public_real,
+        admin_address    => $cinder_admin_real,
+        internal_address => $cinder_internal_real,
       }
     }
   }
