@@ -53,12 +53,12 @@ class openstack::keystone (
   $admin_tenant            = 'admin',
   $verbose                 = 'False',
   $bind_host               = '0.0.0.0',
-  $internal_address        = $public_address,
+  $internal_address        = false,
   $admin_address           = false,
-  $glance_public_address   = $public_address,
+  $glance_public_address   = false,
   $glance_internal_address = false,
   $glance_admin_address    = false,
-  $nova_public_address     = $public_address,
+  $nova_public_address     = false,
   $nova_internal_address   = false,
   $nova_admin_address      = false,
   $cinder_public_address   = false,
@@ -66,8 +66,8 @@ class openstack::keystone (
   $cinder_admin_address    = false,
   $glance                  = true,
   $nova                    = true,
-  $enabled                 = true,
   $cinder                  = true,
+  $enabled                 = true
 ) {
 
   # Install and configure Keystone
@@ -89,20 +89,30 @@ class openstack::keystone (
   } else {
     $admin_real = $internal_real
   }
+  if($glance_public_address) {
+    $glance_public_real = $public_public_address
+  } else {
+    $glance_public_real = $public_address
+  }
   if($glance_internal_address) {
     $glance_internal_real = $glance_internal_address
   } else {
-    $glance_internal_real = $glance_public_address
+    $glance_internal_real = $glance_public_real
   }
   if($glance_admin_address) {
     $glance_admin_real = $glance_admin_address
   } else {
     $glance_admin_real = $glance_internal_real
   }
+  if($nova_public_address) {
+    $nova_public_real = $nova_public_address
+  } else {
+    $nova_public_real = $public_address
+  }
   if($nova_internal_address) {
     $nova_internal_real = $nova_internal_address
   } else {
-    $nova_internal_real = $nova_public_address
+    $nova_internal_real = $nova_public_real
   }
   if($nova_admin_address) {
     $nova_admin_real = $nova_admin_address
@@ -153,7 +163,7 @@ class openstack::keystone (
     if $glance {
       class { 'glance::keystone::auth':
         password         => $glance_user_password,
-        public_address   => $glance_public_address,
+        public_address   => $glance_public_real,
         admin_address    => $glance_admin_real,
         internal_address => $glance_internal_real,
       }
@@ -163,7 +173,7 @@ class openstack::keystone (
     if $nova {
       class { 'nova::keystone::auth':
         password         => $nova_user_password,
-        public_address   => $nova_public_address,
+        public_address   => $nova_public_real,
         admin_address    => $nova_admin_real,
         internal_address => $nova_internal_real,
       }
