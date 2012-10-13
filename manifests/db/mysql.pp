@@ -64,7 +64,7 @@ class openstack::db::mysql (
   # Install and configure MySQL Server
   class { 'mysql::server':
     config_hash => {
-      #'root_password' => $mysql_root_password,
+      'root_password' => $mysql_root_password,
       'bind_address'  => $mysql_bind_address,
     },
     enabled     => $enabled,
