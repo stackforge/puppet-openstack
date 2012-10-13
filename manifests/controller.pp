@@ -128,6 +128,11 @@ class openstack::controller (
   $cinder_db_password      = 'cinder_db_pass',
   $cinder_db_user          = 'cinder',
   $cinder_db_dbname        = 'cinder',
+  #
+  $quantum_user_password   = 'quantum_user_pass',
+  $quantum_db_password     = 'quantum_db_pass',
+  $quantum_db_user         = 'quantum',
+  $quantum_db_dbname       = 'quantum',
   $enabled                 = true
 ) {
 
@@ -158,6 +163,9 @@ class openstack::controller (
       cinder_db_user         => $cinder_db_user,
       cinder_db_password     => $cinder_db_password,
       cinder_db_dbname       => $cinder_db_dbname,
+      quantum_db_user         => $quantum_db_user,
+      quantum_db_password    => $quantum_db_password,
+      quantum_db_dbname      => $quantum_db_dbname,
       allowed_hosts          => $allowed_hosts,
       enabled                => $enabled,
     }
@@ -165,23 +173,24 @@ class openstack::controller (
 
   ####### KEYSTONE ###########
   class { 'openstack::keystone':
-    verbose              => $verbose,
-    db_type              => $db_type,
-    db_host              => $db_host,
-    db_password          => $keystone_db_password,
-    db_name              => $keystone_db_dbname,
-    db_user              => $keystone_db_user,
-    admin_token          => $keystone_admin_token,
-    admin_tenant         => $keystone_admin_tenant,
-    admin_email          => $admin_email,
-    admin_password       => $admin_password,
-    public_address       => $public_address,
-    internal_address     => $internal_address,
-    admin_address        => $admin_address,
-    glance_user_password => $glance_user_password,
-    nova_user_password   => $nova_user_password,
-    cinder_user_password => $cinder_user_password,
-    enabled              => $enabled,
+    verbose               => $verbose,
+    db_type               => $db_type,
+    db_host               => $db_host,
+    db_password           => $keystone_db_password,
+    db_name               => $keystone_db_dbname,
+    db_user               => $keystone_db_user,
+    admin_token           => $keystone_admin_token,
+    admin_tenant          => $keystone_admin_tenant,
+    admin_email           => $admin_email,
+    admin_password        => $admin_password,
+    public_address        => $public_address,
+    internal_address      => $internal_address,
+    admin_address         => $admin_address,
+    glance_user_password  => $glance_user_password,
+    nova_user_password    => $nova_user_password,
+    cinder_user_password  => $cinder_user_password,
+    quantum_user_password => $quantum_user_password,
+    enabled               => $enabled,
   }
 
 
@@ -212,10 +221,7 @@ class openstack::controller (
     # Database
     db_host                 => $db_host,
     # Network
-    network_manager         => $network_manager,
-    network_config          => $network_config,
-    private_interface       => $private_interface,
-    public_interface        => $public_interface,
+    #network_manager         => $network_manager,
     floating_range          => $floating_range,
     fixed_range             => $fixed_range,
     public_address          => $public_address,

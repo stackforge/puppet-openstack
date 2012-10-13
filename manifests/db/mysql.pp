@@ -38,6 +38,7 @@ class openstack::db::mysql (
     $glance_db_password,
     $nova_db_password,
     $cinder_db_password,
+    $quantum_db_password,
     # MySQL
     $mysql_bind_address     = '0.0.0.0',
     $mysql_account_security = true,
@@ -54,6 +55,9 @@ class openstack::db::mysql (
     # Cinder
     $cinder_db_user         = 'cinder',
     $cinder_db_dbname       = 'cinder',
+    # quantum
+    $quantum_db_user        = 'quantum',
+    $quantum_db_dbname      = 'quantum',
     $enabled                = true
 ) {
 
@@ -101,6 +105,13 @@ class openstack::db::mysql (
       user          => $cinder_db_user,
       password      => $cinder_db_password,
       dbname        => $cinder_db_dbname,
+      allowed_hosts => $allowed_hosts,
+    }
+
+    class { 'quantum::db::mysql':
+      user          => $quantum_db_user,
+      password      => $quantum_db_password,
+      dbname        => $quantum_db_dbname,
       allowed_hosts => $allowed_hosts,
     }
   }

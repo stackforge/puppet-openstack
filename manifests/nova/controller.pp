@@ -30,10 +30,6 @@ class openstack::nova::controller (
   $nova_user_password,
   $nova_db_password,
   # Network
-  $network_manager           = 'nova.network.manager.FlatDHCPManager',
-  $network_config            = {},
-  $public_interface          = 'eth0',
-  $private_interface         = 'eth1',
   $fixed_range               = '10.0.0.0/24',
   $floating_range            = false,
   $internal_address          = $public_address,
@@ -135,18 +131,18 @@ class openstack::nova::controller (
     $really_create_networks = false
   }
 
-  class { 'nova::network':
-    private_interface => $private_interface,
-    public_interface  => $public_interface,
-    fixed_range       => $fixed_range,
-    floating_range    => $floating_range,
-    network_manager   => $network_manager,
-    config_overrides  => $network_config,
-    create_networks   => $really_create_networks,
-    num_networks      => $num_networks,
-    enabled           => $enable_network_service,
-    install_service   => $enable_network_service,
-  }
+  #class { 'nova::network':
+  #  private_interface => $private_interface,
+  #  public_interface  => $public_interface,
+  #  fixed_range       => $fixed_range,
+  #  floating_range    => $floating_range,
+  #  network_manager   => $network_manager,
+  #  config_overrides  => $network_config,
+  #  create_networks   => $really_create_networks,
+  #  num_networks      => $num_networks,
+  #  enabled           => $enable_network_service,
+  #  install_service   => $enable_network_service,
+  #}
 
   if $auto_assign_floating_ip {
     nova_config { 'auto_assign_floating_ip': value => 'True' }

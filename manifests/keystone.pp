@@ -46,28 +46,33 @@ class openstack::keystone (
   $glance_user_password,
   $nova_user_password,
   $cinder_user_password,
+  $quantum_user_password,
   $public_address,
-  $db_type                 = 'mysql',
-  $db_user                 = 'keystone',
-  $db_name                 = 'keystone',
-  $admin_tenant            = 'admin',
-  $verbose                 = 'False',
-  $bind_host               = '0.0.0.0',
-  $internal_address        = false,
-  $admin_address           = false,
-  $glance_public_address   = false,
-  $glance_internal_address = false,
-  $glance_admin_address    = false,
-  $nova_public_address     = false,
-  $nova_internal_address   = false,
-  $nova_admin_address      = false,
-  $cinder_public_address   = false,
-  $cinder_internal_address = false,
-  $cinder_admin_address    = false,
-  $glance                  = true,
-  $nova                    = true,
-  $cinder                  = true,
-  $enabled                 = true
+  $db_type                  = 'mysql',
+  $db_user                  = 'keystone',
+  $db_name                  = 'keystone',
+  $admin_tenant             = 'admin',
+  $verbose                  = 'False',
+  $bind_host                = '0.0.0.0',
+  $internal_address         = false,
+  $admin_address            = false,
+  $glance_public_address    = false,
+  $glance_internal_address  = false,
+  $glance_admin_address     = false,
+  $nova_public_address      = false,
+  $nova_internal_address    = false,
+  $nova_admin_address       = false,
+  $cinder_public_address    = false,
+  $cinder_internal_address  = false,
+  $cinder_admin_address     = false,
+  $quantum_public_address   = false,
+  $quantum_internal_address = false,
+  $quantum_admin_address    = false,
+  $glance                   = true,
+  $nova                     = true,
+  $cinder                   = true,
+  $quantum                  = true,
+  $enabled                  = true
 ) {
 
   # Install and configure Keystone
@@ -134,6 +139,21 @@ class openstack::keystone (
   } else {
     $cinder_admin_real = $cinder_internal_real
   }
+  if($quantum_public_address) {
+    $quantum_public_real = $quantum_public_address
+  } else {
+    $quantum_public_real = $public_address
+  }
+  if($quantum_internal_address) {
+    $quantum_internal_real = $quantum_internal_address
+  } else {
+    $quantum_internal_real = $quantum_public_real
+  }
+  if($quantum_admin_address) {
+    $quantum_admin_real = $quantum_admin_address
+  } else {
+    $quantum_admin_real = $quantum_internal_real
+  }
 
   class { '::keystone':
     log_verbose    => $verbose,
@@ -186,6 +206,14 @@ class openstack::keystone (
         public_address   => $cinder_public_real,
         admin_address    => $cinder_admin_real,
         internal_address => $cinder_internal_real,
+      }
+    }
+    if $quantum {
+      class { 'quantum::keystone::auth':
+        password         => $quantum_user_password,
+        public_address   => $quantum_public_real,
+        admin_address    => $quantum_admin_real,
+        internal_address => $quantum_internal_real,
       }
     }
   }

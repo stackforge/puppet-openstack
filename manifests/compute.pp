@@ -25,11 +25,7 @@ class openstack::compute (
   # Network
   $public_address                = undef,
   $public_interface              = undef,
-  $private_interface             = 'eth1',
-  $fixed_range                   = '10.0.0.0/24',
   $network_manager               = 'nova.network.manager.FlatDHCPManager',
-  $network_config                = {},
-  $multi_host                    = false,
   # DB
   $sql_connection                = false,
   # Nova
@@ -93,14 +89,14 @@ class openstack::compute (
   # compute installation
   if $multi_host {
     include keystone::python
-    nova_config {
-      'multi_host':      value => 'True';
-      'send_arp_for_ha': value => 'True';
-    }
-    if ! $public_interface {
-      fail('public_interface must be defined for multi host compute nodes')
-    }
-    $enable_network_service = true
+    #nova_config {
+    #  'multi_host':      value => 'True';
+    #  'send_arp_for_ha': value => 'True';
+    #}
+    #if ! $public_interface {
+    #  fail('public_interface must be defined for multi host compute nodes')
+    #}
+    #$enable_network_service = true
     class { 'nova::api':
       enabled           => true,
       admin_tenant_name => 'services',
@@ -109,23 +105,23 @@ class openstack::compute (
       # TODO override enabled_apis
     }
   } else {
-    $enable_network_service = false
-    nova_config {
-      'multi_host':      value => 'False';
-      'send_arp_for_ha': value => 'False';
-    }
+    #$enable_network_service = false
+    #nova_config {
+    #  'multi_host':      value => 'False';
+    #  'send_arp_for_ha': value => 'False';
+    #}
   }
 
-  class { 'nova::network':
-    private_interface => $private_interface,
-    public_interface  => $public_interface,
-    fixed_range       => $fixed_range,
-    floating_range    => false,
-    network_manager   => $network_manager,
-    config_overrides  => $network_config,
-    create_networks   => false,
-    enabled           => $enable_network_service,
-    install_service   => $enable_network_service,
-  }
+  #class { 'nova::network':
+  #  private_interface => $private_interface,
+  #  public_interface  => $public_interface,
+  #  fixed_range       => $fixed_range,
+  #  floating_range    => false,
+  #  network_manager   => $network_manager,
+  #  config_overrides  => $network_config,
+  #  create_networks   => false,
+  #  enabled           => $enable_network_service,
+  #  install_service   => $enable_network_service,
+  #}
 
 }
