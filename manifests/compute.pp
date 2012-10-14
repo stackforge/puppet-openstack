@@ -23,9 +23,6 @@ class openstack::compute (
   # Required Rabbit
   $rabbit_password,
   # Network
-  $public_address                = undef,
-  $public_interface              = undef,
-  $network_manager               = 'nova.network.manager.FlatDHCPManager',
   # DB
   $sql_connection                = false,
   # Nova
