@@ -66,8 +66,8 @@ describe 'openstack::controller' do
       should contain_class('keystone').with(
         :admin_token  => 'keystone_admin_token',
         :bind_host    => '0.0.0.0',
-        :log_verbose  => false,
-        :log_debug    => false,
+        :verbose      => false,
+        :debug        => false,
         :catalog_type => 'sql',
         :enabled      => true
       )
@@ -98,8 +98,8 @@ describe 'openstack::controller' do
         #:before           => 'Class[nova::api]'
       )
       should contain_class('glance::api').with(
-        :log_verbose       => false,
-        :log_debug         => false,
+        :verbose           => false,
+        :debug             => false,
         :auth_type         => 'keystone',
         :auth_host         => '127.0.0.1',
         :auth_port         => '35357',
@@ -111,8 +111,8 @@ describe 'openstack::controller' do
       should contain_class('glance::backend::file')
 
       should contain_class('glance::registry').with(
-        :log_verbose       => false,
-        :log_debug         => false,
+        :verbose           => false,
+        :debug             => false,
         :auth_type         => 'keystone',
         :auth_host         => '127.0.0.1',
         :auth_port         => '35357',
@@ -200,9 +200,9 @@ describe 'openstack::controller' do
 
       it 'should override keystone config' do
         should contain_class('keystone').with(
-          :log_verbose   => true,
-          :log_debug     => true,
-          :admin_token   => 'foo'
+          :verbose     => true,
+          :debug       => true,
+          :admin_token => 'foo'
         )
         should contain_class('keystone::config::mysql').with(
           :password => 'pass'
@@ -225,14 +225,14 @@ describe 'openstack::controller' do
       end
       it 'should override glance config' do
         should contain_class('glance::api').with(
-          :log_verbose       => true,
-          :log_debug         => true,
+          :verbose           => true,
+          :debug             => true,
           :keystone_password => 'pass6',
           :enabled           => true
         )
         should contain_class('glance::registry').with(
-          :log_verbose       => true,
-          :log_debug         => true,
+          :verbose           => true,
+          :debug             => true,
           :keystone_password => 'pass6',
           :sql_connection    => "mysql://glance:pass2@127.0.0.1/glance",
           :enabled           => true
