@@ -52,11 +52,10 @@ class openstack::glance (
 
   # Install and configure glance-api
   class { 'glance::api':
-    verbose       => $verbose,
-    debug         => $verbose,
+    verbose           => $verbose,
+    debug             => $verbose,
     auth_type         => 'keystone',
     auth_port         => '35357',
-    auth_uri          => $auth_uri,
     auth_host         => $keystone_host,
     keystone_tenant   => 'services',
     keystone_user     => 'glance',
@@ -67,12 +66,11 @@ class openstack::glance (
 
   # Install and configure glance-registry
   class { 'glance::registry':
-    verbose       => $verbose,
-    debug         => $verbose,
+    verbose           => $verbose,
+    debug             => $verbose,
     auth_host         => $keystone_host,
     auth_port         => '35357',
     auth_type         => 'keystone',
-    auth_uri          => $auth_uri,
     keystone_tenant   => 'services',
     keystone_user     => 'glance',
     keystone_password => $glance_user_password,
