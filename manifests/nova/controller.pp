@@ -38,6 +38,8 @@ class openstack::nova::controller (
   $create_networks           = true,
   $num_networks              = 1,
   $multi_host                = false,
+  $network_manager           = 'nova.network.manager.FlatDHCPManager',
+  $quantum                   = true,
   # Nova
   $nova_db_user              = 'nova',
   $nova_db_dbname            = 'nova',
@@ -118,7 +120,7 @@ class openstack::nova::controller (
     nova_config { 'multi_host': value => 'True' }
     $enable_network_service = false
   } else {
-    if $enabled == true {
+    if $enabled {
       $enable_network_service = true
     } else {
       $enable_network_service = false
@@ -131,18 +133,20 @@ class openstack::nova::controller (
     $really_create_networks = false
   }
 
-  #class { 'nova::network':
-  #  private_interface => $private_interface,
-  #  public_interface  => $public_interface,
-  #  fixed_range       => $fixed_range,
-  #  floating_range    => $floating_range,
-  #  network_manager   => $network_manager,
-  #  config_overrides  => $network_config,
-  #  create_networks   => $really_create_networks,
-  #  num_networks      => $num_networks,
-  #  enabled           => $enable_network_service,
-  #  install_service   => $enable_network_service,
-  #}
+  if $quantum == false { 
+    class { 'nova::network':
+      private_interface => $private_interface,
+      public_interface  => $public_interface,
+      fixed_range       => $fixed_range,
+      floating_range    => $floating_range,
+      network_manager   => $network_manager,
+      config_overrides  => $network_config,
+      create_networks   => $really_create_networks,
+      num_networks      => $num_networks,
+      enabled           => $enable_network_service,
+      install_service   => $enable_network_service,
+    }
+  }
 
   if $auto_assign_floating_ip {
     nova_config { 'auto_assign_floating_ip': value => 'True' }

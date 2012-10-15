@@ -53,9 +53,11 @@ class openstack::db::mysql (
     $nova_db_dbname         = 'nova',
     $allowed_hosts          = false,
     # Cinder
+    $cinder                 = true,
     $cinder_db_user         = 'cinder',
     $cinder_db_dbname       = 'cinder',
     # quantum
+    $quantum                = true,
     $quantum_db_user        = 'quantum',
     $quantum_db_dbname      = 'quantum',
     $enabled                = true
@@ -101,18 +103,23 @@ class openstack::db::mysql (
     }
 
     # create cinder db
-    class { 'cinder::db::mysql':
-      user          => $cinder_db_user,
-      password      => $cinder_db_password,
-      dbname        => $cinder_db_dbname,
-      allowed_hosts => $allowed_hosts,
+    if ($cinder) {
+      class { 'cinder::db::mysql':
+        user          => $cinder_db_user,
+        password      => $cinder_db_password,
+        dbname        => $cinder_db_dbname,
+        allowed_hosts => $allowed_hosts,
+      }
     }
 
-    class { 'quantum::db::mysql':
-      user          => $quantum_db_user,
-      password      => $quantum_db_password,
-      dbname        => $quantum_db_dbname,
-      allowed_hosts => $allowed_hosts,
+    # create quantum db
+    if ($quantum) {
+      class { 'quantum::db::mysql':
+        user          => $quantum_db_user,
+        password      => $quantum_db_password,
+        dbname        => $quantum_db_dbname,
+        allowed_hosts => $allowed_hosts,
+      }
     }
   }
 }

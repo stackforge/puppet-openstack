@@ -119,6 +119,7 @@ class openstack::controller (
   $cache_server_port       = '11211',
   $swift                   = false,
   $quantum                 = false,
+  $cinder                  = false,
   $horizon_app_links       = undef,
   # General
   $verbose                 = 'False',
@@ -160,10 +161,12 @@ class openstack::controller (
       nova_db_user           => $nova_db_user,
       nova_db_password       => $nova_db_password,
       nova_db_dbname         => $nova_db_dbname,
+      cinder                 => $cinder,
       cinder_db_user         => $cinder_db_user,
       cinder_db_password     => $cinder_db_password,
       cinder_db_dbname       => $cinder_db_dbname,
-      quantum_db_user         => $quantum_db_user,
+      quantum                => $quantum,
+      quantum_db_user        => $quantum_db_user,
       quantum_db_password    => $quantum_db_password,
       quantum_db_dbname      => $quantum_db_dbname,
       allowed_hosts          => $allowed_hosts,
@@ -188,7 +191,9 @@ class openstack::controller (
     admin_address         => $admin_address,
     glance_user_password  => $glance_user_password,
     nova_user_password    => $nova_user_password,
+    cinder                => $cinder,
     cinder_user_password  => $cinder_user_password,
+    quantum               => $quantum,
     quantum_user_password => $quantum_user_password,
     enabled               => $enabled,
   }
@@ -221,7 +226,7 @@ class openstack::controller (
     # Database
     db_host                 => $db_host,
     # Network
-    #network_manager         => $network_manager,
+    network_manager         => $network_manager,
     floating_range          => $floating_range,
     fixed_range             => $fixed_range,
     public_address          => $public_address,
@@ -231,6 +236,7 @@ class openstack::controller (
     create_networks         => $create_networks,
     num_networks            => $num_networks,
     multi_host              => $multi_host,
+    quantum                 => $quantum,
     # Nova
     nova_user_password      => $nova_user_password,
     nova_db_password        => $nova_db_password,
@@ -248,17 +254,22 @@ class openstack::controller (
   }
 
   ######### Cinder Controller Services ########
-  class { "cinder::base":
-    verbose         => $verbose,
-    sql_connection  => "mysql://${cinder_db_user}:${cinder_db_password}@${db_host}/${cinder_db_dbname}?charset=utf8",
-    rabbit_password => $rabbit_password,
+  if ($cinder) {
+    class { "cinder::base":
+      verbose         => $verbose,
+      sql_connection  => "mysql://${cinder_db_user}:${cinder_db_password}@${db_host}/${cinder_db_dbname}?charset=utf8",
+      rabbit_password => $rabbit_password,
+    }
+  
+    class { 'cinder::api':
+      keystone_password => $cinder_user_password,
+    }
+ 
+    class { 'cinder::scheduler': }
+  } else {
+    # Set up nova-volume
   }
 
-  class { 'cinder::api':
-    keystone_password => $cinder_user_password,
-  }
-
-  class { 'cinder::scheduler': }
 
   ######## Horizon ########
   class { 'openstack::horizon':
