@@ -133,7 +133,7 @@ class openstack::nova::controller (
     $really_create_networks = false
   }
 
-  if $quantum == false { 
+  if $quantum == false {
     class { 'nova::network':
       private_interface => $private_interface,
       public_interface  => $public_interface,

@@ -260,11 +260,11 @@ class openstack::controller (
       sql_connection  => "mysql://${cinder_db_user}:${cinder_db_password}@${db_host}/${cinder_db_dbname}?charset=utf8",
       rabbit_password => $rabbit_password,
     }
-  
+
     class { 'cinder::api':
       keystone_password => $cinder_user_password,
     }
- 
+
     class { 'cinder::scheduler': }
   } else {
     # Set up nova-volume
