@@ -3,9 +3,8 @@
 #
 # Class that performs a basic openstack all in one installation.
 #
-# === Parameterrs
+# === Parameters
 #
-#  TODO public address should be optional.
 #  [public_address] Public address used by vnchost. Required.
 #  [public_interface] The interface used to route public traffic by the
 #    network service.
@@ -35,16 +34,21 @@
 #  [purge_nova_config] Whether unmanaged nova.conf entries should be purged. Optional. Defaults to true.
 #  [libvirt_type] The virualization type being controlled by libvirt.  Optional. Defaults to 'kvm'.
 #  [nova_volume] The name of the volume group to use for nova volume allocation. Optional. Defaults to 'nova-volumes'.
-#
 # === Examples
 #
 #  class { 'openstack::all':
-#    public_address       => '192.168.0.3',
-#    public_interface     => eth0,
-#    private_interface    => eth1,
-#    admin_email          => my_email@mw.com,
+#    public_address       => '192.168.1.1',
+#    mysql_root_password  => 'changeme',
+#    rabbit_password      => 'changeme',
+#    keystone_db_password => 'changeme',
+#    keystone_admin_token => '12345',
+#    admin_email          => 'my_email@mw.com',
 #    admin_password       => 'my_admin_password',
-#    libvirt_type         => 'kvm',
+#    nova_db_password     => 'changeme',
+#    nova_user_password   => 'changeme',
+#    glance_db_password   => 'changeme',
+#    glance_user_password => 'changeme',
+#    secret_key           => 'dummy_secret_key',
 #  }
 #
 # === Authors
@@ -52,38 +56,127 @@
 # Dan Bode <bodepd@gmail.com>
 #
 #
-class openstack::all(
-  # passing in the public ipaddress is required
+class openstack::all (
+  # Network Required
   $public_address,
-  $public_interface,
-  $private_interface,
-  $floating_range          = false,
+  # MySQL Required
+  $mysql_root_password     = 'sql_pass',
+  # Rabbit Required
+  $rabbit_password         = 'rabbitpw',
+  # Keystone Required
+  $keystone_db_password    = 'keystone_pass',
+  $keystone_admin_token    = 'keystone_admin_token',
+  $admin_email             = 'some_user@some_fake_email_address.foo',
+  $admin_password          = 'ChangeMe',
+  # Nova Required
+  $nova_db_password        = 'nova_pass',
+  $nova_user_password      = 'nova_pass',
+  # Glance Required
+  $glance_db_password      = 'glance_pass',
+  $glance_user_password    = 'glance_pass',
+  # Horizon Required
+  $secret_key              = 'dummy_secret_key',
+  # Network
+  $public_interface        = 'eth0',
+  $private_interface       = 'eth1',
   $fixed_range             = '10.0.0.0/24',
   $network_manager         = 'nova.network.manager.FlatDHCPManager',
   $network_config          = {},
-  # middleware credentials
-  $mysql_root_password     = undef,
-  $rabbit_password         = 'rabbit_pw',
-  $rabbit_user             = 'nova',
-  # opestack credentials
-  $admin_email             = 'someuser@some_fake_email_address.foo',
-  $admin_password          = 'ChangeMe',
-  $keystone_db_password    = 'keystone_pass',
-  $keystone_admin_token    = 'keystone_admin_token',
-  $keystone_admin_tenant   = 'openstack',
-  $nova_db_password        = 'nova_pass',
-  $nova_user_password      = 'nova_pass',
-  $glance_db_password      = 'glance_pass',
-  $glance_user_password    = 'glance_pass',
-  $secret_key              = 'dummy_secret_key',
-  # config
-  $verbose                 = false,
   $auto_assign_floating_ip = false,
+  $floating_range          = false,
+  $create_networks         = true,
+  $num_networks            = 1,
+  # MySQL
+  $db_type                 = 'mysql',
+  $mysql_account_security  = true,
+  $allowed_hosts           = ['127.0.0.%'],
+  # Rabbit
+  $rabbit_user             = 'nova',
+  # Keystone
+  $keystone_db_user        = 'keystone',
+  $keystone_db_dbname      = 'keystone',
+  $keystone_admin_tenant   = 'admin',
+  # Nova
+  $nova_db_user            = 'nova',
+  $nova_db_dbname          = 'nova',
   $purge_nova_config       = true,
+  # Glance
+  $glance_db_user          = 'glance',
+  $glance_db_dbname        = 'glance',
+  # Horizon
+  $cache_server_ip         = '127.0.0.1',
+  $cache_server_port       = '11211',
+  $swift                   = false,
+  $quantum                 = false,
+  $horizon_app_links       = undef,
+  # Virtaulization
   $libvirt_type            = 'kvm',
-  $nova_volume             = 'nova-volumes'
+  # Volume
+  $nova_volume             = 'nova-volumes',
+  # VNC
+  $vnc_enabled             = true,
+  # General
+  $enabled                 = true,
+  $verbose                 = 'False'
 ) {
 
+  # Ensure things are run in order
+  Class['openstack::db::mysql'] -> Class['openstack::keystone']
+  Class['openstack::db::mysql'] -> Class['openstack::glance']
+  Class['openstack::db::mysql'] -> Class['openstack::nova::controller']
+
+  # set up mysql server
+  case $db_type {
+    'mysql': {
+      class { 'openstack::db::mysql':
+        mysql_root_password    => $mysql_root_password,
+        mysql_bind_address     => '127.0.0.1',
+        mysql_account_security => $mysql_account_security,
+        keystone_db_user       => $keystone_db_user,
+        keystone_db_password   => $keystone_db_password,
+        keystone_db_dbname     => $keystone_db_dbname,
+        glance_db_user         => $glance_db_user,
+        glance_db_password     => $glance_db_password,
+        glance_db_dbname       => $glance_db_dbname,
+        nova_db_user           => $nova_db_user,
+        nova_db_password       => $nova_db_password,
+        nova_db_dbname         => $nova_db_dbname,
+        allowed_hosts          => $allowed_hosts,
+      }
+    }
+  }
+
+  ####### KEYSTONE ###########
+  class { 'openstack::keystone':
+    verbose                   => $verbose,
+    db_type                   => $db_type,
+    db_host                   => '127.0.0.1',
+    keystone_db_password      => $keystone_db_password,
+    keystone_db_dbname        => $keystone_db_dbname,
+    keystone_db_user          => $keystone_db_user,
+    keystone_admin_token      => $keystone_admin_token,
+    keystone_admin_tenant     => $keystone_admin_tenant,
+    admin_email               => $admin_email,
+    admin_password            => $admin_password,
+    public_address            => $public_address,
+    internal_address          => '127.0.0.1',
+    admin_address             => '127.0.0.1',
+    glance_user_password      => $glance_user_password,
+    nova_user_password        => $nova_user_password,
+  }
+
+  ######## GLANCE ##########
+  class { 'openstack::glance':
+    verbose                   => $verbose,
+    db_type                   => $db_type,
+    db_host                   => '127.0.0.1',
+    glance_db_user            => $glance_db_user,
+    glance_db_dbname          => $glance_db_dbname,
+    glance_db_password        => $glance_db_password,
+    glance_user_password      => $glance_user_password,
+  }
+
+  ######## NOVA ###########
 
   #
   # indicates that all nova config entries that we did
@@ -95,184 +188,78 @@ class openstack::all(
     }
   }
 
-  # set up mysql server
-  class { 'mysql::server':
-    config_hash => {
-      # the priv grant fails on precise if I set a root password
-      'root_password' => $mysql_root_password,
-      'bind_address'  => '127.0.0.1'
-    }
+  class { 'openstack::nova::controller':
+    # Network
+    network_manager         => $network_manager,
+    network_config          => $network_config,
+    private_interface       => $private_interface,
+    public_interface        => $public_interface,
+    floating_range          => $floating_range,
+    fixed_range             => $fixed_range,
+    public_address          => $public_address,
+    admin_address           => '127.0.0.1',
+    internal_address        => '127.0.0.1',
+    auto_assign_floating_ip => $auto_assign_floating_ip,
+    create_networks         => $create_networks,
+    num_networks            => $num_networks,
+    multi_host              => false,
+    # Database
+    db_host                 => '127.0.0.1',
+    # Nova
+    nova_user_password      => $nova_user_password,
+    nova_db_password        => $nova_db_password,
+    nova_db_user            => $nova_db_user,
+    nova_db_dbname          => $nova_db_dbname,
+    # Rabbit
+    rabbit_user             => $rabbit_user,
+    rabbit_password         => $rabbit_password,
+    # Glance
+    glance_api_servers      => '127.0.0.1:9292',
+    # VNC
+    vnc_enabled             => $vnc_enabled,
+    # General
+    verbose                 => $verbose,
+    enabled                 => $enabled,
+    exported_resources      => false,
   }
 
-  ####### KEYSTONE ###########
-
-  # set up keystone database
-  class { 'keystone::db::mysql':
-    password => $keystone_db_password,
-  }
-  # set up the keystone config for mysql
-  class { 'keystone::config::mysql':
-    password => $keystone_db_password,
-  }
-  # set up keystone
-  class { 'keystone':
-    admin_token  => $keystone_admin_token,
-    bind_host    => '0.0.0.0',
-    log_verbose  => $verbose,
-    log_debug    => $verbose,
-    catalog_type => 'sql',
-  }
-  # set up keystone admin users
-  class { 'keystone::roles::admin':
-    email        => $admin_email,
-    password     => $admin_password,
-    admin_tenant => $keystone_admin_tenant,
-  }
-  # set up the keystone service and endpoint
-  class { 'keystone::endpoint': }
-
-  ######## END KEYSTONE ##########
-
-  ######## BEGIN GLANCE ##########
-
-  # set up keystone user, endpoint, service
-  class { 'glance::keystone::auth':
-    password => $glance_user_password,
-    public_address => $public_address,
-  }
-
-  # creat glance db/user/grants
-  class { 'glance::db::mysql':
-    host     => '127.0.0.1',
-    password => $glance_db_password,
-  }
-
-  # configure glance api
-  class { 'glance::api':
-    log_verbose       => $verbose,
-    log_debug         => $verbose,
-    auth_type         => 'keystone',
-    auth_host         => '127.0.0.1',
-    auth_port         => '35357',
-    keystone_tenant   => 'services',
-    keystone_user     => 'glance',
-    keystone_password => $glance_user_password,
-  }
-
-  # configure glance to store images to disk
-  class { 'glance::backend::file': }
-
-  class { 'glance::registry':
-    log_verbose       => $verbose,
-    log_debug         => $verbose,
-    auth_type         => 'keystone',
-    auth_host         => '127.0.0.1',
-    auth_port         => '35357',
-    keystone_tenant   => 'services',
-    keystone_user     => 'glance',
-    keystone_password => $glance_user_password,
-    sql_connection    => "mysql://glance:${glance_db_password}@127.0.0.1/glance",
-  }
-
-
-  ######## END GLANCE ###########
-
-  ######## BEGIN NOVA ###########
-
-  class { 'nova::keystone::auth':
-    password => $nova_user_password,
-    public_address => $public_address,
-  }
-
-  class { 'nova::rabbitmq':
-    userid   => $rabbit_user,
-    password => $rabbit_password,
-  }
-
-  class { 'nova::db::mysql':
-    password => $nova_db_password,
-    host     => 'localhost',
-  }
-
-  class { 'nova':
-    sql_connection     => "mysql://nova:${nova_db_password}@localhost/nova",
-    rabbit_userid      => $rabbit_user,
-    rabbit_password    => $rabbit_password,
-    image_service      => 'nova.image.glance.GlanceImageService',
-    glance_api_servers => '127.0.0.1:9292',
-    verbose            => $verbose,
-  }
-
-  class { 'nova::api':
-    enabled        => true,
-    admin_password => $nova_user_password,
-  }
-
-  # set up networking
-  class { 'nova::network':
-    private_interface => $private_interface,
-    public_interface  => $public_interface,
-    fixed_range       => $fixed_range,
-    floating_range    => $floating_range,
-    install_service   => true,
-    enabled           => true,
-    network_manager   => $network_manager,
-    config_overrides  => $network_config,
-    create_networks   => true,
-  }
-
-  if $auto_assign_floating_ip {
-    nova_config { 'auto_assign_floating_ip':   value => 'True'; }
-  }
-
-  # a bunch of nova services that require no configuration
-  class { [
-    'nova::scheduler',
-    'nova::objectstore',
-    'nova::volume',
-    'nova::cert',
-    'nova::consoleauth'
-  ]:
-    enabled => true
-  }
-
-  class { 'nova::vncproxy':
-    enabled => true,
-    host    => $public_hostname,
-  }
-
-  class { 'nova::compute':
-    enabled                       => true,
-    vnc_enabled                   => true,
-    vncserver_proxyclient_address => '127.0.0.1',
+  class { 'openstack::nova::compute':
+    # Network
+    public_address                => $public_address,
+    private_interface             => $private_interface,
+    public_interface              => $public_interface,
+    fixed_range                   => $fixed_range,
+    network_manager               => $network_manager,
+    network_config                => $network_config,
+    multi_host                    => false,
+    internal_address              => '127.0.0.1',
+    # Virtualization
+    libvirt_type                  => $libvirt_type,
+    # Volumes
+    nova_volume                   => $nova_volume,
+    manage_volumes                => true,
+    iscsi_ip_address              => '127.0.0.1',
+    # VNC
+    vnc_enabled                   => $vnc_enabled,
     vncproxy_host                 => $public_address,
+    # Nova
+    nova_user_password            => $nova_user_password,
+    # Rabbit
+    rabbit_password               => $rabbit_password,
+    # General
+    verbose                       => $verbose,
+    exported_resources            => false,
+    enabled                       => $enabled,
   }
-
-  class { 'nova::compute::libvirt':
-    libvirt_type     => $libvirt_type,
-    vncserver_listen => '127.0.0.1',
-  }
-
-  class { 'nova::volume::iscsi':
-    volume_group     => $nova_volume,
-    iscsi_ip_address => '127.0.0.1',
-  }
-
-#  nova::network::bridge { 'br100':
-#    ip      => '11.0.0.1',
-#    netmask => '255.255.255.0',
-#  }
 
   ######## Horizon ########
-
-  class { 'memcached':
-    listen_ip => '127.0.0.1',
+  class { 'openstack::horizon':
+    secret_key        => $secret_key,
+    cache_server_ip   => $cache_server_ip,
+    cache_server_port => $cache_server_port,
+    swift             => $swift,
+    quantum           => $quantum,
+    horizon_app_links => $horizon_app_links,
   }
-
-  class { 'horizon':
-    secret_key => $secret_key,
-  }
-
-  ######## End Horizon #####
 
 }

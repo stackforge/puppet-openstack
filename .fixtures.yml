@@ -6,5 +6,6 @@ fixtures:
     "nova": "git://github.com/puppetlabs/puppetlabs-nova.git"
     "stdlib": "git://github.com/puppetlabs/puppetlabs-stdlib.git"
     "sysctl": "git://github.com/duritong/puppet-sysctl.git"
+    'inifile':  'git://github.com/cprice-puppet/puppetlabs-inifile'
   symlinks:
     "openstack": "#{source_dir}"
