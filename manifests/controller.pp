@@ -122,6 +122,8 @@ class openstack::controller (
   $quantum                 = false,
   $cinder                  = false,
   $horizon_app_links       = undef,
+  # VNC
+  $vnc_enabled             = true,
   # General
   $verbose                 = 'False',
   # if the cinder management components should be installed
@@ -252,6 +254,8 @@ class openstack::controller (
     rabbit_password         => $rabbit_password,
     # Glance
     glance_api_servers      => $glance_api_servers,
+    # VNC
+    vnc_enabled            => $vnc_enabled,
     # General
     verbose                 => $verbose,
     enabled                 => $enabled,
