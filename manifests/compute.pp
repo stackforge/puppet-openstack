@@ -54,6 +54,7 @@ class openstack::compute (
   $nova_volume                   = 'cinder-volumes',
   $iscsi_ip_address              = '127.0.0.1',
   # General
+  $migration_support             = false,
   $verbose                       = 'False',
   $enabled                       = true
 ) {
@@ -90,8 +91,9 @@ class openstack::compute (
 
   # Configure libvirt for nova-compute
   class { 'nova::compute::libvirt':
-    libvirt_type     => $libvirt_type,
-    vncserver_listen => $internal_address,
+    libvirt_type      => $libvirt_type,
+    vncserver_listen  => $vncserver_listen,
+    migration_support => $migration_support,
   }
 
   # if the compute node should be configured as a multi-host
