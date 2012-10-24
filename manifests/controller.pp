@@ -127,6 +127,7 @@ class openstack::controller (
   $verbose                 = 'False',
   $export_resources        = true,
   # if the cinder management components should be installed
+  $cinder                  = false,
   $cinder_user_password    = 'cinder_user_pass',
   $cinder_db_password      = 'cinder_db_pass',
   $cinder_db_user          = 'cinder',

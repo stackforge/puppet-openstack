@@ -46,6 +46,13 @@ class openstack::compute (
   # VNC
   $vnc_enabled                   = true,
   $vncproxy_host                 = undef,
+  $vncserver_listen              = $internal_address,
+  # cinder / volumes
+  $cinder                        = true,
+  $cinder_sql_connection         = undef,
+  $manage_volumes                = true,
+  $nova_volume                   = 'cinder-volumes',
+  $iscsi_ip_address              = '127.0.0.1',
   # General
   $verbose                       = 'False',
   $enabled                       = true
@@ -134,5 +141,17 @@ class openstack::compute (
     # TODO install quantum
   }
 
+  if ($cinder) {
+    class { 'cinder':
+      rabbit_password => $rabbit_password,
+      rabbit_host     => $rabbit_host,
+      sql_connection  => $cinder_sql_connection,
+      verbose         => $verbose,
+    }
+    class { 'cinder::volume': }
+    class { 'cinder::volume::iscsi': }
+  } else {
+    # Set up nova-volume
+  }
 
 }
