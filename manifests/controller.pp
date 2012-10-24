@@ -104,8 +104,8 @@ class openstack::controller (
   $nova_db_dbname          = 'nova',
   $purge_nova_config       = true,
   # Network
-  $internal_address        = $public_address,
-  $admin_address           = $public_address,
+  $internal_address        = false,
+  $admin_address           = false,
   $network_manager         = 'nova.network.manager.FlatDHCPManager',
   $fixed_range             = '10.0.0.0/24',
   $floating_range          = false,
@@ -135,6 +135,17 @@ class openstack::controller (
   $quantum_db_dbname       = 'quantum',
   $enabled                 = true
 ) {
+
+  if $internal_address {
+    $internal_address_real = $internal_address
+  } else {
+    $internal_address_real = $public_address
+  }
+  if $admin_address {
+    $admin_address_real = $admin_address
+  } else {
+    $admin_address_real = $public_address
+  }
 
   # Ensure things are run in order
   Class['openstack::db::mysql'] -> Class['openstack::keystone']
@@ -186,7 +197,7 @@ class openstack::controller (
     admin_email           => $admin_email,
     admin_password        => $admin_password,
     public_address        => $public_address,
-    internal_address      => $internal_address,
+    internal_address      => $internal_address_real,
     admin_address         => $admin_address,
     region                => $region,
     glance_user_password  => $glance_user_password,
@@ -232,7 +243,7 @@ class openstack::controller (
     fixed_range             => $fixed_range,
     public_address          => $public_address,
     admin_address           => $admin_address,
-    internal_address        => $internal_address,
+    internal_address        => $internal_address_real,
     auto_assign_floating_ip => $auto_assign_floating_ip,
     create_networks         => $create_networks,
     num_networks            => $num_networks,

@@ -44,7 +44,7 @@ class openstack::compute (
   # VNC
   $vnc_enabled                   = true,
   $vncproxy_host                 = undef,
-  $vncserver_listen              = $internal_address,
+  $vncserver_listen              = false,
   # cinder / volumes
   $cinder                        = true,
   $cinder_sql_connection         = undef,
@@ -56,6 +56,13 @@ class openstack::compute (
   $verbose                       = 'False',
   $enabled                       = true
 ) {
+
+  if $vncserver_listen {
+    $vncserver_listen_real = $vncserver_listen
+  } else {
+    $vncserver_listen_real = $internal_address
+  }
+
 
   #
   # indicates that all nova config entries that we did
@@ -90,7 +97,7 @@ class openstack::compute (
   # Configure libvirt for nova-compute
   class { 'nova::compute::libvirt':
     libvirt_type      => $libvirt_type,
-    vncserver_listen  => $vncserver_listen,
+    vncserver_listen  => $vncserver_listen_real,
     migration_support => $migration_support,
   }
 
