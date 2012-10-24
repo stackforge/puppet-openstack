@@ -189,6 +189,7 @@ class openstack::controller (
     public_address        => $public_address,
     internal_address      => $internal_address,
     admin_address         => $admin_address,
+    region                => $region,
     glance_user_password  => $glance_user_password,
     nova_user_password    => $nova_user_password,
     cinder                => $cinder,
