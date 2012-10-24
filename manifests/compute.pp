@@ -35,7 +35,7 @@ class openstack::compute (
   $network_config                = {},
   $multi_host                    = false,
   # Nova
-  $purge_nova_config              = true,
+  $purge_nova_config             = true,
   # Rabbit
   $rabbit_host                   = '127.0.0.1',
   $rabbit_user                   = 'nova',
