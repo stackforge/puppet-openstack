@@ -26,8 +26,6 @@ class openstack::compute (
   $sql_connection,
   # Network
   $quantum                       = true,
-  $public_address                = $internal_address,
-  $admin_address                 = $internal_address,
   $public_interface              = undef,
   $private_interface             = undef,
   $fixed_range                   = undef,
