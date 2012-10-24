@@ -66,6 +66,23 @@ class openstack::controller (
   $public_address,
   $public_interface,
   $private_interface,
+  $admin_email,
+  # required password
+  $admin_password,
+  $rabbit_password,
+  $keystone_db_password,
+  $keystone_admin_token,
+  $glance_db_password,
+  $glance_user_password,
+  $nova_db_password,
+  $nova_user_password,
+  $secret_key,
+  # cinder and quantum password are not required b/c they are
+  # optional. Not sure what to do about this.
+  $cinder_user_password    = 'cinder_pass',
+  $cinder_db_password      = 'cinder_pass',
+  $quantum_user_password   = 'quantum_pass',
+  $quantum_db_password     = 'quantum_pass',
   # Database
   $db_host                 = '127.0.0.1',
   $db_type                 = 'mysql',
@@ -74,25 +91,17 @@ class openstack::controller (
   $mysql_bind_address      = '0.0.0.0',
   $allowed_hosts           = '%',
   # Keystone
-  $admin_email             = 'some_user@some_fake_email_address.foo',
-  $admin_password          = 'ChangeMe',
-  $keystone_db_password    = 'keystone_pass',
   $keystone_db_user        = 'keystone',
   $keystone_db_dbname      = 'keystone',
-  $keystone_admin_token    = 'keystone_admin_token',
   $keystone_admin_tenant   = 'admin',
   $region                  = 'RegionOne',
   # Glance
-  $glance_db_password      = 'glance_pass',
   $glance_db_user          = 'glance',
   $glance_db_dbname        = 'glance',
-  $glance_user_password    = 'glance_pass',
   $glance_api_servers      = undef,
   # Nova
-  $nova_db_password        = 'nova_pass',
   $nova_db_user            = 'nova',
   $nova_db_dbname          = 'nova',
-  $nova_user_password      = 'nova_pass',
   $purge_nova_config       = true,
   # Network
   $internal_address        = $public_address,
@@ -107,10 +116,8 @@ class openstack::controller (
   $network_config          = {},
   $quantum                 = true,
   # Rabbit
-  $rabbit_password         = 'rabbit_pw',
   $rabbit_user             = 'nova',
   # Horizon
-  $secret_key              = 'dummy_secret_key',
   $cache_server_ip         = '127.0.0.1',
   $cache_server_port       = '11211',
   $horizon_app_links       = undef,
@@ -121,13 +128,9 @@ class openstack::controller (
   $verbose                 = 'False',
   # if the cinder management components should be installed
   $cinder                  = false,
-  $cinder_user_password    = 'cinder_user_pass',
-  $cinder_db_password      = 'cinder_db_pass',
   $cinder_db_user          = 'cinder',
   $cinder_db_dbname        = 'cinder',
   #
-  $quantum_user_password   = 'quantum_user_pass',
-  $quantum_db_password     = 'quantum_db_pass',
   $quantum_db_user         = 'quantum',
   $quantum_db_dbname       = 'quantum',
   $enabled                 = true
