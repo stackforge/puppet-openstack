@@ -23,7 +23,7 @@ class openstack::compute (
   # Required Rabbit
   $rabbit_password,
   # DB
-  $sql_connection                = false,
+  $sql_connection,
   # Network
   $quantum                       = true,
   $public_address                = $internal_address,
@@ -37,7 +37,7 @@ class openstack::compute (
   # Nova
   $purge_nova_config              = true,
   # Rabbit
-  $rabbit_host                   = false,
+  $rabbit_host                   = '127.0.0.1',
   $rabbit_user                   = 'nova',
   # Glance
   $glance_api_servers            = false,
@@ -69,10 +69,6 @@ class openstack::compute (
       }
     }
   }
-
-  $final_sql_connection = $sql_connection
-  $glance_connection = $glance_api_servers
-  $rabbit_connection = $rabbit_host
 
   class { 'nova':
     sql_connection     => $sql_connection,

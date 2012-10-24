@@ -31,7 +31,6 @@
 # [network_config] Hash that can be used to pass implementation specifc
 #   network settings. Optioal. Defaults to {}
 # [verbose] Whether to log services at verbose.
-# [export_resources] Rather to export resources.
 # Horizon related config - assumes puppetlabs-horizon code
 # [secret_key]          secret key to encode cookies, …
 # [cache_server_ip]     local memcached instance ip
@@ -125,7 +124,6 @@ class openstack::controller (
   $horizon_app_links       = undef,
   # General
   $verbose                 = 'False',
-  $export_resources        = true,
   # if the cinder management components should be installed
   $cinder                  = false,
   $cinder_user_password    = 'cinder_user_pass',
@@ -257,7 +255,6 @@ class openstack::controller (
     # General
     verbose                 => $verbose,
     enabled                 => $enabled,
-    exported_resources      => $export_resources,
   }
 
   ######### Cinder Controller Services ########

@@ -58,7 +58,6 @@ class openstack::nova::controller (
   $keystone_host             = '127.0.0.1',
   $verbose                   = 'False',
   $enabled                   = true,
-  $exported_resources        = true
 ) {
 
   # Configure the db string
@@ -73,25 +72,10 @@ class openstack::nova::controller (
   } else {
     $real_glance_api_servers = $glance_api_servers
   }
-  if ($exported_resources) {
-    # export all of the things that will be needed by the clients
-    @@nova_config { 'rabbit_host': value => $internal_address }
-    Nova_config <| title == 'rabbit_host' |>
 
-    @@nova_config { 'sql_connection': value => $nova_db }
-    Nova_config <| title == 'sql_connection' |>
-
-    @@nova_config { 'glance_api_servers': value => $real_glance_api_servers }
-    Nova_config <| title == 'glance_api_servers' |>
-
-    $sql_connection    = false
-    $glance_connection = false
-    $rabbit_connection = false
-  } else {
-    $sql_connection    = $nova_db
-    $glance_connection = $real_glance_api_servers
-    $rabbit_connection = $internal_address
-  }
+  $sql_connection    = $nova_db
+  $glance_connection = $real_glance_api_servers
+  $rabbit_connection = $internal_address
 
   # Install / configure rabbitmq
   class { 'nova::rabbitmq':
