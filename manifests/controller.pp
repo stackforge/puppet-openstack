@@ -83,6 +83,7 @@ class openstack::controller (
   # Required Horizon
   $secret_key              = 'dummy_secret_key',
   # not sure if this works correctly
+  # Network
   $internal_address        = $public_address,
   $admin_address           = $public_address,
   $network_manager         = 'nova.network.manager.FlatDHCPManager',
@@ -111,6 +112,7 @@ class openstack::controller (
   $nova_db_user            = 'nova',
   $nova_db_dbname          = 'nova',
   $purge_nova_config       = true,
+  $quantum                 = true,
   # Rabbit
   $rabbit_password         = 'rabbit_pw',
   $rabbit_user             = 'nova',
@@ -228,6 +230,7 @@ class openstack::controller (
     db_host                 => $db_host,
     # Network
     network_manager         => $network_manager,
+    network_config          => $network_config,
     floating_range          => $floating_range,
     fixed_range             => $fixed_range,
     public_address          => $public_address,
@@ -237,6 +240,8 @@ class openstack::controller (
     create_networks         => $create_networks,
     num_networks            => $num_networks,
     multi_host              => $multi_host,
+    public_interface        => $public_interface,
+    private_interface       => $private_interface,
     quantum                 => $quantum,
     # Nova
     nova_user_password      => $nova_user_password,

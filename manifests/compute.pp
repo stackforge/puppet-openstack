@@ -22,9 +22,18 @@ class openstack::compute (
   $nova_user_password,
   # Required Rabbit
   $rabbit_password,
-  # Network
   # DB
   $sql_connection                = false,
+  # Network
+  $quantum                       = true,
+  $public_address                = $internal_address,
+  $admin_address                 = $internal_address,
+  $public_interface              = undef,
+  $private_interface             = undef,
+  $fixed_range                   = undef,
+  $network_manager               = 'nova.network.manager.FlatDHCPManager',
+  $network_config                = {},
+  $multi_host                    = false,
   # Nova
   $purge_nova_config              = true,
   # Rabbit
@@ -84,41 +93,46 @@ class openstack::compute (
 
   # if the compute node should be configured as a multi-host
   # compute installation
-  if $multi_host {
-    include keystone::python
-    #nova_config {
-    #  'multi_host':      value => 'True';
-    #  'send_arp_for_ha': value => 'True';
-    #}
-    #if ! $public_interface {
-    #  fail('public_interface must be defined for multi host compute nodes')
-    #}
-    #$enable_network_service = true
-    class { 'nova::api':
-      enabled           => true,
-      admin_tenant_name => 'services',
-      admin_user        => 'nova',
-      admin_password    => $nova_user_password,
-      # TODO override enabled_apis
+  if $quantum == false {
+    if $multi_host {
+      include keystone::python
+      nova_config {
+        'multi_host':      value => 'True';
+        'send_arp_for_ha': value => 'True';
+      }
+      if ! $public_interface {
+        fail('public_interface must be defined for multi host compute nodes')
+      }
+      $enable_network_service = true
+      class { 'nova::api':
+        enabled           => true,
+        admin_tenant_name => 'services',
+        admin_user        => 'nova',
+        admin_password    => $nova_user_password,
+        # TODO override enabled_apis
+      }
+    } else {
+      $enable_network_service = false
+      nova_config {
+        'multi_host':      value => 'False';
+        'send_arp_for_ha': value => 'False';
+      }
+    }
+
+    class { 'nova::network':
+      private_interface => $private_interface,
+      public_interface  => $public_interface,
+      fixed_range       => $fixed_range,
+      floating_range    => false,
+      network_manager   => $network_manager,
+      config_overrides  => $network_config,
+      create_networks   => false,
+      enabled           => $enable_network_service,
+      install_service   => $enable_network_service,
     }
   } else {
-    #$enable_network_service = false
-    #nova_config {
-    #  'multi_host':      value => 'False';
-    #  'send_arp_for_ha': value => 'False';
-    #}
+    # TODO install quantum
   }
 
-  #class { 'nova::network':
-  #  private_interface => $private_interface,
-  #  public_interface  => $public_interface,
-  #  fixed_range       => $fixed_range,
-  #  floating_range    => false,
-  #  network_manager   => $network_manager,
-  #  config_overrides  => $network_config,
-  #  create_networks   => false,
-  #  enabled           => $enable_network_service,
-  #  install_service   => $enable_network_service,
-  #}
 
 }

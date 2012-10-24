@@ -30,15 +30,18 @@ class openstack::nova::controller (
   $nova_user_password,
   $nova_db_password,
   # Network
-  $fixed_range               = '10.0.0.0/24',
+  $network_manager           = 'nova.network.manager.FlatDHCPManager',
+  $network_config            = {},
   $floating_range            = false,
-  $internal_address          = $public_address,
+  $fixed_range               = '10.0.0.0/24',
   $admin_address             = $public_address,
+  $internal_address          = $public_address,
   $auto_assign_floating_ip   = false,
   $create_networks           = true,
   $num_networks              = 1,
   $multi_host                = false,
-  $network_manager           = 'nova.network.manager.FlatDHCPManager',
+  $public_interface          = undef,
+  $private_interface         = undef,
   $quantum                   = true,
   # Nova
   $nova_db_user              = 'nova',
@@ -115,17 +118,6 @@ class openstack::nova::controller (
     auth_host         => $keystone_host,
   }
 
-  # Configure nova-network
-  if $multi_host {
-    nova_config { 'multi_host': value => 'True' }
-    $enable_network_service = false
-  } else {
-    if $enabled {
-      $enable_network_service = true
-    } else {
-      $enable_network_service = false
-    }
-  }
 
   if $enabled {
     $really_create_networks = $create_networks
@@ -134,6 +126,18 @@ class openstack::nova::controller (
   }
 
   if $quantum == false {
+    # Configure nova-network
+    if $multi_host {
+      nova_config { 'multi_host': value => 'True' }
+      $enable_network_service = false
+    } else {
+      if $enabled {
+        $enable_network_service = true
+      } else {
+        $enable_network_service = false
+      }
+    }
+
     class { 'nova::network':
       private_interface => $private_interface,
       public_interface  => $public_interface,
@@ -146,6 +150,8 @@ class openstack::nova::controller (
       enabled           => $enable_network_service,
       install_service   => $enable_network_service,
     }
+  } else {
+    # Set up Quantum
   }
 
   if $auto_assign_floating_ip {
