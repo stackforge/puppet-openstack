@@ -66,22 +66,34 @@ class openstack::controller (
   $public_address,
   $public_interface,
   $private_interface,
-  # Required Database
+  # Database
+  $db_host                 = '127.0.0.1',
+  $db_type                 = 'mysql',
   $mysql_root_password     = 'sql_pass',
-  # Required Keystone
+  $mysql_account_security  = true,
+  $mysql_bind_address      = '0.0.0.0',
+  $allowed_hosts           = '%',
+  # Keystone
   $admin_email             = 'some_user@some_fake_email_address.foo',
   $admin_password          = 'ChangeMe',
   $keystone_db_password    = 'keystone_pass',
+  $keystone_db_user        = 'keystone',
+  $keystone_db_dbname      = 'keystone',
   $keystone_admin_token    = 'keystone_admin_token',
-  # Required Glance
+  $keystone_admin_tenant   = 'admin',
+  $region                  = 'RegionOne',
+  # Glance
   $glance_db_password      = 'glance_pass',
+  $glance_db_user          = 'glance',
+  $glance_db_dbname        = 'glance',
   $glance_user_password    = 'glance_pass',
-  # Required Nova
+  $glance_api_servers      = undef,
+  # Nova
   $nova_db_password        = 'nova_pass',
+  $nova_db_user            = 'nova',
+  $nova_db_dbname          = 'nova',
   $nova_user_password      = 'nova_pass',
-  # Required Horizon
-  $secret_key              = 'dummy_secret_key',
-  # not sure if this works correctly
+  $purge_nova_config       = true,
   # Network
   $internal_address        = $public_address,
   $admin_address           = $public_address,
@@ -93,35 +105,16 @@ class openstack::controller (
   $multi_host              = false,
   $auto_assign_floating_ip = false,
   $network_config          = {},
-  # Database
-  $db_host                 = '127.0.0.1',
-  $db_type                 = 'mysql',
-  $mysql_account_security  = true,
-  $mysql_bind_address      = '0.0.0.0',
-  $allowed_hosts           = '%',
-  # Keystone
-  $keystone_db_user        = 'keystone',
-  $keystone_db_dbname      = 'keystone',
-  $keystone_admin_tenant   = 'admin',
-  # Glance
-  $glance_db_user          = 'glance',
-  $glance_db_dbname        = 'glance',
-  $glance_api_servers      = undef,
-  # Nova
-  $nova_db_user            = 'nova',
-  $nova_db_dbname          = 'nova',
-  $purge_nova_config       = true,
   $quantum                 = true,
   # Rabbit
   $rabbit_password         = 'rabbit_pw',
   $rabbit_user             = 'nova',
   # Horizon
+  $secret_key              = 'dummy_secret_key',
   $cache_server_ip         = '127.0.0.1',
   $cache_server_port       = '11211',
-  $swift                   = false,
-  $quantum                 = false,
-  $cinder                  = false,
   $horizon_app_links       = undef,
+  $swift                   = false,
   # VNC
   $vnc_enabled             = true,
   # General
