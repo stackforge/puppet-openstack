@@ -145,14 +145,19 @@ class openstack::compute (
   }
 
   if ($cinder) {
-    class { 'cinder':
+    class { 'cinder::base':
       rabbit_password => $rabbit_password,
       rabbit_host     => $rabbit_host,
       sql_connection  => $cinder_sql_connection,
       verbose         => $verbose,
     }
     class { 'cinder::volume': }
-    class { 'cinder::volume::iscsi': }
+    class { 'cinder::volume::iscsi':
+      iscsi_ip_address => $internal_address,
+      volume_group     => $nova_volume,
+    }
+
+    nova_config { 'volume_api_class': value => 'nova.volume.cinder.API' }
   } else {
     # Set up nova-volume
   }
