@@ -22,13 +22,20 @@ class openstack::compute (
   $nova_user_password,
   # Required Rabbit
   $rabbit_password,
-  # Network
   # DB
-  $sql_connection                = false,
+  $sql_connection,
+  # Network
+  $quantum                       = true,
+  $public_interface              = undef,
+  $private_interface             = undef,
+  $fixed_range                   = undef,
+  $network_manager               = 'nova.network.manager.FlatDHCPManager',
+  $network_config                = {},
+  $multi_host                    = false,
   # Nova
-  $purge_nova_config              = true,
+  $purge_nova_config             = true,
   # Rabbit
-  $rabbit_host                   = false,
+  $rabbit_host                   = '127.0.0.1',
   $rabbit_user                   = 'nova',
   # Glance
   $glance_api_servers            = false,
@@ -37,10 +44,25 @@ class openstack::compute (
   # VNC
   $vnc_enabled                   = true,
   $vncproxy_host                 = undef,
+  $vncserver_listen              = false,
+  # cinder / volumes
+  $cinder                        = true,
+  $cinder_sql_connection         = undef,
+  $manage_volumes                = true,
+  $nova_volume                   = 'cinder-volumes',
+  $iscsi_ip_address              = '127.0.0.1',
   # General
+  $migration_support             = false,
   $verbose                       = 'False',
   $enabled                       = true
 ) {
+
+  if $vncserver_listen {
+    $vncserver_listen_real = $vncserver_listen
+  } else {
+    $vncserver_listen_real = $internal_address
+  }
+
 
   #
   # indicates that all nova config entries that we did
@@ -53,10 +75,6 @@ class openstack::compute (
       }
     }
   }
-
-  $final_sql_connection = $sql_connection
-  $glance_connection = $glance_api_servers
-  $rabbit_connection = $rabbit_host
 
   class { 'nova':
     sql_connection     => $sql_connection,
@@ -78,47 +96,70 @@ class openstack::compute (
 
   # Configure libvirt for nova-compute
   class { 'nova::compute::libvirt':
-    libvirt_type     => $libvirt_type,
-    vncserver_listen => $internal_address,
+    libvirt_type      => $libvirt_type,
+    vncserver_listen  => $vncserver_listen_real,
+    migration_support => $migration_support,
   }
 
   # if the compute node should be configured as a multi-host
   # compute installation
-  if $multi_host {
-    include keystone::python
-    #nova_config {
-    #  'multi_host':      value => 'True';
-    #  'send_arp_for_ha': value => 'True';
-    #}
-    #if ! $public_interface {
-    #  fail('public_interface must be defined for multi host compute nodes')
-    #}
-    #$enable_network_service = true
-    class { 'nova::api':
-      enabled           => true,
-      admin_tenant_name => 'services',
-      admin_user        => 'nova',
-      admin_password    => $nova_user_password,
-      # TODO override enabled_apis
+  if $quantum == false {
+    if $multi_host {
+      include keystone::python
+      nova_config {
+        'multi_host':      value => 'True';
+        'send_arp_for_ha': value => 'True';
+      }
+      if ! $public_interface {
+        fail('public_interface must be defined for multi host compute nodes')
+      }
+      $enable_network_service = true
+      class { 'nova::api':
+        enabled           => true,
+        admin_tenant_name => 'services',
+        admin_user        => 'nova',
+        admin_password    => $nova_user_password,
+        # TODO override enabled_apis
+      }
+    } else {
+      $enable_network_service = false
+      nova_config {
+        'multi_host':      value => 'False';
+        'send_arp_for_ha': value => 'False';
+      }
+    }
+
+    class { 'nova::network':
+      private_interface => $private_interface,
+      public_interface  => $public_interface,
+      fixed_range       => $fixed_range,
+      floating_range    => false,
+      network_manager   => $network_manager,
+      config_overrides  => $network_config,
+      create_networks   => false,
+      enabled           => $enable_network_service,
+      install_service   => $enable_network_service,
     }
   } else {
-    #$enable_network_service = false
-    #nova_config {
-    #  'multi_host':      value => 'False';
-    #  'send_arp_for_ha': value => 'False';
-    #}
+    # TODO install quantum
   }
 
-  #class { 'nova::network':
-  #  private_interface => $private_interface,
-  #  public_interface  => $public_interface,
-  #  fixed_range       => $fixed_range,
-  #  floating_range    => false,
-  #  network_manager   => $network_manager,
-  #  config_overrides  => $network_config,
-  #  create_networks   => false,
-  #  enabled           => $enable_network_service,
-  #  install_service   => $enable_network_service,
-  #}
+  if ($cinder) {
+    class { 'cinder::base':
+      rabbit_password => $rabbit_password,
+      rabbit_host     => $rabbit_host,
+      sql_connection  => $cinder_sql_connection,
+      verbose         => $verbose,
+    }
+    class { 'cinder::volume': }
+    class { 'cinder::volume::iscsi':
+      iscsi_ip_address => $internal_address,
+      volume_group     => $nova_volume,
+    }
+
+    nova_config { 'volume_api_class': value => 'nova.volume.cinder.API' }
+  } else {
+    # Set up nova-volume
+  }
 
 }

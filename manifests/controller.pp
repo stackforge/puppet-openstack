@@ -31,7 +31,6 @@
 # [network_config] Hash that can be used to pass implementation specifc
 #   network settings. Optioal. Defaults to {}
 # [verbose] Whether to log services at verbose.
-# [export_resources] Rather to export resources.
 # Horizon related config - assumes puppetlabs-horizon code
 # [secret_key]          secret key to encode cookies, …
 # [cache_server_ip]     local memcached instance ip
@@ -67,35 +66,27 @@ class openstack::controller (
   $public_address,
   $public_interface,
   $private_interface,
-  # Required Database
-  $mysql_root_password     = 'sql_pass',
-  # Required Keystone
-  $admin_email             = 'some_user@some_fake_email_address.foo',
-  $admin_password          = 'ChangeMe',
-  $keystone_db_password    = 'keystone_pass',
-  $keystone_admin_token    = 'keystone_admin_token',
-  # Required Glance
-  $glance_db_password      = 'glance_pass',
-  $glance_user_password    = 'glance_pass',
-  # Required Nova
-  $nova_db_password        = 'nova_pass',
-  $nova_user_password      = 'nova_pass',
-  # Required Horizon
-  $secret_key              = 'dummy_secret_key',
-  # not sure if this works correctly
-  $internal_address        = $public_address,
-  $admin_address           = $public_address,
-  $network_manager         = 'nova.network.manager.FlatDHCPManager',
-  $fixed_range             = '10.0.0.0/24',
-  $floating_range          = false,
-  $create_networks         = true,
-  $num_networks            = 1,
-  $multi_host              = false,
-  $auto_assign_floating_ip = false,
-  $network_config          = {},
+  $admin_email,
+  # required password
+  $admin_password,
+  $rabbit_password,
+  $keystone_db_password,
+  $keystone_admin_token,
+  $glance_db_password,
+  $glance_user_password,
+  $nova_db_password,
+  $nova_user_password,
+  $secret_key,
+  # cinder and quantum password are not required b/c they are
+  # optional. Not sure what to do about this.
+  $cinder_user_password    = 'cinder_pass',
+  $cinder_db_password      = 'cinder_pass',
+  $quantum_user_password   = 'quantum_pass',
+  $quantum_db_password     = 'quantum_pass',
   # Database
   $db_host                 = '127.0.0.1',
   $db_type                 = 'mysql',
+  $mysql_root_password     = 'sql_pass',
   $mysql_account_security  = true,
   $mysql_bind_address      = '0.0.0.0',
   $allowed_hosts           = '%',
@@ -103,6 +94,7 @@ class openstack::controller (
   $keystone_db_user        = 'keystone',
   $keystone_db_dbname      = 'keystone',
   $keystone_admin_tenant   = 'admin',
+  $region                  = 'RegionOne',
   # Glance
   $glance_db_user          = 'glance',
   $glance_db_dbname        = 'glance',
@@ -111,31 +103,49 @@ class openstack::controller (
   $nova_db_user            = 'nova',
   $nova_db_dbname          = 'nova',
   $purge_nova_config       = true,
+  # Network
+  $internal_address        = false,
+  $admin_address           = false,
+  $network_manager         = 'nova.network.manager.FlatDHCPManager',
+  $fixed_range             = '10.0.0.0/24',
+  $floating_range          = false,
+  $create_networks         = true,
+  $num_networks            = 1,
+  $multi_host              = false,
+  $auto_assign_floating_ip = false,
+  $network_config          = {},
+  $quantum                 = true,
   # Rabbit
-  $rabbit_password         = 'rabbit_pw',
   $rabbit_user             = 'nova',
   # Horizon
   $cache_server_ip         = '127.0.0.1',
   $cache_server_port       = '11211',
-  $swift                   = false,
-  $quantum                 = false,
-  $cinder                  = false,
   $horizon_app_links       = undef,
+  $swift                   = false,
+  # VNC
+  $vnc_enabled             = true,
   # General
   $verbose                 = 'False',
-  $export_resources        = true,
   # if the cinder management components should be installed
-  $cinder_user_password    = 'cinder_user_pass',
-  $cinder_db_password      = 'cinder_db_pass',
+  $cinder                  = false,
   $cinder_db_user          = 'cinder',
   $cinder_db_dbname        = 'cinder',
   #
-  $quantum_user_password   = 'quantum_user_pass',
-  $quantum_db_password     = 'quantum_db_pass',
   $quantum_db_user         = 'quantum',
   $quantum_db_dbname       = 'quantum',
   $enabled                 = true
 ) {
+
+  if $internal_address {
+    $internal_address_real = $internal_address
+  } else {
+    $internal_address_real = $public_address
+  }
+  if $admin_address {
+    $admin_address_real = $admin_address
+  } else {
+    $admin_address_real = $public_address
+  }
 
   # Ensure things are run in order
   Class['openstack::db::mysql'] -> Class['openstack::keystone']
@@ -187,8 +197,9 @@ class openstack::controller (
     admin_email           => $admin_email,
     admin_password        => $admin_password,
     public_address        => $public_address,
-    internal_address      => $internal_address,
+    internal_address      => $internal_address_real,
     admin_address         => $admin_address,
+    region                => $region,
     glance_user_password  => $glance_user_password,
     nova_user_password    => $nova_user_password,
     cinder                => $cinder,
@@ -227,15 +238,18 @@ class openstack::controller (
     db_host                 => $db_host,
     # Network
     network_manager         => $network_manager,
+    network_config          => $network_config,
     floating_range          => $floating_range,
     fixed_range             => $fixed_range,
     public_address          => $public_address,
     admin_address           => $admin_address,
-    internal_address        => $internal_address,
+    internal_address        => $internal_address_real,
     auto_assign_floating_ip => $auto_assign_floating_ip,
     create_networks         => $create_networks,
     num_networks            => $num_networks,
     multi_host              => $multi_host,
+    public_interface        => $public_interface,
+    private_interface       => $private_interface,
     quantum                 => $quantum,
     # Nova
     nova_user_password      => $nova_user_password,
@@ -247,10 +261,11 @@ class openstack::controller (
     rabbit_password         => $rabbit_password,
     # Glance
     glance_api_servers      => $glance_api_servers,
+    # VNC
+    vnc_enabled            => $vnc_enabled,
     # General
     verbose                 => $verbose,
     enabled                 => $enabled,
-    exported_resources      => $export_resources,
   }
 
   ######### Cinder Controller Services ########
