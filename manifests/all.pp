@@ -225,7 +225,7 @@ class openstack::all (
     image_service      => 'nova.image.glance.GlanceImageService',
     glance_api_servers => 'localhost:9292',
     verbose            => $verbose,
-    rabbit_host        => $internal_address,
+    rabbit_host        => '127.0.0.1',
   }
 
   # Configure nova-api
@@ -292,9 +292,9 @@ class openstack::all (
 
     class { 'cinder::scheduler': }
     class { 'cinder::volume': }
-    class { 'cinder::volume::iscsi': 
-      volume_group => $volume_group,
-      test         => $cinder_test,
+    class { 'cinder::volume::iscsi':
+      iscsi_ip_address => '127.0.0.1',
+      volume_group     => $nova_volume,
     }
   } else {
     # Set up nova-volume

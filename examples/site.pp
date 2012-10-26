@@ -44,6 +44,8 @@ $auto_assign_floating_ip = false
 # deployed as all-in-one openstack installations.
 node /openstack_all/ {
 
+  include 'apache'
+
   class { 'openstack::all':
     public_address          => $ipaddress_eth0,
     public_interface        => $public_interface,
