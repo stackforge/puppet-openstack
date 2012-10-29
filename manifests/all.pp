@@ -310,7 +310,7 @@ class openstack::all (
     enabled                       => $enabled,
     vnc_enabled                   => $vnc_enabled,
     vncserver_proxyclient_address => $internal_address,
-    vncproxy_host                 => 'localhost',
+    vncproxy_host                 => $public_address,
   }
 
   # Configure libvirt for nova-compute
