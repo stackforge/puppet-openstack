@@ -165,6 +165,8 @@ class openstack::all (
       allowed_hosts          => $allowed_hosts,
       enabled                => $enabled,
     }
+  } else {
+    fail("unsupported db type: ${db_type}")
   }
 
   ####### KEYSTONE ###########
