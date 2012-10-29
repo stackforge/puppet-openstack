@@ -4,8 +4,14 @@ describe 'openstack::compute' do
 
   let :default_params do
     {
-      :private_interface => 'eth0',
-      :internal_address  => '0.0.0.0',
+      :private_interface     => 'eth0',
+      :internal_address      => '0.0.0.0',
+      :nova_user_password    => 'nova_pass',
+      :rabbit_password       => 'rabbit_pw',
+      :sql_connection        => 'mysql://user:pass@host/dbname/',
+      :cinder_sql_connection => 'mysql://user:pass@host/dbname/',
+      :quantum               => false,
+      :fixed_range           => '10.0.0.0/16',
     }
   end
 
@@ -22,13 +28,13 @@ describe 'openstack::compute' do
     end
     it {
       should contain_class('nova').with(
-        :sql_connection     => false,
-        :rabbit_host        => false,
+        :sql_connection     => 'mysql://user:pass@host/dbname/',
+        :rabbit_host        => '127.0.0.1',
         :rabbit_userid      => 'nova',
         :rabbit_password    => 'rabbit_pw',
         :image_service      => 'nova.image.glance.GlanceImageService',
         :glance_api_servers => false,
-        :verbose            => false
+        :verbose            => 'False'
       )
       should contain_class('nova::compute').with(
         :enabled                        => true,
@@ -43,8 +49,6 @@ describe 'openstack::compute' do
       should contain_nova_config('multi_host').with( :value => 'False' )
       should contain_nova_config('send_arp_for_ha').with( :value => 'False' )
       should_not contain_class('nova::api')
-      should_not contain_class('nova::volume')
-      should_not contain_class('nova::volume::iscsi')
       should contain_class('nova::network').with({
         :enabled           => false,
         :install_service   => false,
@@ -82,7 +86,7 @@ describe 'openstack::compute' do
     let :params do
       default_params.merge(override_params)
     end
-    it {
+    it do
       should contain_class('nova').with(
         :sql_connection     => 'mysql://user:passwd@host/name',
         :rabbit_host        => 'my_host',
@@ -105,8 +109,6 @@ describe 'openstack::compute' do
       should contain_nova_config('multi_host').with( :value => 'False' )
       should contain_nova_config('send_arp_for_ha').with( :value => 'False' )
       should_not contain_class('nova::api')
-      should_not contain_class('nova::volume')
-      should_not contain_class('nova::volume::iscsi')
       should contain_class('nova::network').with({
         :enabled           => false,
         :install_service   => false,
@@ -116,7 +118,7 @@ describe 'openstack::compute' do
         :enabled           => false,
         :install_service   => false
       })
-    }
+    end
   end
 
   describe "when enabling volume management" do
@@ -129,71 +131,65 @@ describe 'openstack::compute' do
     it do
       should contain_nova_config('multi_host').with({ 'value' => 'False'})
       should_not contain_class('nova::api')
-      should contain_class('nova::volume').with(:enabled => true)
       should contain_class('nova::network').with({
         'enabled' => false,
         'install_service' => false
       })
     end
-    describe 'with default volume settings' do
-      it { should contain_class('nova::volume::iscsi').with(
-        :volume_group     => 'nova-volumes',
-        :iscsi_ip_address => '0.0.0.0'
-      )}
-    end
-    describe 'when overriding volume parameters' do
-      let :params do
-        default_params.merge({
-          :manage_volumes   => true,
-          :nova_volume      => 'nova-volumes2',
-          :internal_address => '127.0.0.1'
-        })
-      end
-      it { should contain_class('nova::volume::iscsi').with(
-        :volume_group     => 'nova-volumes2',
-        :iscsi_ip_address => '127.0.0.1'
-      ) }
-    end
   end
 
-  describe "when configuring for multi host" do
-    let :params do
-      default_params.merge({
-        :multi_host       => true,
-        :public_interface => 'eth0'
-      })
-    end
-
-    it {
-      should contain_class('keystone::python')
-      should contain_nova_config('multi_host').with({ 'value' => 'True'})
-      should contain_nova_config('send_arp_for_ha').with(:value => 'True')
-      should_not contain_class('nova::volume')
-      should_not contain_class('nova::volume::iscsi')
-      should contain_class('nova::network').with({
-        'enabled' => true,
-        'install_service' => true
-      })
-    }
-    describe 'with defaults' do
-      it { should contain_class('nova::api').with(
-        :enabled           => true,
-        :admin_tenant_name => 'services',
-        :admin_user        => 'nova',
-        :admin_password    => 'nova_pass'
-      )}
-    end
-    describe 'when overrding nova volumes' do
+  describe 'when quantum is false' do
+    describe 'configuring for multi host' do
       let :params do
         default_params.merge({
-          :multi_host         => true,
-          :public_interface   => 'eth0',
-          :nova_user_password => 'foo'
+          :multi_host       => true,
+          :public_interface => 'eth0',
+          :quantum          => false
         })
       end
-      it { should contain_class('nova::api').with(
-        :admin_password    => 'foo'
-      )}
+
+      it 'should configure nova for multi-host' do
+        #should contain_class('keystone::python')
+        should contain_nova_config('multi_host').with(:value => 'True')
+        should contain_nova_config('send_arp_for_ha').with( :value => 'True')
+        should contain_class('nova::network').with({
+          'enabled' => true,
+          'install_service' => true
+        })
+      end
+      describe 'with defaults' do
+        it { should contain_class('nova::api').with(
+          :enabled           => true,
+          :admin_tenant_name => 'services',
+          :admin_user        => 'nova',
+          :admin_password    => 'nova_pass'
+        )}
+      end
+    end
+    describe 'when overriding network params' do
+      let :params do
+        default_params.merge({
+          :multi_host        => true,
+          :public_interface  => 'eth0',
+          :manage_volumes    => true,
+          :private_interface => 'eth1',
+          :public_interface  => 'eth2',
+          :fixed_range       => '12.0.0.0/24',
+          :network_manager   => 'nova.network.manager.VlanManager',
+          :network_config    => {'vlan_interface' => 'eth0'}
+        })
+      end
+      it { should contain_class('nova::network').with({
+        :private_interface => 'eth1',
+        :public_interface  => 'eth2',
+        :fixed_range       => '12.0.0.0/24',
+        :floating_range    => false,
+        :network_manager   => 'nova.network.manager.VlanManager',
+        :config_overrides  => {'vlan_interface' => 'eth0'},
+        :create_networks   => false,
+        'enabled'          => true,
+        'install_service'  => true
+      })}
     end
   end
 
@@ -221,8 +217,6 @@ describe 'openstack::compute' do
     it {
       should contain_nova_config('multi_host').with({ 'value' => 'True'})
       should contain_class('nova::api')
-      should contain_class('nova::volume')
-      should contain_class('nova::volume::iscsi')
       should contain_class('nova::network').with({
         'enabled' => true,
         'install_service' => true
@@ -230,30 +224,4 @@ describe 'openstack::compute' do
     }
   end
 
-  describe 'when overriding network params' do
-    let :params do
-      default_params.merge({
-        :multi_host        => true,
-        :public_interface  => 'eth0',
-        :manage_volumes    => true,
-        :private_interface => 'eth1',
-        :public_interface  => 'eth2',
-        :fixed_range       => '12.0.0.0/24',
-        :network_manager   => 'nova.network.manager.VlanManager',
-        :network_config    => {'vlan_interface' => 'eth0'}
-      })
-    end
-    it { should contain_class('nova::network').with({
-      :private_interface => 'eth1',
-      :public_interface  => 'eth2',
-      :fixed_range       => '12.0.0.0/24',
-      :floating_range    => false,
-      :network_manager   => 'nova.network.manager.VlanManager',
-      :config_overrides  => {'vlan_interface' => 'eth0'},
-      :create_networks   => false,
-      'enabled'          => true,
-      'install_service'  => true
-    })}
-
-  end
 end
