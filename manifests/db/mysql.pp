@@ -51,7 +51,6 @@ class openstack::db::mysql (
     # Nova
     $nova_db_user           = 'nova',
     $nova_db_dbname         = 'nova',
-    $allowed_hosts          = false,
     # Cinder
     $cinder                 = true,
     $cinder_db_user         = 'cinder',
@@ -60,6 +59,7 @@ class openstack::db::mysql (
     $quantum                = true,
     $quantum_db_user        = 'quantum',
     $quantum_db_dbname      = 'quantum',
+    $allowed_hosts          = false,
     $enabled                = true
 ) {
 

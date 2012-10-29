@@ -103,7 +103,12 @@ class openstack::compute (
 
   # if the compute node should be configured as a multi-host
   # compute installation
-  if $quantum == false {
+  if ! $quantum {
+
+    if ! $fixed_range {
+      fail("Must specify the fixed range when using nova-networks")
+    }
+
     if $multi_host {
       include keystone::python
       nova_config {
@@ -157,7 +162,10 @@ class openstack::compute (
       volume_group     => $nova_volume,
     }
 
-    nova_config { 'volume_api_class': value => 'nova.volume.cinder.API' }
+    # set in nova::api
+    if ! defined(Nova_config['volume_api_class']) {
+      nova_config { 'volume_api_class': value => 'nova.volume.cinder.API' }
+    }
   } else {
     # Set up nova-volume
   }

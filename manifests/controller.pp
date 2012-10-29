@@ -114,7 +114,6 @@ class openstack::controller (
   $multi_host              = false,
   $auto_assign_floating_ip = false,
   $network_config          = {},
-  $quantum                 = true,
   # Rabbit
   $rabbit_user             = 'nova',
   # Horizon
@@ -126,11 +125,13 @@ class openstack::controller (
   $vnc_enabled             = true,
   # General
   $verbose                 = 'False',
+  # cinder
   # if the cinder management components should be installed
-  $cinder                  = false,
+  $cinder                  = true,
   $cinder_db_user          = 'cinder',
   $cinder_db_dbname        = 'cinder',
-  #
+  # quantum
+  $quantum                 = true,
   $quantum_db_user         = 'quantum',
   $quantum_db_dbname       = 'quantum',
   $enabled                 = true
@@ -144,7 +145,7 @@ class openstack::controller (
   if $admin_address {
     $admin_address_real = $admin_address
   } else {
-    $admin_address_real = $public_address
+    $admin_address_real = $internal_address_real
   }
 
   # Ensure things are run in order
@@ -182,6 +183,8 @@ class openstack::controller (
       allowed_hosts          => $allowed_hosts,
       enabled                => $enabled,
     }
+  } else {
+    fail("Unsupported db : ${db_type}")
   }
 
   ####### KEYSTONE ###########
@@ -198,7 +201,7 @@ class openstack::controller (
     admin_password        => $admin_password,
     public_address        => $public_address,
     internal_address      => $internal_address_real,
-    admin_address         => $admin_address,
+    admin_address         => $admin_address_real,
     region                => $region,
     glance_user_password  => $glance_user_password,
     nova_user_password    => $nova_user_password,

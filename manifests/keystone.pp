@@ -157,8 +157,8 @@ class openstack::keystone (
   }
 
   class { '::keystone':
-    verbose    => $verbose,
-    debug      => $verbose,
+    verbose        => $verbose,
+    debug          => $verbose,
     catalog_type   => 'sql',
     admin_token    => $admin_token,
     enabled        => $enabled,

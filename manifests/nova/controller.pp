@@ -57,7 +57,7 @@ class openstack::nova::controller (
   # General
   $keystone_host             = '127.0.0.1',
   $verbose                   = 'False',
-  $enabled                   = true,
+  $enabled                   = true
 ) {
 
   # Configure the db string

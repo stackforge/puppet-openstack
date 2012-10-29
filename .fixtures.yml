@@ -4,8 +4,15 @@ fixtures:
     "keystone": "git://github.com/puppetlabs/puppetlabs-keystone.git"
     "mysql": "git://github.com/puppetlabs/puppetlabs-mysql.git"
     "nova": "git://github.com/puppetlabs/puppetlabs-nova.git"
+    "glance": "git://github.com/puppetlabs/puppetlabs-glance.git"
+    "rabbitmq": "git://github.com/puppetlabs/puppetlabs-rabbitmq"
+    'memcached': 'git://github.com/saz/puppet-memcached'
+    'horizon': 'git://github.com/puppetlabs/puppetlabs-horizon'
+    'quantum': 'git://github.com/bodepd/openstack-quantum-puppet'
+    'cinder': 'git://github.com/puppetlabs/puppetlabs-cinder'
     "stdlib": "git://github.com/puppetlabs/puppetlabs-stdlib.git"
     "sysctl": "git://github.com/duritong/puppet-sysctl.git"
     'inifile':  'git://github.com/cprice-puppet/puppetlabs-inifile'
+    "create_resources": 'git://github.com/puppetlabs/puppetlabs-create_resources'
   symlinks:
     "openstack": "#{source_dir}"
