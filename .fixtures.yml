@@ -13,5 +13,6 @@ fixtures:
     "stdlib": "git://github.com/puppetlabs/puppetlabs-stdlib.git"
     "sysctl": "git://github.com/duritong/puppet-sysctl.git"
     'inifile':  'git://github.com/cprice-puppet/puppetlabs-inifile'
+    "create_resources": 'git://github.com/puppetlabs/puppetlabs-create_resources'
   symlinks:
     "openstack": "#{source_dir}"
