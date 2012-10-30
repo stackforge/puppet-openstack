@@ -263,6 +263,53 @@ class openstack::all (
     }
   } else {
     # Set up Quantum
+    $quantum_sql_connection = "mysql://${quantum_db_user}:${quantum_db_password}@127.0.0.1/${quantum_db_dbname}?charset=utf8"
+
+    class { 'quantum':
+      verbose         => $verbose,
+      debug           => $verbose,
+      rabbit_host     => '127.0.0.1',
+      rabbit_user     => $rabbit_user,
+      rabbit_password => $rabbit_password,
+      sql_connection  => $quantum_sql_connection,
+    }
+
+    class { 'quantum::server':
+      keystone_password => $quantum_user_password,
+    }
+
+    class { 'quantum::agents::dhcp': }
+
+    class { 'nova::compute::quantum': }
+
+    nova_config {
+      'linuxnet_interface_driver':       value => 'nova.network.linux_net.LinuxOVSInterfaceDriver';
+      'linuxnet_ovs_integration_bridge': value => 'br-int';
+    }
+
+    class { 'quantum::plugins::ovs':
+      sql_connection      => $quantum_sql_connection,
+      tenant_network_type => 'gre',
+      # I need to know what this does...
+      local_ip            => '10.0.0.1',
+    }
+
+    class { 'quantum::agents::ovs':
+      bridge_uplinks => ["br-virtual:${private_interface}"],
+    }
+
+    class { 'nova::network::quantum':
+    #$fixed_range,
+      quantum_admin_password    => $quantum_user_password,
+    #$use_dhcp                  = 'True',
+    #$public_interface          = undef,
+      quantum_connection_host   => 'localhost',
+      quantum_auth_strategy     => 'keystone',
+      quantum_url               => "http://127.0.0.1:9696",
+      quantum_admin_tenant_name => 'services',
+      #quantum_admin_username    => 'quantum',
+      quantum_admin_auth_url    => "http://127.0.0.1:35357/v2.0",
+    }
   }
 
   if $auto_assign_floating_ip {
