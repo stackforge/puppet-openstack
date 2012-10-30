@@ -25,13 +25,18 @@ class openstack::compute (
   # DB
   $sql_connection,
   # Network
-  $quantum                       = true,
   $public_interface              = undef,
   $private_interface             = undef,
   $fixed_range                   = undef,
   $network_manager               = 'nova.network.manager.FlatDHCPManager',
   $network_config                = {},
   $multi_host                    = false,
+  # Quantum
+  $quantum                       = true,
+  $quantum_sql_connection        = false,
+  $quantum_host                  = false,
+  $quantum_user_password         = false,
+  $keystone_host                 = false,
   # Nova
   $purge_nova_config             = true,
   # Rabbit
@@ -146,7 +151,56 @@ class openstack::compute (
       install_service   => $enable_network_service,
     }
   } else {
-    # TODO install quantum
+
+    if ! $quantum_sql_connection {
+      fail('quantum sql connection must be specified when quantum is installed on compute instances')
+    }
+    if ! $quantum_host {
+      fail('quantum host must be specified when quantum is installed on compute instances')
+    }
+    if ! $quantum_user_password {
+      fail('quantum user password must be set when quantum is configured')
+    }
+    if ! $keystone_host {
+      fail('keystone host must be configured when quantum is installed')
+    }
+
+    class { 'quantum':
+      verbose         => $verbose,
+      debug           => $verbose,
+      rabbit_host     => $rabbit_host,
+      rabbit_user     => $rabbit_user,
+      rabbit_password => $rabbit_password,
+      sql_connection  => $quantum_sql_connection,
+    }
+
+    class { 'quantum::agents::ovs':
+      bridge_uplinks => ["br-virtual:${private_interface}"],
+    }
+
+    class { 'quantum::agents::dhcp': }
+
+    class { 'nova::compute::quantum': }
+
+    # does this have to be installed on the compute node?
+    # NOTE
+    class { 'nova::network::quantum':
+    #$fixed_range,
+      quantum_admin_password    => $quantum_user_password,
+    #$use_dhcp                  = 'True',
+    #$public_interface          = undef,
+      quantum_connection_host   => $quantum_host,
+      #quantum_auth_strategy     => 'keystone',
+      quantum_url               => "http://${keystone_host}:9696",
+      quantum_admin_tenant_name => 'services',
+      #quantum_admin_username    => 'quantum',
+      quantum_admin_auth_url    => "http://${keystone_host}:35357/v2.0"
+    }
+
+    nova_config {
+      'linuxnet_interface_driver':       value => 'nova.network.linux_net.LinuxOVSInterfaceDriver';
+      'linuxnet_ovs_integration_bridge': value => 'br-int';
+    }
   }
 
   if ($cinder) {

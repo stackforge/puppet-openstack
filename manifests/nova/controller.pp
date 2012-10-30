@@ -136,6 +136,37 @@ class openstack::nova::controller (
     }
   } else {
     # Set up Quantum
+    $quantum_sql_connection = "mysql://${quantum_db_user}:${quantum_db_password}@${db_host}/${quantum_db_dbname}?charset=utf8"
+    class { 'quantum':
+      rabbit_user     => $rabbit_user,
+      rabbit_password => $rabbit_password,
+      sql_connection  => $quantum_sql_connection,
+      verbose         => $verbose,
+    }
+
+    class { 'quantum::server':
+      keystone_password => $quantum_user_password,
+    }
+
+    class { 'quantum::plugins::ovs':
+      sql_connection      => $quantum_sql_connection,
+      tenant_network_type => 'gre',
+      # I need to know what this does...
+      local_ip            => '10.0.0.1',
+    }
+
+    class { 'nova::network::quantum':
+    #$fixed_range,
+      quantum_admin_password    => $quantum_user_password,
+    #$use_dhcp                  = 'True',
+    #$public_interface          = undef,
+      quantum_connection_host   => 'localhost',
+      quantum_auth_strategy     => 'keystone',
+      quantum_url               => "http://$keystone_host}:9696",
+      quantum_admin_tenant_name => 'services',
+      #quantum_admin_username    => 'quantum',
+      quantum_admin_auth_url    => "http://${keystone_host}:35357/v2.0",
+    }
   }
 
   if $auto_assign_floating_ip {
