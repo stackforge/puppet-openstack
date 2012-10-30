@@ -162,7 +162,7 @@ class openstack::nova::controller (
     #$public_interface          = undef,
       quantum_connection_host   => 'localhost',
       quantum_auth_strategy     => 'keystone',
-      quantum_url               => "http://$keystone_host}:9696",
+      quantum_url               => "http://${keystone_host}:9696",
       quantum_admin_tenant_name => 'services',
       #quantum_admin_username    => 'quantum',
       quantum_admin_auth_url    => "http://${keystone_host}:35357/v2.0",
