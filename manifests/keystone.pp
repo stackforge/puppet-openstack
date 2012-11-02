@@ -54,6 +54,7 @@ class openstack::keystone (
   $admin_tenant             = 'admin',
   $verbose                  = 'False',
   $bind_host                = '0.0.0.0',
+  $region                   = 'RegionOne',
   $internal_address         = false,
   $admin_address            = false,
   $glance_public_address    = false,
@@ -156,8 +157,8 @@ class openstack::keystone (
   }
 
   class { '::keystone':
-    verbose    => $verbose,
-    debug      => $verbose,
+    verbose        => $verbose,
+    debug          => $verbose,
     catalog_type   => 'sql',
     admin_token    => $admin_token,
     enabled        => $enabled,
@@ -177,6 +178,7 @@ class openstack::keystone (
       public_address   => $public_address,
       admin_address    => $admin_real,
       internal_address => $internal_real,
+      region           => $region,
     }
 
     # Configure Glance endpoint in Keystone
@@ -186,6 +188,7 @@ class openstack::keystone (
         public_address   => $glance_public_real,
         admin_address    => $glance_admin_real,
         internal_address => $glance_internal_real,
+        region           => $region,
       }
     }
 
@@ -196,6 +199,7 @@ class openstack::keystone (
         public_address   => $nova_public_real,
         admin_address    => $nova_admin_real,
         internal_address => $nova_internal_real,
+        region           => $region,
       }
     }
 
@@ -206,6 +210,7 @@ class openstack::keystone (
         public_address   => $cinder_public_real,
         admin_address    => $cinder_admin_real,
         internal_address => $cinder_internal_real,
+        region           => $region,
       }
     }
     if $quantum {
@@ -214,6 +219,7 @@ class openstack::keystone (
         public_address   => $quantum_public_real,
         admin_address    => $quantum_admin_real,
         internal_address => $quantum_internal_real,
+        region           => $region,
       }
     }
   }

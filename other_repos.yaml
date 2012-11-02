@@ -7,6 +7,8 @@ repos:
     git://github.com/puppetlabs/puppetlabs-swift: swift
     git://github.com/puppetlabs/puppetlabs-keystone: keystone
     git://github.com/puppetlabs/puppetlabs-horizon: horizon
+    git://github.com/puppetlabs/puppetlabs-cinder: cinder
+    git://github.com/bodepd/openstack-quantum-puppet: quantum
     # openstack middleware
     git://github.com/puppetlabs/puppetlabs-rabbitmq: rabbitmq
     git://github.com/puppetlabs/puppetlabs-mysql: mysql
@@ -14,6 +16,8 @@ repos:
     git://github.com/puppetlabs/puppetlabs-vcsrepo: vcsrepo
     git://github.com/saz/puppet-memcached: memcached
     git://github.com/puppetlabs/puppetlabs-rsync: rsync
+    git://github.com/puppetlabs/puppetlabs-apache: apache
+    git://github.com/ekarlso/puppet-vswitch: vswitch
     # other deps
     git://github.com/puppetlabs/puppetlabs-xinetd: xinetd
     git://github.com/saz/puppet-ssh: ssh
@@ -21,7 +25,10 @@ repos:
     git://github.com/puppetlabs/puppetlabs-apt: apt
     git://github.com/ripienaar/puppet-concat: concat
     git://github.com/duritong/puppet-sysctl.git: sysctl
+    git://github.com/cprice-puppet/puppetlabs-inifile: inifile
+
   checkout_branches:
-#  keystone: dev
+    # for some reason this is not checking out to master by default
+    cinder: master
 #  glance: dev
 #    nova: dev
