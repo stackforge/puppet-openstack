@@ -62,11 +62,12 @@ describe 'openstack::controller' do
         )
       end
 
-      it { should contain_class('mysql::server').with(
-          :config_hash => {'bind_address' => '0.0.0.0', 'root_password' => 'sql_pass' },
-          :enabled     => true
-        )
-      }
+      it 'should configure mysql server' do
+        param_value(subject, 'class', 'mysql::server', 'enabled').should be_true
+        config_hash = param_value(subject, 'class', 'mysql::server', 'config_hash')
+        config_hash['bind_address'].should == '0.0.0.0'
+        config_hash['root_password'].should == 'sql_pass'
+      end
 
       it 'should contain openstack db config' do
          should contain_class('keystone::db::mysql').with(
@@ -129,11 +130,12 @@ describe 'openstack::controller' do
         )
       end
 
-      it { should contain_class('mysql::server').with(
-          :config_hash => {'bind_address' => '0.0.0.0', 'root_password' => 'sql_pass' },
-          :enabled     => false
-        )
-      }
+      it 'should configure mysql server' do
+        param_value(subject, 'class', 'mysql::server', 'enabled').should be_false
+        config_hash = param_value(subject, 'class', 'mysql::server', 'config_hash')
+        config_hash['bind_address'].should == '0.0.0.0'
+        config_hash['root_password'].should == 'sql_pass'
+      end
 
       ['keystone', 'nova', 'glance', 'cinder', 'quantum'].each do |x|
         it { should_not contain_class("#{x}::db::mysql") }
