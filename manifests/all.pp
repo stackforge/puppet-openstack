@@ -271,11 +271,10 @@ class openstack::all (
       rabbit_host     => '127.0.0.1',
       rabbit_user     => $rabbit_user,
       rabbit_password => $rabbit_password,
-      sql_connection  => $quantum_sql_connection,
     }
 
     class { 'quantum::server':
-      keystone_password => $quantum_user_password,
+      auth_password => $quantum_user_password,
     }
 
     class { 'quantum::agents::dhcp': }
@@ -292,6 +291,7 @@ class openstack::all (
       tenant_network_type => 'gre',
       # I need to know what this does...
       local_ip            => '10.0.0.1',
+      enable_tunneling    => true,
     }
 
     class { 'quantum::agents::ovs':

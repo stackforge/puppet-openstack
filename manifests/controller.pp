@@ -131,7 +131,7 @@ class openstack::controller (
   $cinder_db_user          = 'cinder',
   $cinder_db_dbname        = 'cinder',
   # quantum
-  $quantum                 = true,
+  $quantum                 = false,
   $quantum_db_user         = 'quantum',
   $quantum_db_dbname       = 'quantum',
   $enabled                 = true
@@ -253,7 +253,12 @@ class openstack::controller (
     multi_host              => $multi_host,
     public_interface        => $public_interface,
     private_interface       => $private_interface,
+    # Quantum
     quantum                 => $quantum,
+    quantum_user_password   => $quantum_user_password,
+    quantum_db_password     => $quantum_db_password,
+    quantum_db_user         => $quantum_db_user,
+    quantum_db_dbname       => $quantum_db_dbname,
     # Nova
     nova_user_password      => $nova_user_password,
     nova_db_password        => $nova_db_password,
