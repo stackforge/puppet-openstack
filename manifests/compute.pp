@@ -32,7 +32,7 @@ class openstack::compute (
   $network_config                = {},
   $multi_host                    = false,
   # Quantum
-  $quantum                       = true,
+  $quantum                       = false,
   $quantum_sql_connection        = false,
   $quantum_host                  = false,
   $quantum_user_password         = false,
@@ -171,14 +171,27 @@ class openstack::compute (
       rabbit_host     => $rabbit_host,
       rabbit_user     => $rabbit_user,
       rabbit_password => $rabbit_password,
-      sql_connection  => $quantum_sql_connection,
+      #sql_connection  => $quantum_sql_connection,
+    }
+
+    class { 'quantum::plugins::ovs':
+      tenant_network_type => 'gre',
+      enable_tunneling    => true,
     }
 
     class { 'quantum::agents::ovs':
-      bridge_uplinks => ["br-virtual:${private_interface}"],
+      bridge_uplinks   => ["br-virtual:${private_interface}"],
+      enable_tunneling => true,
+      local_ip         => $internal_address,
     }
 
-    class { 'quantum::agents::dhcp': }
+    class { 'quantum::agents::dhcp':
+      use_namespaces => False,
+    }
+
+    class { 'quantum::agents::l3':
+      auth_password => $quantum_user_password,
+    }
 
     class { 'nova::compute::quantum': }
 

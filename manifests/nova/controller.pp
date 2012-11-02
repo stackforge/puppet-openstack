@@ -42,7 +42,12 @@ class openstack::nova::controller (
   $multi_host                = false,
   $public_interface          = undef,
   $private_interface         = undef,
-  $quantum                   = true,
+  # quantum
+  $quantum                   = false,
+  $quantum_db_dbname         = 'quantum',
+  $quantum_db_user           = 'quantum',
+  $quantum_db_password       = 'quantum_pass',
+  $quantum_user_password     = 'quantum_pass',
   # Nova
   $nova_db_user              = 'nova',
   $nova_db_dbname            = 'nova',
@@ -140,20 +145,40 @@ class openstack::nova::controller (
     class { 'quantum':
       rabbit_user     => $rabbit_user,
       rabbit_password => $rabbit_password,
-      sql_connection  => $quantum_sql_connection,
+      #sql_connection  => $quantum_sql_connection,
       verbose         => $verbose,
+      debug           => $verbose,
     }
 
     class { 'quantum::server':
-      keystone_password => $quantum_user_password,
+      auth_password => $quantum_user_password,
     }
 
     class { 'quantum::plugins::ovs':
       sql_connection      => $quantum_sql_connection,
       tenant_network_type => 'gre',
-      # I need to know what this does...
-      local_ip            => '10.0.0.1',
+      enable_tunneling    => true,
     }
+
+    class { 'quantum::agents::ovs':
+      bridge_uplinks   => ["br-virtual:${private_interface}"],
+      enable_tunneling => true,
+      local_ip         => $internal_address,
+    }
+
+    class { 'quantum::agents::dhcp':
+      use_namespaces => False,
+    }
+
+
+#    class { 'quantum::agents::dhcp':
+#      use_namespaces => False,
+#    }
+#
+#
+#    class { 'quantum::agents::l3':
+#      auth_password => $quantum_user_password,
+#    }
 
     class { 'nova::network::quantum':
     #$fixed_range,
