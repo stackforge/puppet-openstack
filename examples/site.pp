@@ -109,7 +109,6 @@ node /openstack_all/ {
     fixed_range             => $fixed_network_range,
     verbose                 => $verbose,
     quantum                 => $use_quantum,
-    vncproxy_host           => $ipaddress_eth0,
   }
 
   class { 'openstack::auth_file':
