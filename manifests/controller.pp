@@ -35,6 +35,7 @@
 # [secret_key]          secret key to encode cookies, …
 # [cache_server_ip]     local memcached instance ip
 # [cache_server_port]   local memcached instance port
+# [horizon]             (bool) is horizon installed. Defaults to: true
 # [swift]               (bool) is swift installed
 # [quantum]             (bool) is quantum installed
 #   The next is an array of arrays, that can be used to add call-out links to the dashboard for other apps.
@@ -48,7 +49,7 @@
 #
 # class { 'openstack::controller':
 #   public_address       => '192.168.0.3',
-#   mysql_root_password  => 'changeme',
+#   mysql_root_password  => 'chanhorizon,
 #   allowed_hosts        => ['127.0.0.%', '192.168.1.%'],
 #   admin_email          => 'my_email@mw.com',
 #   admin_password       => 'my_admin_password',
@@ -117,6 +118,7 @@ class openstack::controller (
   # Rabbit
   $rabbit_user             = 'nova',
   # Horizon
+  $horizon                 = true,
   $cache_server_ip         = '127.0.0.1',
   $cache_server_port       = '11211',
   $horizon_app_links       = undef,
@@ -295,13 +297,15 @@ class openstack::controller (
 
 
   ######## Horizon ########
-  class { 'openstack::horizon':
-    secret_key        => $secret_key,
-    cache_server_ip   => $cache_server_ip,
-    cache_server_port => $cache_server_port,
-    swift             => $swift,
-    quantum           => $quantum,
-    horizon_app_links => $horizon_app_links,
+  if ($horizon) {
+    class { 'openstack::horizon':
+      secret_key        => $secret_key,
+      cache_server_ip   => $cache_server_ip,
+      cache_server_port => $cache_server_port,
+      swift             => $swift,
+      quantum           => $quantum,
+      horizon_app_links => $horizon_app_links,
+    }
   }
 
 }
