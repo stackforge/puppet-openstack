@@ -90,6 +90,7 @@ class openstack::compute (
     glance_api_servers => $glance_api_servers,
     verbose            => $verbose,
     rabbit_host        => $rabbit_host,
+    virtual_host       => $rabbit_virtual_host,
   }
 
   # Install / configure nova-compute
