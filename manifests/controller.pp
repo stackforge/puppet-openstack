@@ -36,7 +36,7 @@
 # [secret_key]          secret key to encode cookies, …
 # [cache_server_ip]     local memcached instance ip
 # [cache_server_port]   local memcached instance port
-# [horizon]             (bool) is horizon installed. Defaults to: true
+# [horizon]             (bool) is horizon installed. Defaults to: true 
 # [swift]               (bool) is swift installed
 # [quantum]             (bool) is quantum installed
 #   The next is an array of arrays, that can be used to add call-out links to the dashboard for other apps.

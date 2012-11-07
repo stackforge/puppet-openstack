@@ -8,6 +8,7 @@ describe 'openstack::compute' do
       :internal_address      => '0.0.0.0',
       :nova_user_password    => 'nova_pass',
       :rabbit_password       => 'rabbit_pw',
+      :rabbit_virtual_host   => '/',
       :sql_connection        => 'mysql://user:pass@host/dbname/',
       :cinder_sql_connection => 'mysql://user:pass@host/dbname/',
       :quantum               => false,

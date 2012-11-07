@@ -93,13 +93,14 @@ class openstack::nova::controller (
 
   # Configure Nova
   class { 'nova':
-    sql_connection     => $sql_connection,
-    rabbit_userid      => $rabbit_user,
-    rabbit_password    => $rabbit_password,
-    image_service      => 'nova.image.glance.GlanceImageService',
-    glance_api_servers => $glance_connection,
-    verbose            => $verbose,
-    rabbit_host        => $rabbit_connection,
+    sql_connection       => $sql_connection,
+    rabbit_userid        => $rabbit_user,
+    rabbit_password      => $rabbit_password,
+    rabbit_virtual_host  => $rabbit_virtual_host,
+    image_service        => 'nova.image.glance.GlanceImageService',
+    glance_api_servers   => $glance_connection,
+    verbose              => $verbose,
+    rabbit_host          => $rabbit_connection,
   }
 
   # Configure nova-api
