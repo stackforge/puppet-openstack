@@ -34,6 +34,7 @@
 #  [purge_nova_config] Whether unmanaged nova.conf entries should be purged. Optional. Defaults to true.
 #  [libvirt_type] The virualization type being controlled by libvirt.  Optional. Defaults to 'kvm'.
 #  [nova_volume] The name of the volume group to use for nova volume allocation. Optional. Defaults to 'nova-volumes'.
+#  [horizon] (bool) is horizon installed. Defaults to: true
 # === Examples
 #
 #  class { 'openstack::all':
@@ -108,6 +109,7 @@ class openstack::all (
   # Rabbit
   $rabbit_user             = 'nova',
   # Horizon
+  $horizon                 = true,
   $cache_server_ip         = '127.0.0.1',
   $cache_server_port       = '11211',
   $swift                   = false,
@@ -369,13 +371,15 @@ class openstack::all (
   }
 
   ######## Horizon ########
-  class { 'openstack::horizon':
-    secret_key        => $secret_key,
-    cache_server_ip   => $cache_server_ip,
-    cache_server_port => $cache_server_port,
-    swift             => $swift,
-    quantum           => $quantum,
-    horizon_app_links => $horizon_app_links,
+  if ($horizon) {
+    class { 'openstack::horizon':
+      secret_key        => $secret_key,
+      cache_server_ip   => $cache_server_ip,
+      cache_server_port => $cache_server_port,
+      swift             => $swift,
+      quantum           => $quantum,
+      horizon_app_links => $horizon_app_links,
+    }
   }
 
 }
