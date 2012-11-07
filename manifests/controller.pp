@@ -49,7 +49,7 @@
 #
 # class { 'openstack::controller':
 #   public_address       => '192.168.0.3',
-#   mysql_root_password  => 'chanhorizon,
+#   mysql_root_password  => 'changeme,
 #   allowed_hosts        => ['127.0.0.%', '192.168.1.%'],
 #   admin_email          => 'my_email@mw.com',
 #   admin_password       => 'my_admin_password',
