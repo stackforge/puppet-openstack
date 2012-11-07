@@ -1,5 +1,8 @@
 # This document serves as an example of how to deploy
 # basic single and multi-node openstack environments.
+#
+# For complete installation example, please refer to:
+#   http://edin.no-ip.com/blog/hswong3i/openstack-folsom-deploy-puppet-ubuntu-12-04-howto
 
 Exec {
   logoutput => true,
@@ -109,7 +112,6 @@ node /openstack_all/ {
     fixed_range             => $fixed_network_range,
     verbose                 => $verbose,
     quantum                 => $use_quantum,
-    vncproxy_host           => $ipaddress_eth0,
   }
 
   class { 'openstack::auth_file':
