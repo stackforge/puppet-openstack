@@ -38,7 +38,6 @@
 # [cache_server_port]   local memcached instance port
 # [swift]               (bool) is swift installed
 # [quantum]             (bool) is quantum installed
-# [horizon]             (bool) is horizon installed
 #   The next is an array of arrays, that can be used to add call-out links to the dashboard for other apps.
 #   There is no specific requirement for these apps to be for monitoring, that's just the defacto purpose.
 #   Each app is defined in two parts, the display name, and the URI
@@ -120,7 +119,6 @@ class openstack::controller (
   $rabbit_user             = 'nova',
   $rabbit_virtual_host     = '/',
   # Horizon
-  $horizon                 = true,
   $cache_server_ip         = '127.0.0.1',
   $cache_server_port       = '11211',
   $horizon_app_links       = undef,
@@ -300,15 +298,13 @@ class openstack::controller (
 
 
   ######## Horizon ########
-  if ($horizon) {
-    class { 'openstack::horizon':
-      secret_key        => $secret_key,
-      cache_server_ip   => $cache_server_ip,
-      cache_server_port => $cache_server_port,
-      swift             => $swift,
-      quantum           => $quantum,
-      horizon_app_links => $horizon_app_links,
-    }
+  class { 'openstack::horizon':
+    secret_key        => $secret_key,
+    cache_server_ip   => $cache_server_ip,
+    cache_server_port => $cache_server_port,
+    swift             => $swift,
+    quantum           => $quantum,
+    horizon_app_links => $horizon_app_links,
   }
 
 }
