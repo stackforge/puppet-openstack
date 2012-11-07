@@ -42,6 +42,7 @@ class openstack::compute (
   # Rabbit
   $rabbit_host                   = '127.0.0.1',
   $rabbit_user                   = 'nova',
+  $rabbit_virtual_host           = '/',
   # Glance
   $glance_api_servers            = false,
   # Virtualization
