@@ -42,6 +42,7 @@ class openstack::compute (
   # Rabbit
   $rabbit_host                   = '127.0.0.1',
   $rabbit_user                   = 'nova',
+  $rabbit_virtual_host           = '/',
   # Glance
   $glance_api_servers            = false,
   # Virtualization
@@ -82,13 +83,14 @@ class openstack::compute (
   }
 
   class { 'nova':
-    sql_connection     => $sql_connection,
-    rabbit_userid      => $rabbit_user,
-    rabbit_password    => $rabbit_password,
-    image_service      => 'nova.image.glance.GlanceImageService',
-    glance_api_servers => $glance_api_servers,
-    verbose            => $verbose,
-    rabbit_host        => $rabbit_host,
+    sql_connection      => $sql_connection,
+    rabbit_userid       => $rabbit_user,
+    rabbit_password     => $rabbit_password,
+    image_service       => 'nova.image.glance.GlanceImageService',
+    glance_api_servers  => $glance_api_servers,
+    verbose             => $verbose,
+    rabbit_host         => $rabbit_host,
+    rabbit_virtual_host => $rabbit_virtual_host,
   }
 
   # Install / configure nova-compute

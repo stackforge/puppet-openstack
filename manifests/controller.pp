@@ -18,6 +18,7 @@
 # [nova_user_password] Nova service password.
 # [rabbit_password] Rabbit password.
 # [rabbit_user] Rabbit User.
+# [rabbit_virtual_host] Rabbit virtual host path for Nova. Defaults to '/'.
 # [network_manager] Nova network manager to use.
 # [fixed_range] Range of ipv4 network for vms.
 # [floating_range] Floating ip range to create.
@@ -117,6 +118,7 @@ class openstack::controller (
   $network_config          = {},
   # Rabbit
   $rabbit_user             = 'nova',
+  $rabbit_virtual_host     = '/',
   # Horizon
   $horizon                 = true,
   $cache_server_ip         = '127.0.0.1',
@@ -269,6 +271,7 @@ class openstack::controller (
     # Rabbit
     rabbit_user             => $rabbit_user,
     rabbit_password         => $rabbit_password,
+    rabbit_virtual_host     => $rabbit_virtual_host,
     # Glance
     glance_api_servers      => $glance_api_servers,
     # VNC

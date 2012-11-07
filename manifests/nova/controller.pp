@@ -53,6 +53,7 @@ class openstack::nova::controller (
   $nova_db_dbname            = 'nova',
   # Rabbit
   $rabbit_user               = 'nova',
+  $rabbit_virtual_host       = '/',
   # Database
   $db_type                   = 'mysql',
   # Glance
@@ -84,9 +85,10 @@ class openstack::nova::controller (
 
   # Install / configure rabbitmq
   class { 'nova::rabbitmq':
-    userid   => $rabbit_user,
-    password => $rabbit_password,
-    enabled  => $enabled,
+    userid        => $rabbit_user,
+    password      => $rabbit_password,
+    enabled       => $enabled,
+    virtual_host  => $rabbit_virtual_host,
   }
 
   # Configure Nova
