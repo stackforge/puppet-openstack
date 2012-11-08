@@ -12,6 +12,7 @@ describe 'openstack::controller' do
       :admin_email           => 'some_user@some_fake_email_address.foo',
       :admin_password        => 'ChangeMe',
       :rabbit_password       => 'rabbit_pw',
+      :rabbit_virtual_host   => '/',
       :keystone_db_password  => 'keystone_pass',
       :keystone_admin_token  => 'keystone_admin_token',
       :glance_db_password    => 'glance_pass',
