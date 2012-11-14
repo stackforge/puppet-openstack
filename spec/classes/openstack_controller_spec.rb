@@ -117,6 +117,7 @@ describe 'openstack::controller' do
         )
       end
       it do
+        should contain_class('nova::volume')
         should_not contain_class('quantum::db::mysql')
         should_not contain_class('cinder::db::mysql')
       end
