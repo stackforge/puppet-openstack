@@ -18,6 +18,7 @@
 # [nova_user_password] Nova service password.
 # [rabbit_password] Rabbit password.
 # [rabbit_user] Rabbit User.
+# [rabbit_virtual_host] Rabbit virtual host path for Nova. Defaults to '/'.
 # [network_manager] Nova network manager to use.
 # [fixed_range] Range of ipv4 network for vms.
 # [floating_range] Floating ip range to create.
@@ -35,6 +36,7 @@
 # [secret_key]          secret key to encode cookies, …
 # [cache_server_ip]     local memcached instance ip
 # [cache_server_port]   local memcached instance port
+# [horizon]             (bool) is horizon installed. Defaults to: true
 # [swift]               (bool) is swift installed
 # [quantum]             (bool) is quantum installed
 #   The next is an array of arrays, that can be used to add call-out links to the dashboard for other apps.
@@ -116,7 +118,9 @@ class openstack::controller (
   $network_config          = {},
   # Rabbit
   $rabbit_user             = 'nova',
+  $rabbit_virtual_host     = '/',
   # Horizon
+  $horizon                 = true,
   $cache_server_ip         = '127.0.0.1',
   $cache_server_port       = '11211',
   $horizon_app_links       = undef,
@@ -267,6 +271,7 @@ class openstack::controller (
     # Rabbit
     rabbit_user             => $rabbit_user,
     rabbit_password         => $rabbit_password,
+    rabbit_virtual_host     => $rabbit_virtual_host,
     # Glance
     glance_api_servers      => $glance_api_servers,
     # VNC
@@ -291,17 +296,20 @@ class openstack::controller (
     class { 'cinder::scheduler': }
   } else {
     # Set up nova-volume
+    class{ 'nova::volume': }
   }
 
 
   ######## Horizon ########
-  class { 'openstack::horizon':
-    secret_key        => $secret_key,
-    cache_server_ip   => $cache_server_ip,
-    cache_server_port => $cache_server_port,
-    swift             => $swift,
-    quantum           => $quantum,
-    horizon_app_links => $horizon_app_links,
+  if ($horizon) {
+    class { 'openstack::horizon':
+      secret_key        => $secret_key,
+      cache_server_ip   => $cache_server_ip,
+      cache_server_port => $cache_server_port,
+      swift             => $swift,
+      quantum           => $quantum,
+      horizon_app_links => $horizon_app_links,
+    }
   }
 
 }

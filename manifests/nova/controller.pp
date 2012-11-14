@@ -53,6 +53,7 @@ class openstack::nova::controller (
   $nova_db_dbname            = 'nova',
   # Rabbit
   $rabbit_user               = 'nova',
+  $rabbit_virtual_host       = '/',
   # Database
   $db_type                   = 'mysql',
   # Glance
@@ -84,20 +85,22 @@ class openstack::nova::controller (
 
   # Install / configure rabbitmq
   class { 'nova::rabbitmq':
-    userid   => $rabbit_user,
-    password => $rabbit_password,
-    enabled  => $enabled,
+    userid        => $rabbit_user,
+    password      => $rabbit_password,
+    enabled       => $enabled,
+    virtual_host  => $rabbit_virtual_host,
   }
 
   # Configure Nova
   class { 'nova':
-    sql_connection     => $sql_connection,
-    rabbit_userid      => $rabbit_user,
-    rabbit_password    => $rabbit_password,
-    image_service      => 'nova.image.glance.GlanceImageService',
-    glance_api_servers => $glance_connection,
-    verbose            => $verbose,
-    rabbit_host        => $rabbit_connection,
+    sql_connection       => $sql_connection,
+    rabbit_userid        => $rabbit_user,
+    rabbit_password      => $rabbit_password,
+    rabbit_virtual_host  => $rabbit_virtual_host,
+    image_service        => 'nova.image.glance.GlanceImageService',
+    glance_api_servers   => $glance_connection,
+    verbose              => $verbose,
+    rabbit_host          => $rabbit_connection,
   }
 
   # Configure nova-api

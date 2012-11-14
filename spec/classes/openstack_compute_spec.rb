@@ -8,6 +8,7 @@ describe 'openstack::compute' do
       :internal_address      => '0.0.0.0',
       :nova_user_password    => 'nova_pass',
       :rabbit_password       => 'rabbit_pw',
+      :rabbit_virtual_host   => '/',
       :sql_connection        => 'mysql://user:pass@host/dbname/',
       :cinder_sql_connection => 'mysql://user:pass@host/dbname/',
       :quantum               => false,
@@ -28,13 +29,14 @@ describe 'openstack::compute' do
     end
     it {
       should contain_class('nova').with(
-        :sql_connection     => 'mysql://user:pass@host/dbname/',
-        :rabbit_host        => '127.0.0.1',
-        :rabbit_userid      => 'nova',
-        :rabbit_password    => 'rabbit_pw',
-        :image_service      => 'nova.image.glance.GlanceImageService',
-        :glance_api_servers => false,
-        :verbose            => 'False'
+        :sql_connection      => 'mysql://user:pass@host/dbname/',
+        :rabbit_host         => '127.0.0.1',
+        :rabbit_userid       => 'nova',
+        :rabbit_password     => 'rabbit_pw',
+        :rabbit_virtual_host => '/',
+        :image_service       => 'nova.image.glance.GlanceImageService',
+        :glance_api_servers  => false,
+        :verbose             => 'False'
       )
       should contain_class('nova::compute').with(
         :enabled                        => true,
@@ -76,6 +78,7 @@ describe 'openstack::compute' do
         :rabbit_host         => 'my_host',
         :rabbit_password     => 'my_rabbit_pw',
         :rabbit_user         => 'my_rabbit_user',
+        :rabbit_virtual_host => '/foo',
         :glance_api_servers  => ['controller:9292'],
         :libvirt_type        => 'qemu',
         :vncproxy_host       => '127.0.0.2',
@@ -88,13 +91,14 @@ describe 'openstack::compute' do
     end
     it do
       should contain_class('nova').with(
-        :sql_connection     => 'mysql://user:passwd@host/name',
-        :rabbit_host        => 'my_host',
-        :rabbit_userid      => 'my_rabbit_user',
-        :rabbit_password    => 'my_rabbit_pw',
-        :image_service      => 'nova.image.glance.GlanceImageService',
-        :glance_api_servers => ['controller:9292'],
-        :verbose            => true
+        :sql_connection      => 'mysql://user:passwd@host/name',
+        :rabbit_host         => 'my_host',
+        :rabbit_userid       => 'my_rabbit_user',
+        :rabbit_password     => 'my_rabbit_pw',
+        :rabbit_virtual_host => '/foo',
+        :image_service       => 'nova.image.glance.GlanceImageService',
+        :glance_api_servers  => ['controller:9292'],
+        :verbose             => true
       )
       should contain_class('nova::compute').with(
         :enabled                        => true,

@@ -12,6 +12,7 @@ describe 'openstack::controller' do
       :admin_email           => 'some_user@some_fake_email_address.foo',
       :admin_password        => 'ChangeMe',
       :rabbit_password       => 'rabbit_pw',
+      :rabbit_virtual_host   => '/',
       :keystone_db_password  => 'keystone_pass',
       :keystone_admin_token  => 'keystone_admin_token',
       :glance_db_password    => 'glance_pass',
@@ -116,6 +117,7 @@ describe 'openstack::controller' do
         )
       end
       it do
+        should contain_class('nova::volume')
         should_not contain_class('quantum::db::mysql')
         should_not contain_class('cinder::db::mysql')
       end
@@ -330,18 +332,20 @@ describe 'openstack::controller' do
 
       it 'should contain enabled nova services' do
         should contain_class('nova::rabbitmq').with(
-          :userid   => 'nova',
-          :password => 'rabbit_pw',
-          :enabled  => true
+          :userid       => 'nova',
+          :password     => 'rabbit_pw',
+          :virtual_host => '/',
+          :enabled      => true
         )
         should contain_class('nova').with(
-          :sql_connection     => 'mysql://nova:nova_pass@127.0.0.1/nova',
-          :rabbit_host        => '127.0.0.1',
-          :rabbit_userid      => 'nova',
-          :rabbit_password    => 'rabbit_pw',
-          :image_service      => 'nova.image.glance.GlanceImageService',
-          :glance_api_servers => '10.0.0.1:9292',
-          :verbose            => 'False'
+          :sql_connection      => 'mysql://nova:nova_pass@127.0.0.1/nova',
+          :rabbit_host         => '127.0.0.1',
+          :rabbit_userid       => 'nova',
+          :rabbit_password     => 'rabbit_pw',
+          :rabbit_virtual_host => '/',
+          :image_service       => 'nova.image.glance.GlanceImageService',
+          :glance_api_servers  => '10.0.0.1:9292',
+          :verbose             => 'False'
         )
         should contain_class('nova::api').with(
           :enabled           => true,
@@ -391,6 +395,13 @@ describe 'openstack::controller' do
         :quantum           => false,
         :horizon_app_links => false
       )
+    end
+
+    describe 'when horizon is disabled' do
+      let :params do
+        default_params.merge(:horizon => false)
+      end
+      it { should_not contain_class('horizon') }
     end
   end
 
