@@ -22,6 +22,8 @@ repos:
     git://github.com/ripienaar/puppet-concat: concat
     git://github.com/duritong/puppet-sysctl.git: sysctl
   checkout_branches:
-#  keystone: dev
-#  glance: dev
-#    nova: dev
+    keystone: essex
+    glance: essex
+    nova: essex
+    switft: essex
+    horizon: essex
