@@ -287,6 +287,7 @@ class openstack::controller (
       verbose         => $verbose,
       sql_connection  => "mysql://${cinder_db_user}:${cinder_db_password}@${db_host}/${cinder_db_dbname}?charset=utf8",
       rabbit_password => $rabbit_password,
+      rabbit_userid   => $rabbit_user,
     }
 
     class { 'cinder::api':
