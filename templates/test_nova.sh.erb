@@ -6,7 +6,7 @@ source <%= rc_file_path %>
 <% if image_type == 'cirros' -%>
 
 # Grab an image.  Cirros is a nice small Linux that's easy to deploy
-wget https://launchpad.net/cirros/trunk/0.3.0/+download/cirros-0.3.0-x86_64-disk.img
+wget --quiet https://launchpad.net/cirros/trunk/0.3.0/+download/cirros-0.3.0-x86_64-disk.img
 
 # Add it to glance so that we can use it in Openstack
 glance add name='cirros image' is_public=true container_format=bare disk_format=qcow2 < cirros-0.3.0-x86_64-disk.img
@@ -19,7 +19,7 @@ login_user='cirros'
 
 # otherwise, use an Ubuntu precise image. This is a larger image, but a little more
 # feature-full and realistic
-wget http://cloud-images.ubuntu.com/precise/current/precise-server-cloudimg-amd64-disk1.img
+wget --quiet  http://cloud-images.ubuntu.com/precise/current/precise-server-cloudimg-amd64-disk1.img
 # import that image into glance
 glance add name="precise-amd64" is_public=true container_format=ovf disk_format=qcow2 < precise-server-cloudimg-amd64-disk1.img
 # Caputre the Image ID so taht we can call the right UUID for this image
