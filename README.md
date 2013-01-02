@@ -1,5 +1,7 @@
 # The Openstack modules:
 
+[![Unit Test Status](https://secure.travis-ci.org/puppetlabs/puppetlabs-openstack.png?branch=master)](http://travis-ci.org/puppetlabs/puppetlabs-openstack)
+
 ## Introduction
 
 The Openstack Puppet Modules are a flexible Puppet implementation capable of
