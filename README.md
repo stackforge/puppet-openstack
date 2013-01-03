@@ -1,6 +1,6 @@
 # The Openstack modules:
 
-[![Unit Test Status](https://secure.travis-ci.org/puppetlabs/puppetlabs-openstack.png?branch=master)](http://travis-ci.org/puppetlabs/puppetlabs-openstack)
+[![Unit Test Status](https://secure.travis-ci.org/puppetlabs/puppetlabs-openstack.png?branch=master,folsom)](http://travis-ci.org/puppetlabs/puppetlabs-openstack/branches)
 
 ## Introduction
 
