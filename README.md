@@ -572,3 +572,4 @@ The process for contributing code is as follows:
     an entire environment from scratch
   * Integrate with PuppetDB to allow service auto-discovery to simplify the
     configuration of service association
+
