@@ -1,7 +1,7 @@
 # The Openstack modules:
 
 [![Unit Test Status](https://secure.travis-ci.org/puppetlabs/puppetlabs-openstack.png?branch=master,folsom,essex)](http://travis-ci.org/puppetlabs/puppetlabs-openstack/branches)
-[![Build Status](https://travis-ci.org/puppetlabs/puppetlabs-openstack.png)](https://travis-ci.org/puppetlabs/puppetlabs-openstack)
+[![Build Status](https://travis-ci.org/puppetlabs/puppetlabs-openstack.png?branch=master)](https://travis-ci.org/puppetlabs/puppetlabs-openstack)
 
 ## Introduction
 
