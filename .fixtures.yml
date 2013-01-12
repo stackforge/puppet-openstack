@@ -16,5 +16,6 @@ fixtures:
     'inifile':  'git://github.com/cprice-puppet/puppetlabs-inifile'
     "create_resources": 'git://github.com/puppetlabs/puppetlabs-create_resources'
     'vswitch': 'git://github.com/ekarlso/puppet-vswitch'
+    'swift' : 'git://github.com/puppetlabs/puppetlabs-swift'
   symlinks:
     "openstack": "#{source_dir}"

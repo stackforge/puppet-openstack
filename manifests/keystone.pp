@@ -23,6 +23,7 @@
 # [admin_address] Keystone admin address. Optional. Defaults to  $internal_address
 # [glance] Set up glance endpoints and auth. Optional. Defaults to  true
 # [nova] Set up nova endpoints and auth. Optional. Defaults to  true
+# [swift] Set up swift endpoints and auth. Optional. Defaults to false
 # [enabled] If the service is active (true) or passive (false).
 #   Optional. Defaults to  true
 #
@@ -47,6 +48,7 @@ class openstack::keystone (
   $nova_user_password,
   $cinder_user_password,
   $quantum_user_password,
+  $swift_user_password      = false,
   $public_address,
   $db_type                  = 'mysql',
   $db_user                  = 'keystone',
@@ -69,10 +71,14 @@ class openstack::keystone (
   $quantum_public_address   = false,
   $quantum_internal_address = false,
   $quantum_admin_address    = false,
+  $swift_public_address     = false,
+  $swift_internal_address   = false,
+  $swift_admin_address      = false,
   $glance                   = true,
   $nova                     = true,
   $cinder                   = true,
   $quantum                  = true,
+  $swift                    = false,
   $enabled                  = true
 ) {
 
@@ -155,6 +161,21 @@ class openstack::keystone (
   } else {
     $quantum_admin_real = $quantum_internal_real
   }
+  if($swift_public_address) {
+    $swift_public_real = $swift_public_address
+  } else {
+    $swift_public_real = $public_address
+  }
+  if($swift_internal_address) {
+    $swift_internal_real = $swift_internal_address
+  } else {
+    $swift_internal_real = $swift_public_real
+  }
+  if($swift_admin_address) {
+    $swift_admin_real = $swift_admin_address
+  } else {
+    $swift_admin_real = $swift_internal_real
+  }
 
   class { '::keystone':
     verbose        => $verbose,
@@ -219,6 +240,19 @@ class openstack::keystone (
         public_address   => $quantum_public_real,
         admin_address    => $quantum_admin_real,
         internal_address => $quantum_internal_real,
+        region           => $region,
+      }
+    }
+
+    if $swift {
+
+      if ! $swift_user_password {
+        fail('Must set a swift_user_password when swift auth is being configured')
+      }
+
+      class { 'swift::keystone::auth':
+        password         => $swift_user_password,
+        address          => $swift_public_real,
         region           => $region,
       }
     }
