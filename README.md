@@ -124,7 +124,7 @@ These modules are based on the adminstrative guides for openstack
       `service puppetmaster restart`
 
     * Configure each client to connect to the master and enable pluginsync. This
-      can be done by adding the following lines to /etc/puppet.conf:
+      can be done by adding the following lines to /etc/puppet/puppet.conf:
 
             [agent]
               pluginsync = true
