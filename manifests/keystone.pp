@@ -96,7 +96,7 @@ class openstack::keystone (
     $admin_real = $internal_real
   }
   if($glance_public_address) {
-    $glance_public_real = $public_public_address
+    $glance_public_real = $glance_public_address
   } else {
     $glance_public_real = $public_address
   }
