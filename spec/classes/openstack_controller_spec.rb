@@ -339,7 +339,7 @@ describe 'openstack::controller' do
         )
         should contain_class('nova').with(
           :sql_connection      => 'mysql://nova:nova_pass@127.0.0.1/nova',
-          :rabbit_host         => '127.0.0.1',
+          :rabbit_hosts        => ['127.0.0.1'],
           :rabbit_userid       => 'nova',
           :rabbit_password     => 'rabbit_pw',
           :rabbit_virtual_host => '/',

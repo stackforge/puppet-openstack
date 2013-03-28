@@ -40,7 +40,7 @@ class openstack::compute (
   # Nova
   $purge_nova_config             = true,
   # Rabbit
-  $rabbit_host                   = '127.0.0.1',
+  $rabbit_hosts                  = ['127.0.0.1'],
   $rabbit_user                   = 'nova',
   $rabbit_virtual_host           = '/',
   # Glance
@@ -89,7 +89,7 @@ class openstack::compute (
     image_service       => 'nova.image.glance.GlanceImageService',
     glance_api_servers  => $glance_api_servers,
     verbose             => $verbose,
-    rabbit_host         => $rabbit_host,
+    rabbit_hosts        => $rabbit_hosts,
     rabbit_virtual_host => $rabbit_virtual_host,
   }
 
@@ -170,7 +170,7 @@ class openstack::compute (
     class { 'quantum':
       verbose         => $verbose,
       debug           => $verbose,
-      rabbit_host     => $rabbit_host,
+      rabbit_hosts    => $rabbit_hosts,
       rabbit_user     => $rabbit_user,
       rabbit_password => $rabbit_password,
       #sql_connection  => $quantum_sql_connection,
@@ -221,7 +221,7 @@ class openstack::compute (
   if ($cinder) {
     class { 'cinder::base':
       rabbit_password => $rabbit_password,
-      rabbit_host     => $rabbit_host,
+      rabbit_hosts    => $rabbit_hosts,
       sql_connection  => $cinder_sql_connection,
       verbose         => $verbose,
     }

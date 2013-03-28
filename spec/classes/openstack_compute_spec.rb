@@ -30,7 +30,7 @@ describe 'openstack::compute' do
     it {
       should contain_class('nova').with(
         :sql_connection      => 'mysql://user:pass@host/dbname/',
-        :rabbit_host         => '127.0.0.1',
+        :rabbit_hosts        => ['127.0.0.1'],
         :rabbit_userid       => 'nova',
         :rabbit_password     => 'rabbit_pw',
         :rabbit_virtual_host => '/',
@@ -75,7 +75,7 @@ describe 'openstack::compute' do
         :public_interface    => 'eth2',
         :sql_connection      => 'mysql://user:passwd@host/name',
         :nova_user_password  => 'nova_pass',
-        :rabbit_host         => 'my_host',
+        :rabbit_hosts        => ['my_host:1234'],
         :rabbit_password     => 'my_rabbit_pw',
         :rabbit_user         => 'my_rabbit_user',
         :rabbit_virtual_host => '/foo',
@@ -92,7 +92,7 @@ describe 'openstack::compute' do
     it do
       should contain_class('nova').with(
         :sql_connection      => 'mysql://user:passwd@host/name',
-        :rabbit_host         => 'my_host',
+        :rabbit_hosts        => ['my_host:1234'],
         :rabbit_userid       => 'my_rabbit_user',
         :rabbit_password     => 'my_rabbit_pw',
         :rabbit_virtual_host => '/foo',
