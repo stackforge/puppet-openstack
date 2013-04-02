@@ -160,11 +160,11 @@ class openstack::nova::controller (
     class { 'quantum::plugins::ovs':
       sql_connection      => $quantum_sql_connection,
       tenant_network_type => 'gre',
-      enable_tunneling    => true,
     }
 
     class { 'quantum::agents::ovs':
-      bridge_uplinks   => ["br-virtual:${private_interface}"],
+      bridge_uplinks   => ["br-ex:${public_interface}"],
+      bridge_mappings  => ['external:br-ex'],
       enable_tunneling => true,
       local_ip         => $internal_address,
     }
@@ -173,15 +173,10 @@ class openstack::nova::controller (
       use_namespaces => False,
     }
 
-
-#    class { 'quantum::agents::dhcp':
-#      use_namespaces => False,
-#    }
-#
-#
-#    class { 'quantum::agents::l3':
-#      auth_password => $quantum_user_password,
-#    }
+    class { 'quantum::agents::l3':
+      external_network_bridge => 'br-ex',
+      auth_password           => $quantum_user_password,
+    }
 
     class { 'nova::network::quantum':
     #$fixed_range,

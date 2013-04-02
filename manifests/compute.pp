@@ -33,7 +33,6 @@ class openstack::compute (
   $multi_host                    = false,
   # Quantum
   $quantum                       = false,
-  $quantum_sql_connection        = false,
   $quantum_host                  = false,
   $quantum_user_password         = false,
   $keystone_host                 = false,
@@ -154,9 +153,6 @@ class openstack::compute (
     }
   } else {
 
-    if ! $quantum_sql_connection {
-      fail('quantum sql connection must be specified when quantum is installed on compute instances')
-    }
     if ! $quantum_host {
       fail('quantum host must be specified when quantum is installed on compute instances')
     }
@@ -176,23 +172,9 @@ class openstack::compute (
       #sql_connection  => $quantum_sql_connection,
     }
 
-    class { 'quantum::plugins::ovs':
-      tenant_network_type => 'gre',
-      enable_tunneling    => true,
-    }
-
     class { 'quantum::agents::ovs':
-      bridge_uplinks   => ["br-virtual:${private_interface}"],
       enable_tunneling => true,
       local_ip         => $internal_address,
-    }
-
-    class { 'quantum::agents::dhcp':
-      use_namespaces => False,
-    }
-
-    class { 'quantum::agents::l3':
-      auth_password => $quantum_user_password,
     }
 
     class { 'nova::compute::quantum': }

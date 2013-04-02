@@ -38,9 +38,22 @@ nova --no-cache keypair-add --pub_key /tmp/id_rsa.pub key_cirros
 instance_name='<%= image_type %>_test_vm'
 
 <% if quantum -%>
+
+quantum net-create public --router:external=True
+quantum subnet-create --allocation-pool start=172.16.2.128,end=172.16.2.150 public 172.16.2.0/24
+
 quantum net-create net1
 quantum subnet-create net1 10.0.0.0/24
+
 quantum_net=`quantum net-list | grep net1 | awk -F' ' '{print $2}'`
+quantum_public_net=`quantum net-list | grep public | awk -F' ' '{print $2}'`
+quantum_prv_subnet=`quantum subnet-list | grep '10.0.0.0/24' | awk -F' ' '{print $2}'`
+
+quantum router-create router1
+quantum router-interface-add router1 $quantum_prv_subnet
+quantum router-gateway-set router1 $quantum_public_net
+
+
 nova --no-cache boot --flavor 1 --image $IMAGE_ID --key_name key_cirros --nic net-id=$quantum_net $instance_name
 <% else -%>
   <% if floating_ip -%>
@@ -68,10 +81,20 @@ sleep <%= sleep_time %>
 
 <% if floating_ip -%>
 # Now add the floating IP we reserved earlier to the machine.
-nova --no-cache add-floating-ip $instance_name $floating_ip
+  # if not quantum
+  nova --no-cache add-floating-ip $instance_name $floating_ip
 # Wait  and then try to SSH to the node, leveraging the private key
 # we generated earlier.
 sleep <%= sleep_time %>
 ssh $login_user@$floating_ip -i /tmp/id_rsa -o StrictHostKeyChecking=no hostname
 <% end -%>
+
+<% if quantum %>
+# get port
+ip_addr=`nova show $instance_name | grep 'net1 network' | awk -F'|' '{print $3}'`
+port_id=`quantum port-list | grep $ip_addr | awk -F' ' '{print $2}'`
+quantum floatingip-create --port_id $port_id $quantum_public_net
+sleep <%= sleep_time %>
+ssh $login_user@$floating_ip -i /tmp/id_rsa -o StrictHostKeyChecking=no hostname
+<% end %>
 exit 0

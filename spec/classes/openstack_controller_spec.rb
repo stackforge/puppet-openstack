@@ -403,6 +403,7 @@ describe 'openstack::controller' do
       end
       it { should_not contain_class('horizon') }
     end
+
   end
 
   context 'cinder' do
@@ -463,10 +464,60 @@ describe 'openstack::controller' do
     context 'when quantum' do
 
       let :params do
-        default_params.merge(:quantum => true)
+        default_params.merge({
+          :quantum => true,
+          :verbose => true,
+          :quantum_user_password => 'q_pass',
+          :public_interface      => 'eth_27'
+        })
       end
 
       it { should_not contain_class('nova::network') }
+
+      it 'should configure quantum' do
+
+        should contain_class('quantum').with({
+          :rabbit_user      => 'nova',
+          :rabbit_password  => 'rabbit_pw',
+          :verbose          => true,
+          :debug            => true,
+        })
+
+        should contain_class('quantum::server').with({
+         :auth_password => 'q_pass',
+        })
+
+        should contain_class('quantum::plugins::ovs').with({
+          :sql_connection      => 'mysql://quantum:quantum_pass@127.0.0.1/quantum?charset=utf8',
+
+        })
+
+        should contain_class('quantum::agents::ovs').with( {
+          :bridge_uplinks => ["br-ex:eth_27"],
+          :bridge_mappings  => ['external:br-ex'],
+          :enable_tunneling => true,
+          :local_ip         => '127.0.0.1',
+        } )
+
+        should contain_class('quantum::agents::dhcp').with( {
+          :use_namespaces => 'False',
+        } )
+
+        should contain_class('quantum::agents::l3').with( {
+          :external_network_bridge => 'br-ex',
+          :auth_password           => 'q_pass',
+        } )
+
+        should contain_class('nova::network::quantum').with({
+          :quantum_admin_password    => 'q_pass',
+          :quantum_connection_host   => 'localhost',
+          :quantum_auth_strategy     => 'keystone',
+          :quantum_url               => "http://127.0.0.1:9696",
+          :quantum_admin_tenant_name => 'services',
+          :quantum_admin_auth_url    => "http://127.0.0.1:35357/v2.0",
+        })
+
+      end
 
     end
 
