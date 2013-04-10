@@ -284,10 +284,11 @@ class openstack::controller (
   ######### Cinder Controller Services ########
   if ($cinder) {
     class { "cinder::base":
-      verbose         => $verbose,
-      sql_connection  => "mysql://${cinder_db_user}:${cinder_db_password}@${db_host}/${cinder_db_dbname}?charset=utf8",
-      rabbit_password => $rabbit_password,
-      rabbit_userid   => $rabbit_user,
+      verbose             => $verbose,
+      sql_connection      => "mysql://${cinder_db_user}:${cinder_db_password}@${db_host}/${cinder_db_dbname}?charset=utf8",
+      rabbit_password     => $rabbit_password,
+      rabbit_userid       => $rabbit_user,
+      rabbit_virtual_host => $rabbit_virtual_host,
     }
 
     class { 'cinder::api':
