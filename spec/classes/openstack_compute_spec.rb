@@ -9,8 +9,8 @@ describe 'openstack::compute' do
       :nova_user_password    => 'nova_pass',
       :rabbit_password       => 'rabbit_pw',
       :rabbit_virtual_host   => '/',
-      :sql_connection        => 'mysql://user:pass@host/dbname/',
-      :cinder_sql_connection => 'mysql://user:pass@host/dbname/',
+      :sql_connection        => 'mysql://user:pass@host/dbname',
+      :cinder_sql_connection => 'mysql://user:pass@host/dbname',
       :quantum               => false,
       :fixed_range           => '10.0.0.0/16',
     }
@@ -29,7 +29,7 @@ describe 'openstack::compute' do
     end
     it {
       should contain_class('nova').with(
-        :sql_connection      => 'mysql://user:pass@host/dbname/',
+        :sql_connection      => 'mysql://user:pass@host/dbname',
         :rabbit_host         => '127.0.0.1',
         :rabbit_userid       => 'nova',
         :rabbit_password     => 'rabbit_pw',
@@ -191,8 +191,8 @@ describe 'openstack::compute' do
         :network_manager   => 'nova.network.manager.VlanManager',
         :config_overrides  => {'vlan_interface' => 'eth0'},
         :create_networks   => false,
-        'enabled'          => true,
-        'install_service'  => true
+        :enabled           => true,
+        :install_service   => true
       })}
     end
   end
@@ -227,7 +227,7 @@ describe 'openstack::compute' do
       })
     }
   end
-  
+
   context 'cinder' do
 
     context 'when disabled' do
@@ -278,6 +278,55 @@ describe 'openstack::compute' do
         )
         should contain_class('cinder::api').with_keystone_password('foo')
         should contain_class('cinder::scheduler')
+      end
+    end
+
+  end
+
+  context 'cinder' do
+
+    context 'when disabled' do
+      let :params do
+        default_params.merge(:cinder => false)
+      end
+      it 'should not contain cinder classes' do
+        should_not contain_class('cinder::base')
+      end
+    end
+
+    context 'when enabled' do
+      let :params do
+        default_params
+      end
+      it 'should configure cinder using defaults' do
+        should contain_class('cinder::base').with(
+          :verbose              => 'False',
+          :sql_connection       => 'mysql://user:pass@host/dbname',
+          :rabbit_password      => 'rabbit_pw',
+          :rabbit_virtual_host  => '/'
+        )
+      end
+    end
+
+    context 'when overriding config' do
+      let :params do
+        default_params.merge(
+          :verbose              => 'True',
+          :rabbit_password      => 'rabbit_pw2',
+          :cinder_user_password => 'foo',
+          :cinder_db_password   => 'bar',
+          :cinder_db_user       => 'baz',
+          :cinder_db_dbname     => 'blah',
+          :db_host              => '127.0.0.2'
+        )
+      end
+      it 'should configure cinder using defaults' do
+        should contain_class('cinder::base').with(
+          :verbose              => 'True',
+          :sql_connection       => 'mysql://baz:bar@127.0.0.2/blah?charset=utf8',
+          :rabbit_password      => 'rabbit_pw2',
+          :rabbit_virtual_host  => '/'
+        )
       end
     end
 
