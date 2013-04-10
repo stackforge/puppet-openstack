@@ -227,5 +227,60 @@ describe 'openstack::compute' do
       })
     }
   end
+  
+  context 'cinder' do
+
+    context 'when disabled' do
+      let :params do
+        default_params.merge(:cinder => false)
+      end
+      it 'should not contain cinder classes' do
+        should_not contain_class('cinder::base')
+        should_not contain_class('cinder::api')
+        should_not contain_class('cinder:"scheduler')
+      end
+    end
+
+    context 'when enabled' do
+      let :params do
+        default_params
+      end
+      it 'should configure cinder using defaults' do
+        should contain_class('cinder::base').with(
+          :verbose              => 'False',
+          :sql_connection       => 'mysql://cinder:cinder_pass@127.0.0.1/cinder?charset=utf8',
+          :rabbit_password      => 'rabbit_pw',
+          :rabbit_virtual_host  => '/'
+        )
+        should contain_class('cinder::api').with_keystone_password('cinder_pass')
+        should contain_class('cinder::scheduler')
+      end
+    end
+
+    context 'when overriding config' do
+      let :params do
+        default_params.merge(
+          :verbose              => 'True',
+          :rabbit_password      => 'rabbit_pw2',
+          :cinder_user_password => 'foo',
+          :cinder_db_password   => 'bar',
+          :cinder_db_user       => 'baz',
+          :cinder_db_dbname     => 'blah',
+          :db_host              => '127.0.0.2'
+        )
+      end
+      it 'should configure cinder using defaults' do
+        should contain_class('cinder::base').with(
+          :verbose              => 'True',
+          :sql_connection       => 'mysql://baz:bar@127.0.0.2/blah?charset=utf8',
+          :rabbit_password      => 'rabbit_pw2',
+          :rabbit_virtual_host  => '/'
+        )
+        should contain_class('cinder::api').with_keystone_password('foo')
+        should contain_class('cinder::scheduler')
+      end
+    end
+
+  end
 
 end
