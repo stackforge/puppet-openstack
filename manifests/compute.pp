@@ -219,7 +219,7 @@ class openstack::compute (
   }
 
   if ($cinder) {
-    class { 'cinder::base':
+    class { 'cinder':
       rabbit_password => $rabbit_password,
       rabbit_host     => $rabbit_host,
       sql_connection  => $cinder_sql_connection,

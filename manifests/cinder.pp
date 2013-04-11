@@ -6,7 +6,7 @@ class openstack::cinder(
   $enabled         = true
 ) {
 
-  class { 'cinder::base':
+  class { 'cinder':
     rabbit_password => $rabbit_password,
     rabbit_host     => $rabbit_host,
     sql_connection  => $sql_connection,

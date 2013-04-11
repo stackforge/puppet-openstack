@@ -336,7 +336,7 @@ class openstack::all (
 
   ######### Cinder Controller Services ########
   if ($cinder) {
-    class { "cinder::base":
+    class { "cinder":
       verbose         => $verbose,
       sql_connection  => "mysql://${cinder_db_user}:${cinder_db_password}@127.0.0.1/${cinder_db_dbname}?charset=utf8",
       rabbit_password => $rabbit_password,
