@@ -202,10 +202,11 @@ class openstack::compute (
 
   if ($cinder) {
     class { 'cinder::base':
-      rabbit_password => $rabbit_password,
-      rabbit_host     => $rabbit_host,
-      sql_connection  => $cinder_sql_connection,
-      verbose         => $verbose,
+      rabbit_password     => $rabbit_password,
+      rabbit_host         => $rabbit_host,
+      rabbit_virtual_host => $rabbit_virtual_host,
+      sql_connection      => $cinder_sql_connection,
+      verbose             => $verbose,
     }
     class { 'cinder::volume': }
     class { 'cinder::volume::iscsi':
