@@ -284,8 +284,8 @@ class openstack::all (
     class { 'nova::compute::quantum': }
 
     nova_config {
-      'linuxnet_interface_driver':       value => 'nova.network.linux_net.LinuxOVSInterfaceDriver';
-      'linuxnet_ovs_integration_bridge': value => 'br-int';
+      'DEFAULT/linuxnet_interface_driver':       value => 'nova.network.linux_net.LinuxOVSInterfaceDriver';
+      'DEFAULT/linuxnet_ovs_integration_bridge': value => 'br-int';
     }
 
     class { 'quantum::plugins::ovs':
@@ -315,7 +315,7 @@ class openstack::all (
   }
 
   if $auto_assign_floating_ip {
-    nova_config { 'auto_assign_floating_ip': value => 'True' }
+    nova_config { 'DEFUALT/auto_assign_floating_ip': value => 'True' }
   }
 
   class { [

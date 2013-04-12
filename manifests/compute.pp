@@ -119,8 +119,8 @@ class openstack::compute (
     if $multi_host {
       include keystone::python
       nova_config {
-        'multi_host':      value => 'True';
-        'send_arp_for_ha': value => 'True';
+        'DEFAULT/multi_host':      value => 'True';
+        'DEFAULT/send_arp_for_ha': value => 'True';
       }
       if ! $public_interface {
         fail('public_interface must be defined for multi host compute nodes')
@@ -136,8 +136,8 @@ class openstack::compute (
     } else {
       $enable_network_service = false
       nova_config {
-        'multi_host':      value => 'False';
-        'send_arp_for_ha': value => 'False';
+        'DEFAULT/multi_host':      value => 'False';
+        'DEFAULT/send_arp_for_ha': value => 'False';
       }
     }
 
@@ -213,8 +213,8 @@ class openstack::compute (
     }
 
     nova_config {
-      'linuxnet_interface_driver':       value => 'nova.network.linux_net.LinuxOVSInterfaceDriver';
-      'linuxnet_ovs_integration_bridge': value => 'br-int';
+      'DEFAULT/linuxnet_interface_driver':       value => 'nova.network.linux_net.LinuxOVSInterfaceDriver';
+      'DEFAULT/linuxnet_ovs_integration_bridge': value => 'br-int';
     }
   }
 
@@ -233,7 +233,7 @@ class openstack::compute (
 
     # set in nova::api
     if ! defined(Nova_config['volume_api_class']) {
-      nova_config { 'volume_api_class': value => 'nova.volume.cinder.API' }
+      nova_config { 'DEFAULT/volume_api_class': value => 'nova.volume.cinder.API' }
     }
   } else {
     # Set up nova-volume

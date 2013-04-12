@@ -359,13 +359,13 @@ describe 'openstack::controller' do
         should contain_class('nova::objectstore').with(:enabled => true)
         should contain_class('nova::vncproxy').with(:enabled => true)
       end
-      it { should_not contain_nova_config('auto_assign_floating_ip') }
+      it { should_not contain_nova_config('DEFAULT/auto_assign_floating_ip') }
     end
     context 'when auto assign floating ip is assigned' do
       let :params do
         default_params.merge(:auto_assign_floating_ip => 'true')
       end
-      it { should contain_nova_config('auto_assign_floating_ip').with(:value => 'True')}
+      it { should contain_nova_config('DEFAULT/auto_assign_floating_ip').with(:value => 'True')}
     end
     context 'when not enabled' do
       let :params do
@@ -495,7 +495,7 @@ describe 'openstack::controller' do
         let :params do
           default_params.merge(:quantum => false, :multi_host => true)
         end
-        it { should contain_nova_config('multi_host').with(:value => 'True')}
+        it { should contain_nova_config('DEFAULT/multi_host').with(:value => 'True')}
         it {should contain_class('nova::network').with(
           :create_networks   => true,
           :enabled           => false,
