@@ -49,8 +49,8 @@ describe 'openstack::compute' do
         :libvirt_type     => 'kvm',
         :vncserver_listen => '0.0.0.0'
       )
-      should contain_nova_config('multi_host').with( :value => 'False' )
-      should contain_nova_config('send_arp_for_ha').with( :value => 'False' )
+      should contain_nova_config('DEFAULT/multi_host').with( :value => 'False' )
+      should contain_nova_config('DEFAULT/send_arp_for_ha').with( :value => 'False' )
       should_not contain_class('nova::api')
       should contain_class('nova::network').with({
         :enabled           => false,
@@ -111,8 +111,8 @@ describe 'openstack::compute' do
         :libvirt_type     => 'qemu',
         :vncserver_listen => '127.0.0.1'
       )
-      should contain_nova_config('multi_host').with( :value => 'False' )
-      should contain_nova_config('send_arp_for_ha').with( :value => 'False' )
+      should contain_nova_config('DEFAULT/multi_host').with( :value => 'False' )
+      should contain_nova_config('DEFAULT/send_arp_for_ha').with( :value => 'False' )
       should_not contain_class('nova::api')
       should contain_class('nova::network').with({
         :enabled           => false,
@@ -134,7 +134,7 @@ describe 'openstack::compute' do
     end
 
     it do
-      should contain_nova_config('multi_host').with({ 'value' => 'False'})
+      should contain_nova_config('DEFAULT/multi_host').with({ 'value' => 'False'})
       should_not contain_class('nova::api')
       should contain_class('nova::network').with({
         'enabled' => false,
@@ -155,8 +155,8 @@ describe 'openstack::compute' do
 
       it 'should configure nova for multi-host' do
         #should contain_class('keystone::python')
-        should contain_nova_config('multi_host').with(:value => 'True')
-        should contain_nova_config('send_arp_for_ha').with( :value => 'True')
+        should contain_nova_config('DEFAULT/multi_host').with(:value => 'True')
+        should contain_nova_config('DEFAULT/send_arp_for_ha').with( :value => 'True')
         should contain_class('nova::network').with({
           'enabled' => true,
           'install_service' => true
@@ -220,7 +220,7 @@ describe 'openstack::compute' do
     end
 
     it {
-      should contain_nova_config('multi_host').with({ 'value' => 'True'})
+      should contain_nova_config('DEFAULT/multi_host').with({ 'value' => 'True'})
       should contain_class('nova::api')
       should contain_class('nova::network').with({
         'enabled' => true,
