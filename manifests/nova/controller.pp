@@ -60,6 +60,7 @@ class openstack::nova::controller (
   $glance_api_servers        = undef,
   # VNC
   $vnc_enabled               = true,
+  $vncproxy_host             = undef,
   # General
   $keystone_host             = '127.0.0.1',
   $verbose                   = 'False',
@@ -78,7 +79,12 @@ class openstack::nova::controller (
   } else {
     $real_glance_api_servers = $glance_api_servers
   }
-
+  if $vncproxy_host {
+    $vncproxy_host_real = $vncproxy_host
+  } else {
+    $vncproxy_host_real = $public_address
+  }
+  
   $sql_connection    = $nova_db
   $glance_connection = $real_glance_api_servers
   $rabbit_connection = $internal_address
@@ -204,7 +210,7 @@ class openstack::nova::controller (
 
   if $vnc_enabled {
     class { 'nova::vncproxy':
-      host    => $public_address,
+      host    => $vncproxy_host_real,
       enabled => $enabled,
     }
   }
