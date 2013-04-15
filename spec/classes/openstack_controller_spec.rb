@@ -425,9 +425,10 @@ describe 'openstack::controller' do
       end
       it 'should configure cinder using defaults' do
         should contain_class('cinder::base').with(
-          :verbose         => 'False',
-          :sql_connection  => 'mysql://cinder:cinder_pass@127.0.0.1/cinder?charset=utf8',
-          :rabbit_password => 'rabbit_pw'
+          :verbose              => 'False',
+          :sql_connection       => 'mysql://cinder:cinder_pass@127.0.0.1/cinder?charset=utf8',
+          :rabbit_password      => 'rabbit_pw',
+          :rabbit_virtual_host  => '/'
         )
         should contain_class('cinder::api').with_keystone_password('cinder_pass')
         should contain_class('cinder::scheduler')
@@ -448,9 +449,10 @@ describe 'openstack::controller' do
       end
       it 'should configure cinder using defaults' do
         should contain_class('cinder::base').with(
-          :verbose         => 'True',
-          :sql_connection  => 'mysql://baz:bar@127.0.0.2/blah?charset=utf8',
-          :rabbit_password => 'rabbit_pw2'
+          :verbose              => 'True',
+          :sql_connection       => 'mysql://baz:bar@127.0.0.2/blah?charset=utf8',
+          :rabbit_password      => 'rabbit_pw2',
+          :rabbit_virtual_host  => '/'
         )
         should contain_class('cinder::api').with_keystone_password('foo')
         should contain_class('cinder::scheduler')
