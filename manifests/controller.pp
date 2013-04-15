@@ -127,6 +127,7 @@ class openstack::controller (
   $swift                   = false,
   # VNC
   $vnc_enabled             = true,
+  $vncproxy_host           = false,
   # General
   $verbose                 = 'False',
   # cinder
@@ -150,6 +151,11 @@ class openstack::controller (
     $admin_address_real = $admin_address
   } else {
     $admin_address_real = $internal_address_real
+  }
+  if $vncproxy_host {
+    $vncproxy_host_real = $vncproxy_host
+  } else {
+    $vncproxy_host_real = $public_address
   }
 
   # Ensure things are run in order
@@ -276,6 +282,7 @@ class openstack::controller (
     glance_api_servers      => $glance_api_servers,
     # VNC
     vnc_enabled            => $vnc_enabled,
+    vncproxy_host          => $vncproxy_host_real,
     # General
     verbose                 => $verbose,
     enabled                 => $enabled,
