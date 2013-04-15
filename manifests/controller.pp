@@ -127,6 +127,7 @@ class openstack::controller (
   $swift                   = false,
   # VNC
   $vnc_enabled             = true,
+  $vncproxy_host           = $public_address,
   # General
   $verbose                 = 'False',
   # cinder
@@ -276,6 +277,7 @@ class openstack::controller (
     glance_api_servers      => $glance_api_servers,
     # VNC
     vnc_enabled            => $vnc_enabled,
+    vncproxy_host          => $vncproxy_host,
     # General
     verbose                 => $verbose,
     enabled                 => $enabled,

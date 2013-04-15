@@ -21,6 +21,7 @@ describe 'openstack::controller' do
       :nova_user_password    => 'nova_pass',
       :secret_key            => 'secret_key',
       :quantum               => false,
+      :vncproxy_host         => '10.0.0.1' 
     }
   end
 
@@ -357,7 +358,10 @@ describe 'openstack::controller' do
         should contain_class('nova::consoleauth').with(:enabled => true)
         should contain_class('nova::scheduler').with(:enabled => true)
         should contain_class('nova::objectstore').with(:enabled => true)
-        should contain_class('nova::vncproxy').with(:enabled => true)
+        should contain_class('nova::vncproxy').with(
+          :enabled         => true,
+          :host            => '10.0.0.1'
+        )
       end
       it { should_not contain_nova_config('DEFAULT/auto_assign_floating_ip') }
     end
