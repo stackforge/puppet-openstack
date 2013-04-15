@@ -60,6 +60,7 @@ class openstack::nova::controller (
   $glance_api_servers        = undef,
   # VNC
   $vnc_enabled               = true,
+  $vncproxy_host             = $public_address,
   # General
   $keystone_host             = '127.0.0.1',
   $verbose                   = 'False',
@@ -208,7 +209,7 @@ class openstack::nova::controller (
 
   if $vnc_enabled {
     class { 'nova::vncproxy':
-      host    => $public_address,
+      host    => $vncproxy_host,
       enabled => $enabled,
     }
   }
