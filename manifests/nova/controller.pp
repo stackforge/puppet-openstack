@@ -49,8 +49,11 @@ class openstack::nova::controller (
   $quantum_db_password       = 'quantum_pass',
   $quantum_user_password     = 'quantum_pass',
   # Nova
+  $nova_admin_tenant_name    = 'services',
+  $nova_admin_user           = 'nova',
   $nova_db_user              = 'nova',
   $nova_db_dbname            = 'nova',
+  $enabled_apis              = 'ec2,osapi_compute,metadata',
   # Rabbit
   $rabbit_user               = 'nova',
   $rabbit_virtual_host       = '/',
@@ -112,7 +115,10 @@ class openstack::nova::controller (
   # Configure nova-api
   class { 'nova::api':
     enabled           => $enabled,
+    admin_tenant_name => $nova_admin_tenant_name,
+    admin_user        => $nova_admin_user,
     admin_password    => $nova_user_password,
+    enabled_apis      => $enabled_apis,
     auth_host         => $keystone_host,
   }
 
