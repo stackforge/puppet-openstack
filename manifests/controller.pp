@@ -102,9 +102,12 @@ class openstack::controller (
   $glance_db_dbname        = 'glance',
   $glance_api_servers      = undef,
   # Nova
+  $nova_admin_tenant_name  = 'services',
+  $nova_admin_user         = 'nova',
   $nova_db_user            = 'nova',
   $nova_db_dbname          = 'nova',
   $purge_nova_config       = true,
+  $enabled_apis            = 'ec2,osapi_compute,metadata',
   # Network
   $internal_address        = false,
   $admin_address           = false,
@@ -270,10 +273,13 @@ class openstack::controller (
     quantum_db_user         => $quantum_db_user,
     quantum_db_dbname       => $quantum_db_dbname,
     # Nova
+    nova_admin_tenant_name  => $nova_admin_tenant_name,
+    nova_admin_user         => $nova_admin_user,
     nova_user_password      => $nova_user_password,
     nova_db_password        => $nova_db_password,
     nova_db_user            => $nova_db_user,
     nova_db_dbname          => $nova_db_dbname,
+    enabled_apis            => $enabled_apis,
     # Rabbit
     rabbit_user             => $rabbit_user,
     rabbit_password         => $rabbit_password,

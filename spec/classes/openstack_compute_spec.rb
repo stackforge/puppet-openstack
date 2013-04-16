@@ -10,6 +10,9 @@ describe 'openstack::compute' do
       :rabbit_password       => 'rabbit_pw',
       :rabbit_host           => '127.0.0.1',
       :rabbit_virtual_host   => '/',
+      :admin_tenant_name     => 'services',
+      :admin_user            => 'nova',
+      :enabled_apis          => 'ec2,osapi_compute,metadata',
       :sql_connection        => 'mysql://user:pass@host/dbname/',
       :cinder_sql_connection => 'mysql://user:pass@host/dbname/',
       :quantum               => false,
@@ -167,7 +170,8 @@ describe 'openstack::compute' do
           :enabled           => true,
           :admin_tenant_name => 'services',
           :admin_user        => 'nova',
-          :admin_password    => 'nova_pass'
+          :admin_password    => 'nova_pass',
+          :enabled_apis      => 'ec2,osapi_compute,metadata'
         )}
       end
     end
