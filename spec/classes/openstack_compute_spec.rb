@@ -4,16 +4,19 @@ describe 'openstack::compute' do
 
   let :default_params do
     {
-      :private_interface     => 'eth0',
-      :internal_address      => '0.0.0.0',
-      :nova_user_password    => 'nova_pass',
-      :rabbit_password       => 'rabbit_pw',
-      :rabbit_host           => '127.0.0.1',
-      :rabbit_virtual_host   => '/',
-      :sql_connection        => 'mysql://user:pass@host/dbname/',
-      :cinder_sql_connection => 'mysql://user:pass@host/dbname/',
-      :quantum               => false,
-      :fixed_range           => '10.0.0.0/16',
+      :private_interface         => 'eth0',
+      :internal_address          => '0.0.0.0',
+      :nova_user_password        => 'nova_pass',
+      :rabbit_password           => 'rabbit_pw',
+      :rabbit_host               => '127.0.0.1',
+      :rabbit_virtual_host       => '/',
+      :nova_admin_tenant_name    => 'services',
+      :nova_admin_user           => 'nova',
+      :enabled_apis              => 'ec2,osapi_compute,metadata',
+      :sql_connection            => 'mysql://user:pass@host/dbname/',
+      :cinder_sql_connection     => 'mysql://user:pass@host/dbname/',
+      :quantum                   => false,
+      :fixed_range               => '10.0.0.0/16',
     }
   end
 
@@ -167,7 +170,8 @@ describe 'openstack::compute' do
           :enabled           => true,
           :admin_tenant_name => 'services',
           :admin_user        => 'nova',
-          :admin_password    => 'nova_pass'
+          :admin_password    => 'nova_pass',
+          :enabled_apis      => 'ec2,osapi_compute,metadata'
         )}
       end
     end

@@ -31,12 +31,15 @@ class openstack::compute (
   $network_manager               = 'nova.network.manager.FlatDHCPManager',
   $network_config                = {},
   $multi_host                    = false,
+  $enabled_apis                  = 'ec2,osapi_compute,metadata',
   # Quantum
   $quantum                       = false,
   $quantum_host                  = false,
   $quantum_user_password         = false,
   $keystone_host                 = false,
   # Nova
+  $nova_admin_tenant_name        = 'services',
+  $nova_admin_user               = 'nova',
   $purge_nova_config             = true,
   # Rabbit
   $rabbit_host                   = '127.0.0.1',
@@ -127,10 +130,10 @@ class openstack::compute (
       $enable_network_service = true
       class { 'nova::api':
         enabled           => true,
-        admin_tenant_name => 'services',
-        admin_user        => 'nova',
+        admin_tenant_name => $nova_admin_tenant_name,
+        admin_user        => $nova_admin_user,
         admin_password    => $nova_user_password,
-        # TODO override enabled_apis
+        enabled_apis      => $enabled_apis,
       }
     } else {
       $enable_network_service = false
