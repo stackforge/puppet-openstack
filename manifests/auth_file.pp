@@ -8,11 +8,13 @@ class openstack::auth_file(
   $controller_node      = '127.0.0.1',
   $keystone_admin_token = 'keystone_admin_token',
   $admin_user           = 'admin',
-  $admin_tenant         = 'admin'
+  $admin_tenant         = 'admin',
+  $disable_keyring      = 'true'
 ) {
   file { '/root/openrc':
     content =>
   "
+  export OS_NO_CACHE=${disable_keyring}
   export OS_TENANT_NAME=${admin_tenant}
   export OS_USERNAME=${admin_user}
   export OS_PASSWORD=${admin_password}
