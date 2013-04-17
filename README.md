@@ -1,8 +1,5 @@
 # The Openstack modules:
 
-[![Unit Test Status](https://secure.travis-ci.org/puppetlabs/puppetlabs-openstack.png?branch=master,folsom,essex)](http://travis-ci.org/puppetlabs/puppetlabs-openstack/branches)
-[![Build Status](https://travis-ci.org/puppetlabs/puppetlabs-openstack.png?branch=master)](https://travis-ci.org/puppetlabs/puppetlabs-openstack)
-
 ## Introduction
 
 The Openstack Puppet Modules are a flexible Puppet implementation capable of
@@ -18,9 +15,7 @@ A ['Puppet Module'](http://docs.puppetlabs.com/learning/modules1.html#modules)
 is a collection of related content that can be used to model the configuration
 of a discrete service.
 
-These modules are based on the adminstrative guides for openstack
-[compute](http://docs.openstack.org/essex/openstack-compute/admin/content/) and
-[object store](http://docs.openstack.org/essex/openstack-object-storage/admin/content/)
+These modules are based on the [openstack documentation](http://docs.openstack.org/)
 
 ## Dependencies:
 
@@ -32,7 +27,7 @@ These modules are based on the adminstrative guides for openstack
 
 ### Platforms:
 
-  These modules have been fully tested on Ubuntu Precise and Debian Wheezy.
+  These modules have been fully tested on Ubuntu Precise and Debian Wheezy and RHEL 6.
 
   For instructions of how to use these modules on Debian, check
   out this excellent [link](http://wiki.debian.org/OpenStackPuppetHowto):
@@ -58,7 +53,7 @@ These modules are based on the adminstrative guides for openstack
   Below is an example of setting promiscuous mode on an interface on Ubuntu.
 
 
-        #/etc/network/interfaces   
+        #/etc/network/interfaces
         auto eth1
         iface eth1 inet manual
           up ifconfig $IFACE 0.0.0.0 up
