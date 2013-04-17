@@ -15,6 +15,6 @@ fixtures:
     "stdlib": "git://github.com/puppetlabs/puppetlabs-stdlib.git"
     "sysctl": "git://github.com/duritong/puppet-sysctl.git"
     'inifile':  'git://github.com/cprice-puppet/puppetlabs-inifile'
-    'vswitch': 'git://github.com/ekarlso/puppet-vswitch'
+    'vswitch': 'git://github.com/bodepd/puppet-vswitch'
   symlinks:
     "openstack": "#{source_dir}"
