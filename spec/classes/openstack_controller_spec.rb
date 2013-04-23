@@ -510,10 +510,10 @@ describe 'openstack::controller' do
 
         should contain_class('nova::network::quantum').with({
           :quantum_admin_password    => 'q_pass',
-          :quantum_connection_host   => 'localhost',
           :quantum_auth_strategy     => 'keystone',
           :quantum_url               => "http://127.0.0.1:9696",
           :quantum_admin_tenant_name => 'services',
+          :quantum_admin_username    => 'quantum',
           :quantum_admin_auth_url    => "http://127.0.0.1:35357/v2.0",
         })
 

@@ -254,9 +254,10 @@ describe 'openstack::compute' do
       should contain_class('nova::compute::quantum')
       should contain_class('nova::network::quantum').with(
         :quantum_admin_password    => 'quantum_user_password',
-        :quantum_connection_host   => '127.0.0.1',
+        :quantum_auth_strategy     => 'keystone',
         :quantum_url               => "http://127.0.0.1:9696",
         :quantum_admin_tenant_name => 'services',
+        :quantum_admin_username    => 'quantum',
         :quantum_admin_auth_url    => "http://127.0.0.1:35357/v2.0"
       )
     end
