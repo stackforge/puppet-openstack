@@ -1,0 +1,10 @@
+Verified+2: Jenkins
+Approved+1: Joe Topjian <joe@topjian.net>
+Code-Review+1: Joe Topjian <joe@topjian.net>
+Approved+1: Aimon Bustardo <abustardo@morphlabs.com>
+Code-Review+2: Aimon Bustardo <abustardo@morphlabs.com>
+Submitted-by: Jenkins
+Submitted-at: Tue, 23 Apr 2013 20:24:20 +0000
+Reviewed-on: https://review.openstack.org/27323
+Project: stackforge/puppet-openstack
+Branch: refs/heads/master
