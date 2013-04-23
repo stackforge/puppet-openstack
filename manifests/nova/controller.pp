@@ -61,7 +61,7 @@ class openstack::nova::controller (
   # VNC
   $vnc_enabled               = true,
   # General
-  $keystone_host             = '127.0.0.1',
+  $controller_host           = '127.0.0.1',
   $verbose                   = 'False',
   $enabled                   = true
 ) {
@@ -107,7 +107,7 @@ class openstack::nova::controller (
   class { 'nova::api':
     enabled           => $enabled,
     admin_password    => $nova_user_password,
-    auth_host         => $keystone_host,
+    auth_host         => $controller_host,
   }
 
 
@@ -185,10 +185,10 @@ class openstack::nova::controller (
     #$public_interface          = undef,
       quantum_connection_host   => 'localhost',
       quantum_auth_strategy     => 'keystone',
-      quantum_url               => "http://${keystone_host}:9696",
+      quantum_url               => "http://${controller_host}:9696",
       quantum_admin_tenant_name => 'services',
       #quantum_admin_username    => 'quantum',
-      quantum_admin_auth_url    => "http://${keystone_host}:35357/v2.0",
+      quantum_admin_auth_url    => "http://${controller_host}:35357/v2.0",
     }
   }
 

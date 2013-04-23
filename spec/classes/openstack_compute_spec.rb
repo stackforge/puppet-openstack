@@ -235,7 +235,7 @@ describe 'openstack::compute' do
         :internal_address      => '127.0.0.1',
         :public_interface      => 'eth3',
         :quantum               => true,
-        :keystone_host         => '127.0.0.1',
+        :controller_host       => '127.0.0.1',
         :quantum_host          => '127.0.0.1',
         :quantum_user_password => 'quantum_user_password',
       })
