@@ -1,0 +1,10 @@
+Verified+2: Jenkins
+Approved+1: Derek Higgins <derekh@redhat.com>
+Code-Review+2: Derek Higgins <derekh@redhat.com>
+Approved+1: Joe Topjian <joe@topjian.net>
+Code-Review+1: Joe Topjian <joe@topjian.net>
+Submitted-by: Jenkins
+Submitted-at: Wed, 24 Apr 2013 15:09:28 +0000
+Reviewed-on: https://review.openstack.org/27412
+Project: stackforge/puppet-openstack
+Branch: refs/heads/master
