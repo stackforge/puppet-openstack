@@ -150,7 +150,7 @@ These modules are based on the [openstack documentation](http://docs.openstack.o
     contributors):
 
         cd <module_path>
-        git clone git://github.com/puppetlabs/puppetlabs-openstack openstack
+        git clone git://github.com/stackforge/puppet-openstack openstack
         cd openstack
         rake modules:clone
 
@@ -544,11 +544,8 @@ Issues should be opened here:
 
 The process for contributing code is as follows:
 
-* fork the projects in github
-* submit pull requests to the projects containing code contributions
-    - rspec tests are preferred but not required with initial pull requests.
-      I am happy to work with folks to help them get then up and going with
-      rspec-puppet.
+* stackforge/puppet-openstack uses Gerrit for code review.
+* Please visit http://wiki.openstack.org/GerritWorkflow and follow the instructions there to upload your change to Gerrit.
 
 ## Future features:
 
