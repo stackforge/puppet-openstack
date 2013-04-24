@@ -150,7 +150,7 @@ These modules are based on the [openstack documentation](http://docs.openstack.o
     contributors):
 
         cd <module_path>
-        git clone git://github.com/puppetlabs/puppetlabs-openstack openstack
+        git clone git://github.com/stackforge/puppet-openstack openstack
         cd openstack
         rake modules:clone
 
