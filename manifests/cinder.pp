@@ -6,6 +6,8 @@ class openstack::cinder(
   $enabled         = true
 ) {
 
+  warning('The "openstack::cinder" class is deprecated. Use "openstack::cinder::controller and openstack::cinder::volume" instead.')
+
   class { 'cinder::base':
     rabbit_password => $rabbit_password,
     rabbit_host     => $rabbit_host,
