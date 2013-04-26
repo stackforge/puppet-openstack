@@ -1,5 +1,7 @@
 # The Openstack modules:
 
+FOO!
+
 ## Introduction
 
 The Openstack Puppet Modules are a flexible Puppet implementation capable of
