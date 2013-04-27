@@ -1,4 +1,6 @@
 class openstack::swift::proxy (
+  $swift_admin_tenant               = 'services',
+  $swift_admin_user                 = 'swift',
   $swift_user_password              = 'swift_pass',
   $swift_hash_suffix                = 'swift_secret',
   $swift_local_net_ip               = $::ipaddress_eth0,
@@ -98,7 +100,10 @@ class openstack::swift::proxy (
   }
 
   # deploy a script that can be used for testing
-  file { '/tmp/swift_keystone_test.rb':
-    source => 'puppet:///modules/swift/swift_keystone_test.rb'
+  class {'swift::test_file':
+    auth_server  => $controller_node_address,
+    tenant       => $swift_admin_tenant,
+    user         => $swift_admin_user,
+    password     => $swift_user_password,
   }
 }
