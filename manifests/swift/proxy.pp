@@ -16,11 +16,11 @@ class openstack::swift::proxy (
   $ratelimit_rate_buffer_seconds    = 5,
   $ratelimit_account_ratelimit      = 0,
   $package_ensure                   = 'present',
-  $controller_node_address          = '10.0.0.1',
+  $keystone_host                    = '10.0.0.1',
   $memcached                        = true
 ) {
 
-  class { 'swift': 
+  class { 'swift':
     swift_hash_suffix => $swift_hash_suffix,
     package_ensure    => $package_ensure,
   }
@@ -59,7 +59,7 @@ class openstack::swift::proxy (
   }
 
   class { '::swift::proxy::s3token':
-    auth_host     => $controller_node_address,
+    auth_host     => $keystone_host,
     auth_port     => '35357',
   }
   class { '::swift::proxy::keystone':
@@ -69,7 +69,7 @@ class openstack::swift::proxy (
     admin_user        => 'swift',
     admin_tenant_name => 'services',
     admin_password    => $swift_user_password,
-    auth_host         => $controller_node_address,
+    auth_host         => $keystone_host,
   }
 
   # collect all of the resources that are needed
