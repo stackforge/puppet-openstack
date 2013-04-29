@@ -9,6 +9,8 @@ fixtures:
     'quantum': 'git://github.com/bodepd/puppet-quantum'
     "apt": "git://github.com/puppetlabs/puppetlabs-apt.git"
     "apache": "git://github.com/puppetlabs/puppetlabs-apache.git"
+    "concat": "git://github.com/ripienaar/puppet-concat.git"
+    "firewall": "git://github.com/puppetlabs/puppetlabs-firewall.git"
     "mysql": "git://github.com/puppetlabs/puppetlabs-mysql.git"
     "rabbitmq": "git://github.com/puppetlabs/puppetlabs-rabbitmq"
     'memcached': 'git://github.com/saz/puppet-memcached'

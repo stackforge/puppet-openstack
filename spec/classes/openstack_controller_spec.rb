@@ -30,11 +30,13 @@ describe 'openstack::controller' do
 
   let :facts do
     {
-      :operatingsystem => 'Ubuntu',
-      :osfamily        => 'Debian',
-      :puppetversion   => '2.7.x',
-      :memorysize      => '2GB',
-      :processorcount  => '2'
+      :operatingsystem        => 'Ubuntu',
+      :osfamily               => 'Debian',
+      :operatingsystemrelease => '12.04',
+      :puppetversion          => '2.7.x',
+      :memorysize             => '2GB',
+      :processorcount         => '2',
+      :concat_basedir         => '/var/lib/puppet/concat',
     }
   end
 
@@ -324,11 +326,13 @@ describe 'openstack::controller' do
   context 'config for nova' do
     let :facts do
       {
-        :operatingsystem => 'Ubuntu',
-        :osfamily        => 'Debian',
-        :puppetversion   => '2.7.x',
-        :memorysize      => '2GB',
-        :processorcount  => '2'
+        :operatingsystem        => 'Ubuntu',
+        :osfamily               => 'Debian',
+        :operatingsystemrelease => '12.04',
+        :puppetversion          => '2.7.x',
+        :memorysize             => '2GB',
+        :processorcount         => '2',
+        :concat_basedir         => '/var/lib/puppet/concat',
       }
     end
 
