@@ -15,7 +15,7 @@ class openstack::auth_file(
   "
   export OS_TENANT_NAME=${admin_tenant}
   export OS_USERNAME=${admin_user}
-  export OS_PASSWORD=${admin_password}
+  export OS_PASSWORD='${admin_password}'
   export OS_AUTH_URL=\"http://${controller_node}:5000/v2.0/\"
   export OS_AUTH_STRATEGY=keystone
   export SERVICE_TOKEN=${keystone_admin_token}
