@@ -39,6 +39,24 @@ namespace :modules do
     end
   end
 
+  desc 'add all required modules as subtrees'
+  task :subtree_add do
+    repo_hash = YAML.load_file(File.join(File.dirname(__FILE__), repo_file))
+    repos = (repo_hash['repos'] || {})
+    modulepath = (repo_hash['modulepath'] || default_modulepath)
+    repos_to_clone = (repos['repo_paths'] || {})
+    branches_to_checkout = (repos['checkout_branches'] || {})
+    branches_to_checkout.default=('master')
+    repos_to_clone.each do |remote, local|
+      branch = branches_to_checkout[local]
+      Dir.chdir('../../') do
+        output = `git subtree add --prefix=modules/#{local} #{remote} #{branch}`
+        puts output
+      end
+    end
+  end
+
+
   desc 'see if any of the modules are not up-to-date'
   task 'status' do
     repo_hash = YAML.load_file(File.join(File.dirname(__FILE__), repo_file))
