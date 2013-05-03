@@ -252,6 +252,9 @@ class openstack::keystone (
 
       class { 'swift::keystone::auth':
         password         => $swift_user_password,
+        public_address   => $swift_public_real,
+        admin_address    => $swift_admin_real,
+        internal_address => $swift_internal_real,
         address          => $swift_public_real,
         region           => $region,
       }
