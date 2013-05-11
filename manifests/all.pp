@@ -118,7 +118,7 @@ class openstack::all (
   $cinder                  = true,
   $cinder_db_user          = 'cinder',
   $cinder_db_dbname        = 'cinder',
-  $volume_group            = 'cinder-volumes',
+  $nova_volume             = 'cinder-volumes',
   $cinder_test             = false,
   #
   $quantum_db_user         = 'quantum',

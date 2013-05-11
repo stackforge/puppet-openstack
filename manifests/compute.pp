@@ -208,7 +208,7 @@ class openstack::compute (
     }
     class { 'cinder::volume': }
     class { 'cinder::volume::iscsi':
-      iscsi_ip_address => $internal_address,
+      iscsi_ip_address => $iscsi_ip_address,
       volume_group     => $nova_volume,
     }
 
