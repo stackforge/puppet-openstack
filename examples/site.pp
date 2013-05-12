@@ -145,7 +145,7 @@ node /openstack_compute/ {
     vnc_enabled        => true,
     verbose            => $verbose,
     manage_volumes     => true,
-    nova_volume        => 'nova-volumes'
+    volume_group       => 'cinder-volumes'
   }
 
 }

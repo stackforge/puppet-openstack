@@ -68,6 +68,10 @@ describe 'openstack::compute' do
         :enabled           => false,
         :install_service   => false
       })
+      should contain_class('cinder::volume::iscsi').with(
+        :iscsi_ip_address => '127.0.0.1',
+        :volume_group     => 'cinder-volumes'
+      )
     }
   end
 
@@ -132,7 +136,9 @@ describe 'openstack::compute' do
   describe "when enabling volume management" do
     let :params do
       default_params.merge({
-        :manage_volumes => true
+        :manage_volumes   => true,
+        :iscsi_ip_address => '192.168.1.1',
+        :volume_group     => 'foo-volumes'
       })
     end
 
@@ -143,6 +149,10 @@ describe 'openstack::compute' do
         'enabled' => false,
         'install_service' => false
       })
+      should contain_class('cinder::volume::iscsi').with(
+        :iscsi_ip_address => params[:iscsi_ip_address],
+        :volume_group     => params[:volume_group]
+      )
     end
   end
 
@@ -220,6 +230,8 @@ describe 'openstack::compute' do
         :multi_host       => true,
         :public_interface => 'eth0',
         :manage_volumes   => true,
+        :iscsi_ip_address => '192.168.1.1',
+        :volume_group     => 'foo-volumes'
       })
     end
 
@@ -230,7 +242,11 @@ describe 'openstack::compute' do
         'enabled' => true,
         'install_service' => true
       })
-    }
+      should contain_class('cinder::volume::iscsi').with(
+        :iscsi_ip_address => params[:iscsi_ip_address],
+        :volume_group     => params[:volume_group]
+      )
+}
   end
 
   describe 'when configuring quantum' do

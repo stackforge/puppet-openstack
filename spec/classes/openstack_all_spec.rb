@@ -39,6 +39,30 @@ describe 'openstack::all' do
     default_params
   end
 
+  context 'config cinder' do
+    it 'should contain cinder::volume::iscsi' do
+      should contain_class('cinder::volume::iscsi').with(
+       :iscsi_ip_address => '127.0.0.1',
+       :volume_group     => 'cinder-volumes'
+     )
+    end
+
+    describe 'when params are overridden' do
+      let :params do
+        default_params.merge!({
+          :volume_group => 'foo-volumes'
+        })
+      end
+
+      it 'should contain cinder::volume::iscsi' do
+        should contain_class('cinder::volume::iscsi').with(
+          :iscsi_ip_address => '127.0.0.1',
+          :volume_group     => 'foo-volumes'
+        )
+      end
+    end
+  end
+
   context 'config for horizon' do
 
     it 'should contain enabled horizon' do
