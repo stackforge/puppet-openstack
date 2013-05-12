@@ -33,7 +33,7 @@
 #  [verbose] If the services should log verbosely. Optional. Defaults to false.
 #  [purge_nova_config] Whether unmanaged nova.conf entries should be purged. Optional. Defaults to true.
 #  [libvirt_type] The virualization type being controlled by libvirt.  Optional. Defaults to 'kvm'.
-#  [nova_volume] The name of the volume group to use for nova volume allocation. Optional. Defaults to 'nova-volumes'.
+#  [volume_group] The name of the volume group to use for nova volume allocation. Optional. Defaults to 'cinder-volumes'.
 #  [horizon] (bool) is horizon installed. Defaults to: true
 # === Examples
 #
@@ -350,7 +350,7 @@ class openstack::all (
     class { 'cinder::volume': }
     class { 'cinder::volume::iscsi':
       iscsi_ip_address => '127.0.0.1',
-      volume_group     => $nova_volume,
+      volume_group     => $volume_group,
     }
   } else {
     # Set up nova-volume
