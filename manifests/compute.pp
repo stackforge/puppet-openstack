@@ -57,7 +57,7 @@ class openstack::compute (
   $cinder                        = true,
   $cinder_sql_connection         = undef,
   $manage_volumes                = true,
-  $nova_volume                   = 'cinder-volumes',
+  $volume_group                  = 'cinder-volumes',
   $iscsi_ip_address              = '127.0.0.1',
   # General
   $migration_support             = false,
@@ -208,8 +208,8 @@ class openstack::compute (
     }
     class { 'cinder::volume': }
     class { 'cinder::volume::iscsi':
-      iscsi_ip_address => $internal_address,
-      volume_group     => $nova_volume,
+      iscsi_ip_address => $iscsi_ip_address,
+      volume_group     => $volume_group,
     }
 
     # set in nova::api

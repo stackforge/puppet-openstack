@@ -61,8 +61,8 @@ These modules are based on the [openstack documentation](http://docs.openstack.o
 
 ### Volumes:
 
-  Every node that is configured to be a nova volume service must have a volume
-  group called `nova-volumes`.
+  Every node that is configured to be a cinder volume service must have a volume
+  group called `cinder-volumes`.
 
 ### Compute nodes
 
