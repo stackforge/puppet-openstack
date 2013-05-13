@@ -8,7 +8,7 @@ repos:
     git://github.com/stackforge/puppet-keystone: keystone
     git://github.com/stackforge/puppet-horizon: horizon
     git://github.com/stackforge/puppet-cinder: cinder
-    git://github.com/bodepd/puppet-quantum: quantum
+    git://github.com/stackforge/puppet-quantum: quantum
     # openstack middleware
     git://github.com/puppetlabs/puppetlabs-rabbitmq: rabbitmq
     git://github.com/puppetlabs/puppetlabs-mysql: mysql
