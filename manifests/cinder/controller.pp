@@ -1,43 +1,54 @@
 class openstack::cinder::controller(
-  $cinder_sql_connection,
   $rabbit_password,
-  $cinder_rpc_backend              = 'cinder.openstack.common.rpc.impl_kombu',
-  $keystone_tenant                 = 'services',
-  $keystone_enabled                = true,
-  $keystone_user                   = 'cinder',
-  $keystone_password               = 'cinder',
-  $keystone_auth_host              = 'localhost',
-  $keystone_auth_port              = '35357',
-  $keystone_auth_protocol          = 'http',
-  $keystone_service_port           = '5000',
-  $rabbit_userid                   = 'guest',
-  $rabbit_host                     = '127.0.0.1',
-  $rabbit_hosts                    =  undef,
-  $rabbit_port                     = '5672',
-  $cinder_rabbit_virtual_host      = '/',
-  $cinder_package_ensure           = 'present',
-  $cinder_api_package_ensure       = 'latest',
-  $cinder_scheduler_package_ensure = 'latest',
-  $cinder_bind_host                = '0.0.0.0',
-  $cinder_api_paste_config         = '/etc/cinder/api-paste.ini',
-  $scheduler_driver                = 'cinder.scheduler.simple.SimpleScheduler',
-  $cinder_api_enabled              =  true,
-  $cinder_scheduler_enabled        =  true,
-  $cinder_verbose                  = 'False'
+  $keystone_password,
+  $rpc_backend              = 'cinder.openstack.common.rpc.impl_kombu',
+  $keystone_tenant          = 'services',
+  $keystone_enabled         = true,
+  $keystone_user            = 'cinder',
+  $keystone_auth_host       = 'localhost',
+  $keystone_auth_port       = '35357',
+  $keystone_auth_protocol   = 'http',
+  $keystone_service_port    = '5000',
+  $rabbit_userid            = 'guest',
+  $rabbit_host              = '127.0.0.1',
+  $rabbit_hosts             =  undef,
+  $rabbit_port              = '5672',
+  $rabbit_virtual_host      = '/',
+  # Database. Currently mysql is the only option.
+  $db_type                  = 'mysql',
+  $db_user                  = 'cinder',
+  $db_password              = 'cinder_pass',
+  $db_host                  = '127.0.0.1',
+  $db_dbname                = 'cinder',
+  $package_ensure           = present,
+  $api_package_ensure       = present,
+  $scheduler_package_ensure = present,
+  $bind_host                = '0.0.0.0',
+  $api_paste_config         = '/etc/cinder/api-paste.ini',
+  $scheduler_driver         = 'cinder.scheduler.simple.SimpleScheduler',
+  $api_enabled              = true,
+  $scheduler_enabled        = true,
+  $verbose                  = false
 ) {
 
+  ####### DATABASE SETUP ######
+  # set up mysql server
+  if ($db_type == 'mysql') {
+      $sql_connection = "mysql://${db_user}:${db_password}@${db_host}/${db_dbname}?charset=utf8"
+  }
+
   class {'::cinder':
-    sql_connection      => $cinder_sql_connection,
-    rpc_backend         => $cinder_rpc_backend,
+    sql_connection      => $sql_connection,
+    rpc_backend         => $rpc_backend,
     rabbit_userid       => $rabbit_userid,
     rabbit_password     => $rabbit_password,
     rabbit_host         => $rabbit_host,
     rabbit_port         => $rabbit_port,
     rabbit_hosts        => $rabbit_hosts,
     rabbit_virtual_host => $cinder_rabbit_virtual_host,
-    package_ensure      => $cinder_package_ensure,
-    api_paste_config    => $cinder_api_paste_config,
-    verbose             => $cinder_verbose,
+    package_ensure      => $package_ensure,
+    api_paste_config    => $api_paste_config,
+    verbose             => $verbose,
   }
 
   class {'::cinder::api':
@@ -48,15 +59,15 @@ class openstack::cinder::controller(
     keystone_auth_port      => $keystone_auth_port,
     keystone_auth_protocol  => $keystone_auth_protocol,
     service_port            => $keystone_service_port,
-    package_ensure          => $cinder_api_package_ensure,
-    bind_host               => $cinder_bind_host,
-    enabled                 => $cinder_api_enabled,
+    package_ensure          => $api_package_ensure,
+    bind_host               => $bind_host,
+    enabled                 => $api_enabled,
   }
 
   class {'::cinder::scheduler':
     scheduler_driver       => $scheduler_driver,
-    package_ensure         => $cinder_scheduler_package_ensure,
-    enabled                => $cinder_scheduler_enabled,
+    package_ensure         => $scheduler_package_ensure,
+    enabled                => $scheduler_enabled,
   }
 
 }
