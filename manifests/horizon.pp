@@ -10,7 +10,49 @@
 #
 # === Parameters
 #
-# See params.pp
+# [*secret_key*]
+#   (required) A secret key for a particular Django installation. This is used to provide cryptographic signing,
+#   and should be set to a unique, unpredictable value.
+#
+# [*cache_server_ip*]
+#   (optional) Ip address where the memcache server is listening.
+#   Defaults to '127.0.0.1'.
+#
+# [*cache_server_port*]
+#    (optional) Port that memcache server listens on.
+#    Defaults to '11211'.
+#
+# [*swift*]
+#   (optional) Whether the swift interface extension should be enabled in Horizon
+#    Defaults to false.
+#
+# [*quantum*]
+#   (optional) Whether the quantum interface extension should be enabled in Horizon
+#    Defaults to false.
+#
+# [*horizon_app_links*]
+#   (optional) External Monitoring links.
+#   Defaults to undef.
+#
+# [*keystone_host*]
+#   (optional) Address of keystone host.
+#   Defaults to '127.0.0.1'.
+#
+# [*keystone_scheme*]
+#    (optional) Protocol for keystone. Accepts http or https.
+#    Defaults to http.
+#
+# [*keystone_default_role*]
+#   (Optional) Default role for keystone authentication.
+#   Defaults to 'Member'.
+#
+# [*django_debug*]
+#    (Optional) Sets Django debug level.
+#    Defaults to false.
+#
+# [*api_result_limit*]
+#    (Optional) Maximum results to show on a page before pagination kicks in.
+#    Defaults to 1000.
 #
 # === Examples
 #
