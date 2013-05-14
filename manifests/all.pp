@@ -315,7 +315,7 @@ class openstack::all (
   }
 
   if $auto_assign_floating_ip {
-    nova_config { 'DEFUALT/auto_assign_floating_ip': value => 'True' }
+    nova_config { 'DEFAULT/auto_assign_floating_ip': value => 'True' }
   }
 
   class { [

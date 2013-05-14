@@ -82,4 +82,11 @@ describe 'openstack::all' do
       end
     end
   end
+
+  context 'when auto assign floating ip is assigned' do
+    let :params do
+      default_params.merge(:auto_assign_floating_ip => 'true')
+    end
+    it { should contain_nova_config('DEFAULT/auto_assign_floating_ip').with(:value => 'True')}
+  end
 end
