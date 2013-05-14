@@ -3,7 +3,7 @@ require 'spec_helper'
 describe 'openstack::all' do
 
   # minimum set of default parameters
-  let :default_params do
+  let :params do
     {
       :public_address        => '10.0.0.1',
       :public_interface      => 'eth1',
@@ -19,7 +19,7 @@ describe 'openstack::all' do
       :nova_db_password      => 'nova_pass',
       :nova_user_password    => 'nova_pass',
       :secret_key            => 'secret_key',
-      :quantum               => false,
+      :quantum               => false
     }
   end
 
@@ -31,17 +31,13 @@ describe 'openstack::all' do
       :puppetversion          => '2.7.x',
       :memorysize             => '2GB',
       :processorcount         => '2',
-      :concat_basedir         => '/var/lib/puppet/concat',
+      :concat_basedir         => '/var/lib/puppet/concat'
     }
   end
 
-  let :params do
-    default_params
-  end
+  context 'with required parameters' do
 
-  context 'config for horizon' do
-
-    it 'should contain enabled horizon' do
+    it 'configures horizon' do
       should contain_class('horizon').with(
         :secret_key        => 'secret_key',
         :cache_server_ip   => '127.0.0.1',
@@ -52,11 +48,38 @@ describe 'openstack::all' do
       )
     end
 
-    describe 'when horizon is disabled' do
-      let :params do
-        default_params.merge(:horizon => false)
+    context 'when disabling horizon' do
+      before do
+        params.merge!(:horizon => false)
       end
       it { should_not contain_class('horizon') }
+    end
+
+    context 'with cinder' do
+      before do
+        params.merge!(
+          :cinder               => true,
+          :cinder_user_password => 'cinder_ks_passw0rd',
+          :cinder_db_password   => 'cinder_db_passw0rd'
+        )
+      end
+
+      it 'configures cinder' do
+        should contain_class('cinder::base').with(
+          :verbose         => 'False',
+          :sql_connection  => "mysql://cinder:cinder_db_passw0rd@127.0.0.1/cinder?charset=utf8",
+          :rabbit_password => 'rabbit_pw'
+        )
+        should contain_class('cinder::api').with(
+          :keystone_password => 'cinder_ks_passw0rd'
+        )
+        should contain_class('cinder::scheduler')
+        should contain_class('cinder::volume')
+        should contain_class('cinder::volume::iscsi').with(
+          :iscsi_ip_address => '127.0.0.1',
+          :volume_group     => 'cinder-volumes'
+        )
+      end
     end
   end
 end
