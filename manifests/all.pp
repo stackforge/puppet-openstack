@@ -112,7 +112,6 @@ class openstack::all (
   $horizon                 = true,
   $cache_server_ip         = '127.0.0.1',
   $cache_server_port       = '11211',
-  $swift                   = false,
   $horizon_app_links       = undef,
   # if the cinder management components should be installed
   $cinder                  = true,
@@ -376,8 +375,6 @@ class openstack::all (
       secret_key        => $secret_key,
       cache_server_ip   => $cache_server_ip,
       cache_server_port => $cache_server_port,
-      swift             => $swift,
-      quantum           => $quantum,
       horizon_app_links => $horizon_app_links,
     }
   }

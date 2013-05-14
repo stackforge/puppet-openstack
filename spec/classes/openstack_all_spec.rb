@@ -42,8 +42,6 @@ describe 'openstack::all' do
         :secret_key        => 'secret_key',
         :cache_server_ip   => '127.0.0.1',
         :cache_server_port => '11211',
-        :swift             => false,
-        :quantum           => false,
         :horizon_app_links => false
       )
     end

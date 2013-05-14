@@ -30,8 +30,6 @@ describe 'openstack::horizon' do
       :cache_server_ip       => '127.0.0.1',
       :cache_server_port     => '11211',
       :secret_key            => 'super_secret',
-      :swift                 => false,
-      :quantum               => false,
       :horizon_app_links     => false,
       :keystone_host         => '127.0.0.1',
       :keystone_scheme       => 'http',
