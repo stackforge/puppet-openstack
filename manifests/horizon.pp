@@ -22,14 +22,6 @@
 #    (optional) Port that memcache server listens on.
 #    Defaults to '11211'.
 #
-# [*swift*]
-#   (optional) Whether the swift interface extension should be enabled in Horizon
-#    Defaults to false.
-#
-# [*quantum*]
-#   (optional) Whether the quantum interface extension should be enabled in Horizon
-#    Defaults to false.
-#
 # [*horizon_app_links*]
 #   (optional) External Monitoring links.
 #   Defaults to undef.
@@ -65,8 +57,6 @@ class openstack::horizon (
   $secret_key,
   $cache_server_ip       = '127.0.0.1',
   $cache_server_port     = '11211',
-  $swift                 = false,
-  $quantum               = false,
   $horizon_app_links     = undef,
   $keystone_host         = '127.0.0.1',
   $keystone_scheme       = 'http',
@@ -85,8 +75,6 @@ class openstack::horizon (
     cache_server_ip       => $cache_server_ip,
     cache_server_port     => $cache_server_port,
     secret_key            => $secret_key,
-    swift                 => $swift,
-    quantum               => $quantum,
     horizon_app_links     => $horizon_app_links,
     keystone_host         => $keystone_host,
     keystone_scheme       => $keystone_scheme,

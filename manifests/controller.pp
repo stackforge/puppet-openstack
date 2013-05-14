@@ -37,7 +37,6 @@
 # [cache_server_ip]     local memcached instance ip
 # [cache_server_port]   local memcached instance port
 # [horizon]             (bool) is horizon installed. Defaults to: true
-# [swift]               (bool) is swift installed
 # [quantum]             (bool) is quantum installed
 #   The next is an array of arrays, that can be used to add call-out links to the dashboard for other apps.
 #   There is no specific requirement for these apps to be for monitoring, that's just the defacto purpose.
@@ -127,7 +126,6 @@ class openstack::controller (
   $cache_server_ip         = '127.0.0.1',
   $cache_server_port       = '11211',
   $horizon_app_links       = undef,
-  $swift                   = false,
   # VNC
   $vnc_enabled             = true,
   $vncproxy_host           = false,
@@ -320,8 +318,6 @@ class openstack::controller (
       secret_key        => $secret_key,
       cache_server_ip   => $cache_server_ip,
       cache_server_port => $cache_server_port,
-      swift             => $swift,
-      quantum           => $quantum,
       horizon_app_links => $horizon_app_links,
     }
   }
