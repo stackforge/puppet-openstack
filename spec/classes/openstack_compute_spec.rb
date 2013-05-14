@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe 'openstack::compute' do
 
-  let :default_params do
+  let :params do
     {
       :private_interface         => 'eth0',
       :internal_address          => '0.0.0.0',
@@ -13,8 +13,8 @@ describe 'openstack::compute' do
       :nova_admin_tenant_name    => 'services',
       :nova_admin_user           => 'nova',
       :enabled_apis              => 'ec2,osapi_compute,metadata',
-      :sql_connection            => 'mysql://user:pass@host/dbname/',
-      :cinder_sql_connection     => 'mysql://user:pass@host/dbname/',
+      :sql_connection            => 'mysql://user:pass@host/dbname',
+      :cinder_sql_connection     => 'mysql://user:pass@host/dbcinder',
       :quantum                   => false,
       :fixed_range               => '10.0.0.0/16',
     }
@@ -28,12 +28,9 @@ describe 'openstack::compute' do
   end
 
   describe "when using default class parameters" do
-    let :params do
-      default_params
-    end
     it {
       should contain_class('nova').with(
-        :sql_connection      => 'mysql://user:pass@host/dbname/',
+        :sql_connection      => 'mysql://user:pass@host/dbname',
         :rabbit_host         => '127.0.0.1',
         :rabbit_userid       => 'nova',
         :rabbit_password     => 'rabbit_pw',
@@ -72,8 +69,8 @@ describe 'openstack::compute' do
   end
 
   describe "when overriding parameters, but not enabling multi-host or volume management" do
-    let :override_params do
-      {
+    before do
+      params.merge!(
         :private_interface   => 'eth1',
         :internal_address    => '127.0.0.1',
         :public_interface    => 'eth2',
@@ -88,10 +85,7 @@ describe 'openstack::compute' do
         :vncproxy_host       => '127.0.0.2',
         :vnc_enabled         => false,
         :verbose             => true,
-      }
-    end
-    let :params do
-      default_params.merge(override_params)
+      )
     end
     it do
       should contain_class('nova').with(
@@ -130,10 +124,8 @@ describe 'openstack::compute' do
   end
 
   describe "when enabling volume management" do
-    let :params do
-      default_params.merge({
-        :manage_volumes => true
-      })
+    before do
+      params.merge!( :manage_volumes => true )
     end
 
     it do
@@ -146,14 +138,41 @@ describe 'openstack::compute' do
     end
   end
 
+  context 'with cinder' do
+    before do
+      params.merge!(
+        :cinder => true,
+
+      )
+    end
+
+    it 'configures cinder' do
+      should contain_class('cinder::base').with(
+        :rabbit_password => 'rabbit_pw',
+        :rabbit_host     => '127.0.0.1',
+        :sql_connection  => 'mysql://user:pass@host/dbcinder',
+        :verbose         => 'False'
+      )
+      should contain_class('cinder::volume')
+      should contain_class('cinder::volume::iscsi').with(
+        :iscsi_ip_address => '127.0.0.1',
+        :volume_group     => 'cinder-volumes'
+      )
+      should contain_nova_config('DEFAULT/volume_api_class').with(
+        :value => 'nova.volume.cinder.API'
+      )
+    end
+  end
+
   describe 'when quantum is false' do
+
     describe 'configuring for multi host' do
-      let :params do
-        default_params.merge({
+      before do
+        params.merge!(
           :multi_host       => true,
           :public_interface => 'eth0',
           :quantum          => false
-        })
+        )
       end
 
       it 'should configure nova for multi-host' do
@@ -165,6 +184,7 @@ describe 'openstack::compute' do
           'install_service' => true
         })
       end
+
       describe 'with defaults' do
         it { should contain_class('nova::api').with(
           :enabled           => true,
@@ -175,9 +195,10 @@ describe 'openstack::compute' do
         )}
       end
     end
+
     describe 'when overriding network params' do
-      let :params do
-        default_params.merge({
+      before do
+        params.merge!(
           :multi_host        => true,
           :public_interface  => 'eth0',
           :manage_volumes    => true,
@@ -186,8 +207,9 @@ describe 'openstack::compute' do
           :fixed_range       => '12.0.0.0/24',
           :network_manager   => 'nova.network.manager.VlanManager',
           :network_config    => {'vlan_interface' => 'eth0'}
-        })
+        )
       end
+
       it { should contain_class('nova::network').with({
         :private_interface => 'eth1',
         :public_interface  => 'eth2',
@@ -203,10 +225,8 @@ describe 'openstack::compute' do
   end
 
   describe "when configuring for multi host without a public interface" do
-    let :params do
-      default_params.merge({
-        :multi_host => true
-      })
+    before do
+      params.merge!( :multi_host => true )
     end
 
     it {
@@ -215,12 +235,12 @@ describe 'openstack::compute' do
   end
 
   describe "when enabling volume management and using multi host" do
-    let :params do
-      default_params.merge({
+    before do
+      params.merge!(
         :multi_host       => true,
         :public_interface => 'eth0',
         :manage_volumes   => true,
-      })
+      )
     end
 
     it {
@@ -234,22 +254,23 @@ describe 'openstack::compute' do
   end
 
   describe 'when configuring quantum' do
-    let :params do
-      default_params.merge({
+    before do
+      params.merge!(
         :internal_address      => '127.0.0.1',
         :public_interface      => 'eth3',
         :quantum               => true,
         :keystone_host         => '127.0.0.1',
         :quantum_host          => '127.0.0.1',
         :quantum_user_password => 'quantum_user_password',
-      })
+      )
     end
+
     it 'should configure quantum' do
       should contain_class('quantum').with(
         :verbose         => 'False',
         :debug           => 'False',
-        :rabbit_host     => default_params[:rabbit_host],
-        :rabbit_password => default_params[:rabbit_password]
+        :rabbit_host     => params[:rabbit_host],
+        :rabbit_password => params[:rabbit_password]
       )
       should contain_class('quantum::agents::ovs').with(
         :enable_tunneling => true,
