@@ -1,0 +1,8 @@
+Verified+2: Jenkins
+Approved+1: Joe Topjian <joe@topjian.net>
+Code-Review+2: Joe Topjian <joe@topjian.net>
+Submitted-by: Jenkins
+Submitted-at: Wed, 15 May 2013 18:48:38 +0000
+Reviewed-on: https://review.openstack.org/29270
+Project: stackforge/puppet-openstack
+Branch: refs/heads/master
