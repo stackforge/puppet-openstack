@@ -68,8 +68,6 @@
 class openstack::controller (
   # Required Network
   $public_address,
-  $public_interface,
-  $private_interface,
   $admin_email,
   # required password
   $admin_password,
@@ -85,8 +83,8 @@ class openstack::controller (
   # optional. Not sure what to do about this.
   $cinder_user_password    = 'cinder_pass',
   $cinder_db_password      = 'cinder_pass',
-  $quantum_user_password   = 'quantum_pass',
-  $quantum_db_password     = 'quantum_pass',
+  $quantum_user_password   = false,
+  $quantum_db_password     = false,
   # Database
   $db_host                 = '127.0.0.1',
   $db_type                 = 'mysql',
@@ -95,6 +93,7 @@ class openstack::controller (
   $mysql_bind_address      = '0.0.0.0',
   $allowed_hosts           = '%',
   # Keystone
+  $keystone_host           = '127.0.0.1',
   $keystone_db_user        = 'keystone',
   $keystone_db_dbname      = 'keystone',
   $keystone_admin_tenant   = 'admin',
@@ -111,7 +110,9 @@ class openstack::controller (
   $nova_db_dbname          = 'nova',
   $purge_nova_config       = true,
   $enabled_apis            = 'ec2,osapi_compute,metadata',
-  # Network
+  # Nova Networking
+  $public_interface        = false,
+  $private_interface       = false,
   $internal_address        = false,
   $admin_address           = false,
   $network_manager         = 'nova.network.manager.FlatDHCPManager',
@@ -143,8 +144,18 @@ class openstack::controller (
   $cinder_db_dbname        = 'cinder',
   # quantum
   $quantum                 = false,
+  # Quantum
+  $quantum                 = true,
+  $bridge_interface        = undef,
+  $enable_ovs_agent        = undef,
+  $enable_dhcp_agent       = true,
+  $enable_l3_agent         = true,
+  $enable_metadata_agent   = true,
   $quantum_db_user         = 'quantum',
-  $quantum_db_dbname       = 'quantum',
+  $quantum_db_name         = 'quantum',
+  $quantum_l3_auth_url     = "http://127.0.0.1:35357/v2.0",
+  $enable_quantum_server   = true,
+  $ovs_local_ip            = '127.0.0.1',
   $enabled                 = true
 ) {
 
@@ -273,9 +284,6 @@ class openstack::controller (
     # Quantum
     quantum                 => $quantum,
     quantum_user_password   => $quantum_user_password,
-    quantum_db_password     => $quantum_db_password,
-    quantum_db_user         => $quantum_db_user,
-    quantum_db_dbname       => $quantum_db_dbname,
     # Nova
     nova_admin_tenant_name  => $nova_admin_tenant_name,
     nova_admin_user         => $nova_admin_user,
@@ -296,6 +304,48 @@ class openstack::controller (
     # General
     verbose                 => $verbose,
     enabled                 => $enabled,
+  }
+
+  ######### Quantum Controller Services ########
+  if ($quantum) {
+
+    if ! $quantum_user_password {
+      fail('Quantum user password must be set when configuring quantum')
+    }
+
+    if ! $quantum_db_password {
+      fail('Quantum db password must be set when configuring quantum')
+    }
+
+    class { 'openstack::quantum':
+      # Database
+      db_host               => $db_host,
+      # Rabbit
+      rabbit_host           => $rabbit_host,
+      rabbit_user           => $rabbit_user,
+      rabbit_password       => $rabbit_password,
+      rabbit_virtual_host   => $rabbit_virtual_host,
+      # Quantum OVS
+      ovs_local_ip          => $ovs_local_ip,
+      bridge_interface      => $bridge_interface,
+      enable_ovs_agent      => $enable_ovs_agent,
+      # Database
+      db_name               => $quantum_db_name,
+      db_user               => $quantum_db_user,
+      db_password           => $quantum_db_password,
+      # Quantum L3 Agent
+      enable_dhcp_agent     => $enable_dhcp_agent,
+      enable_l3_agent       => $enable_l3_agent,
+      enable_metadata_agent => $enable_metadata_agent,
+      l3_auth_url           => $quantum_l3_auth_url,
+      user_password         => $quantum_user_password,
+      # Keystone
+      keystone_host         => $keystone_host,
+      # General
+      enabled               => $enabled,
+      enable_server         => $enable_quantum_server,
+      verbose               => $verbose,
+    }
   }
 
   ######### Cinder Controller Services ########

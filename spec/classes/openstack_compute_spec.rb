@@ -182,6 +182,7 @@ describe 'openstack::compute' do
           'enabled' => true,
           'install_service' => true
         })
+        should_not contain_class('openstack::quantum')
       end
 
       describe 'with defaults' do
@@ -258,9 +259,10 @@ describe 'openstack::compute' do
         :internal_address      => '127.0.0.1',
         :public_interface      => 'eth3',
         :quantum               => true,
-        :keystone_host         => '127.0.0.1',
-        :quantum_host          => '127.0.0.1',
-        :quantum_user_password => 'quantum_user_password'
+        :keystone_host         => '127.0.0.3',
+        :quantum_host          => '127.0.0.2',
+        :quantum_user_password => 'quantum_user_password',
+        :bridge_interface      => 'eth3'
       )
     end
 
@@ -272,18 +274,25 @@ describe 'openstack::compute' do
         :rabbit_password => params[:rabbit_password]
       )
       should contain_class('quantum::agents::ovs').with(
-        :enable_tunneling => true,
+        :bridge_uplinks   => ['br-ex:eth3'],
+        :bridge_mappings  => ['default:br-ex'],
+        :enable_tunneling => 'True',
         :local_ip         => '127.0.0.1'
       )
       should contain_class('nova::compute::quantum')
       should contain_class('nova::network::quantum').with(
         :quantum_admin_password    => 'quantum_user_password',
         :quantum_auth_strategy     => 'keystone',
-        :quantum_url               => "http://127.0.0.1:9696",
+        :quantum_url               => "http://127.0.0.2:9696",
         :quantum_admin_tenant_name => 'services',
         :quantum_admin_username    => 'quantum',
-        :quantum_admin_auth_url    => "http://127.0.0.1:35357/v2.0"
+        :quantum_admin_auth_url    => "http://127.0.0.3:35357/v2.0"
       )
+
+      should_not contain_class('quantum::server')
+      should_not contain_class('quantum::plugins::ovs')
+      should_not contain_class('quantum::agents::dhcp')
+      should_not contain_class('quantum::agents::l3')
     end
   end
 

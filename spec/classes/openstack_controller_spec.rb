@@ -62,10 +62,12 @@ describe 'openstack::controller' do
 
       let :params do
         default_params.merge(
-          :enabled => true,
-          :db_type => 'mysql',
-          :quantum => true,
-          :cinder  => true
+          :enabled               => true,
+          :db_type               => 'mysql',
+          :quantum               => true,
+          :quantum_user_password => 'q_pass',
+          :quantum_db_password   => 'q_db_pass',
+          :cinder                => true
         )
       end
 
@@ -103,7 +105,7 @@ describe 'openstack::controller' do
          )
          should contain_class('quantum::db::mysql').with(
            :user          => 'quantum',
-           :password      => 'quantum_pass',
+           :password      => 'q_db_pass',
            :dbname        => 'quantum',
            :allowed_hosts => '%'
          )
@@ -480,7 +482,8 @@ describe 'openstack::controller' do
           :quantum => true,
           :verbose => true,
           :quantum_user_password => 'q_pass',
-          :public_interface      => 'eth_27'
+          :public_interface      => 'eth_27',
+          :quantum_db_password   => 'q_db_pass'
         })
       end
 
@@ -492,33 +495,29 @@ describe 'openstack::controller' do
           :rabbit_user      => 'nova',
           :rabbit_password  => 'rabbit_pw',
           :verbose          => true,
-          :debug            => true,
+          :debug            => 'False',
         })
 
         should contain_class('quantum::server').with({
+         :auth_host     => '127.0.0.1',
          :auth_password => 'q_pass',
         })
 
         should contain_class('quantum::plugins::ovs').with({
-          :sql_connection      => 'mysql://quantum:quantum_pass@127.0.0.1/quantum?charset=utf8',
+          :sql_connection      => 'mysql://quantum:q_db_pass@127.0.0.1/quantum?charset=utf8',
+         :tenant_network_type  => 'gre',
 
         })
 
-        should contain_class('quantum::agents::ovs').with( {
-          :bridge_uplinks => ["br-ex:eth_27"],
-          :bridge_mappings  => ['external:br-ex'],
-          :enable_tunneling => true,
-          :local_ip         => '127.0.0.1',
-        } )
-
         should contain_class('quantum::agents::dhcp').with( {
-          :use_namespaces => 'False',
+          :use_namespaces => 'True'
         } )
 
         should contain_class('quantum::agents::l3').with( {
-          :external_network_bridge => 'br-ex',
-          :auth_password           => 'q_pass',
+          :use_namespaces => 'True'
         } )
+
+        should_not contain_class('quantum::agents::ovs')
 
         should contain_class('nova::network::quantum').with({
           :quantum_admin_password    => 'q_pass',
