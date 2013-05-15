@@ -13,6 +13,7 @@ describe 'openstack::compute' do
       :nova_admin_tenant_name    => 'services',
       :nova_admin_user           => 'nova',
       :enabled_apis              => 'ec2,osapi_compute,metadata',
+      :cinder                    => false,
       :sql_connection            => 'mysql://user:pass@host/dbname',
       :cinder_sql_connection     => 'mysql://user:pass@host/dbcinder',
       :quantum                   => false,
@@ -52,6 +53,7 @@ describe 'openstack::compute' do
       should contain_nova_config('DEFAULT/multi_host').with( :value => 'False' )
       should contain_nova_config('DEFAULT/send_arp_for_ha').with( :value => 'False' )
       should_not contain_class('nova::api')
+      should_not contain_class('cinder::base')
       should contain_class('nova::network').with({
         :enabled           => false,
         :install_service   => false,
@@ -141,12 +143,14 @@ describe 'openstack::compute' do
   context 'with cinder' do
     before do
       params.merge!(
-        :cinder => true
+        :rabbit_user => 'my_rabbit_user',
+        :cinder      => true
       )
     end
 
     it 'configures cinder' do
       should contain_class('cinder::base').with(
+        :rabbit_userid   => 'my_rabbit_user',
         :rabbit_password => 'rabbit_pw',
         :rabbit_host     => '127.0.0.1',
         :sql_connection  => 'mysql://user:pass@host/dbcinder',

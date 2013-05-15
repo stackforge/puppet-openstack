@@ -68,6 +68,7 @@ describe 'openstack::all' do
         should contain_class('cinder::base').with(
           :verbose         => 'False',
           :sql_connection  => "mysql://cinder:cinder_db_passw0rd@127.0.0.1/cinder?charset=utf8",
+          :rabbit_userid   => 'nova',
           :rabbit_password => 'rabbit_pw'
         )
         should contain_class('cinder::api').with(
@@ -78,6 +79,26 @@ describe 'openstack::all' do
         should contain_class('cinder::volume::iscsi').with(
           :iscsi_ip_address => '127.0.0.1',
           :volume_group     => 'cinder-volumes'
+        )
+      end
+    end
+
+    context 'with cinder' do
+      before do
+        params.merge!(
+          :rabbit_user          => 'rabbit_user',
+          :cinder               => true,
+          :cinder_user_password => 'cinder_ks_passw0rd',
+          :cinder_db_password   => 'cinder_db_passw0rd'
+        )
+      end
+
+      it 'configures cinder' do
+        should contain_class('cinder::base').with(
+          :verbose         => 'False',
+          :sql_connection  => "mysql://cinder:cinder_db_passw0rd@127.0.0.1/cinder?charset=utf8",
+          :rabbit_userid   => 'rabbit_user',
+          :rabbit_password => 'rabbit_pw'
         )
       end
     end

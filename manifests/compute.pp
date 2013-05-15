@@ -201,6 +201,7 @@ class openstack::compute (
 
   if ($cinder) {
     class { 'cinder::base':
+      rabbit_userid   => $rabbit_user,
       rabbit_password => $rabbit_password,
       rabbit_host     => $rabbit_host,
       sql_connection  => $cinder_sql_connection,

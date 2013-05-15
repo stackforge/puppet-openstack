@@ -339,6 +339,7 @@ class openstack::all (
     class { "cinder::base":
       verbose         => $verbose,
       sql_connection  => "mysql://${cinder_db_user}:${cinder_db_password}@127.0.0.1/${cinder_db_dbname}?charset=utf8",
+      rabbit_userid   => $rabbit_user,
       rabbit_password => $rabbit_password,
     }
 
