@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe 'openstack::cinder::controller' do
 
-  let :required_params do
+  let :params do
     {
       :db_password      => 'db_password',
       :rabbit_password   => 'rabpass',
@@ -14,16 +14,12 @@ describe 'openstack::cinder::controller' do
     { :osfamily => 'Redhat' }
   end
 
-  let :params do
-    required_params
-  end
-
   it 'should configure using the default values' do
     should contain_class('cinder').with(
-      :sql_connection      => "mysql://cinder:#{required_params[:db_password]}@127.0.0.1/cinder?charset=utf8",
+      :sql_connection      => "mysql://cinder:#{params[:db_password]}@127.0.0.1/cinder?charset=utf8",
       :rpc_backend         => 'cinder.openstack.common.rpc.impl_kombu',
       :rabbit_userid       => 'guest',
-      :rabbit_password     => required_params[:rabbit_password],
+      :rabbit_password     => params[:rabbit_password],
       :rabbit_host         => '127.0.0.1',
       :rabbit_port         => '5672',
       :rabbit_hosts        => nil,
@@ -33,7 +29,7 @@ describe 'openstack::cinder::controller' do
       :verbose             => false
     )
     should contain_class('cinder::api').with(
-      :keystone_password       => required_params[:keystone_password],
+      :keystone_password       => params[:keystone_password],
       :keystone_enabled        => true,
       :keystone_user           => 'cinder',
       :keystone_auth_host      => 'localhost',
@@ -49,6 +45,17 @@ describe 'openstack::cinder::controller' do
       :package_ensure         => 'present',
       :enabled                => true
     )
+  end
+
+  context 'with unsupported db type' do
+
+    before do
+      params.merge!({:db_type => 'sqlite'})
+    end
+
+    it do
+      expect { subject }.to raise_error(Puppet::Error, /Unsupported db_type sqlite/)
+    end
   end
 
 end

@@ -82,10 +82,10 @@ class openstack::controller (
   $secret_key,
   # cinder and quantum password are not required b/c they are
   # optional. Not sure what to do about this.
-  $cinder_user_password    = 'cinder_pass',
-  $cinder_db_password      = 'cinder_pass',
   $quantum_user_password   = 'quantum_pass',
   $quantum_db_password     = 'quantum_pass',
+  $cinder_user_password    = false,
+  $cinder_db_password      = false,
   # Database
   $db_host                 = '127.0.0.1',
   $db_type                 = 'mysql',
@@ -306,23 +306,31 @@ class openstack::controller (
 
   ######### Cinder Controller Services ########
   if ($cinder) {
-    class { "cinder::base":
-      verbose         => $verbose,
-      sql_connection  => "mysql://${cinder_db_user}:${cinder_db_password}@${db_host}/${cinder_db_dbname}?charset=utf8",
-      rabbit_password => $rabbit_password,
-      rabbit_userid   => $rabbit_user,
+
+    if ! $cinder_db_password {
+      fail('Must set cinder db password when setting up a cinder controller')
     }
 
-    class { 'cinder::api':
-      keystone_password => $cinder_user_password,
+    if ! $cinder_user_password {
+      fail('Must set cinder user password when setting up a cinder controller')
     }
 
-    class { 'cinder::scheduler': }
-  } else {
-    # Set up nova-volume
-    class{ 'nova::volume': }
+    class { 'openstack::cinder::controller':
+      bind_host          => $bind_host,
+      keystone_auth_host => $keystone_host,
+      keystone_password  => $cinder_user_password,
+      rabbit_password    => $rabbit_password,
+      rabbit_host        => $rabbit_host,
+      db_password        => $cinder_db_password,
+      db_dbname          => $cinder_db_dbname,
+      db_user            => $cinder_db_user,
+      db_type            => $db_type,
+      db_host            => $db_host,
+      api_enabled        => $enabled,
+      scheduler_enabled  => $enabled,
+      verbose            => $verbose
+    }
   }
-
 
   ######## Horizon ########
   if ($horizon) {
