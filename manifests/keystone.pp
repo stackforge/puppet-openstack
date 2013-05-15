@@ -84,7 +84,7 @@ class openstack::keystone (
 
   # Install and configure Keystone
   if $db_type == 'mysql' {
-    $sql_conn = "mysql://${$db_user}:${db_password}@${db_host}/${db_name}"
+    $sql_conn = "mysql://${db_user}:${db_password}@${db_host}/${db_name}"
   } else {
     fail("db_type ${db_type} is not supported")
   }
