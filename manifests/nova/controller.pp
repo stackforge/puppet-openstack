@@ -44,9 +44,6 @@ class openstack::nova::controller (
   $private_interface         = undef,
   # quantum
   $quantum                   = false,
-  $quantum_db_dbname         = 'quantum',
-  $quantum_db_user           = 'quantum',
-  $quantum_db_password       = 'quantum_pass',
   $quantum_user_password     = 'quantum_pass',
   # Nova
   $nova_admin_tenant_name    = 'services',
@@ -64,8 +61,9 @@ class openstack::nova::controller (
   # VNC
   $vnc_enabled               = true,
   $vncproxy_host             = undef,
-  # General
+  # Keystone
   $keystone_host             = '127.0.0.1',
+  # General
   $verbose                   = 'False',
   $enabled                   = true
 ) {
@@ -142,6 +140,13 @@ class openstack::nova::controller (
       }
     }
 
+    if ! $private_interface  {
+      fail('private interface must be set when nova networking is used')
+    }
+    if ! $public_interface  {
+      fail('public interface must be set when nova networking is used')
+    }
+
     class { 'nova::network':
       private_interface => $private_interface,
       public_interface  => $public_interface,
@@ -155,41 +160,7 @@ class openstack::nova::controller (
       install_service   => $enable_network_service,
     }
   } else {
-    # Set up Quantum
-    $quantum_sql_connection = "mysql://${quantum_db_user}:${quantum_db_password}@${db_host}/${quantum_db_dbname}?charset=utf8"
-    class { 'quantum':
-      rabbit_user     => $rabbit_user,
-      rabbit_password => $rabbit_password,
-      #sql_connection  => $quantum_sql_connection,
-      verbose         => $verbose,
-      debug           => $verbose,
-    }
-
-    class { 'quantum::server':
-      auth_password => $quantum_user_password,
-    }
-
-    class { 'quantum::plugins::ovs':
-      sql_connection      => $quantum_sql_connection,
-      tenant_network_type => 'gre',
-    }
-
-    class { 'quantum::agents::ovs':
-      bridge_uplinks   => ["br-ex:${public_interface}"],
-      bridge_mappings  => ['external:br-ex'],
-      enable_tunneling => true,
-      local_ip         => $internal_address,
-    }
-
-    class { 'quantum::agents::dhcp':
-      use_namespaces => False,
-    }
-
-    class { 'quantum::agents::l3':
-      external_network_bridge => 'br-ex',
-      auth_password           => $quantum_user_password,
-    }
-
+    # Configure Nova for Quantum networking
     class { 'nova::network::quantum':
       quantum_admin_password    => $quantum_user_password,
       quantum_auth_strategy     => 'keystone',
