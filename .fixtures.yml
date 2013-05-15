@@ -6,7 +6,7 @@ fixtures:
     "glance": "git://github.com/stackforge/puppet-glance.git"
     'horizon': 'git://github.com/stackforge/puppet-horizon'
     'swift' : 'git://github.com/stackforge/puppet-swift'
-    'quantum': 'git://github.com/bodepd/puppet-quantum'
+    'quantum': 'git://github.com/stackforge/puppet-quantum'
     "apt": "git://github.com/puppetlabs/puppetlabs-apt.git"
     "apache": "git://github.com/puppetlabs/puppetlabs-apache.git"
     "concat": "git://github.com/ripienaar/puppet-concat.git"
