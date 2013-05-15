@@ -12,6 +12,8 @@
 # [admin_password] Admin password.
 # [keystone_db_password] Keystone database password.
 # [keystone_admin_token] Admin token for keystone.
+# [keystone_bind_address] Address that keystone api service should bind to.
+#   Optional. Defaults to '0.0.0.0'.
 # [glance_db_password] Glance DB password.
 # [glance_user_password] Glance service user password.
 # [nova_db_password] Nova DB password.
@@ -96,6 +98,7 @@ class openstack::controller (
   $keystone_db_user        = 'keystone',
   $keystone_db_dbname      = 'keystone',
   $keystone_admin_tenant   = 'admin',
+  $keystone_bind_address   = '0.0.0.0',
   $region                  = 'RegionOne',
   # Glance
   $glance_db_user          = 'glance',
@@ -223,6 +226,7 @@ class openstack::controller (
     quantum               => $quantum,
     quantum_user_password => $quantum_user_password,
     enabled               => $enabled,
+    bind_host             => $keystone_bind_address,
   }
 
 
