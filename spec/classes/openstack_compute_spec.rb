@@ -5,7 +5,7 @@ describe 'openstack::compute' do
   let :params do
     {
       :private_interface         => 'eth0',
-      :internal_address          => '0.0.0.0',
+      :internal_address          => '127.0.0.2',
       :nova_user_password        => 'nova_pass',
       :rabbit_password           => 'rabbit_pw',
       :rabbit_host               => '127.0.0.1',
@@ -42,12 +42,12 @@ describe 'openstack::compute' do
       should contain_class('nova::compute').with(
         :enabled                        => true,
         :vnc_enabled                    => true,
-        :vncserver_proxyclient_address  => '0.0.0.0',
+        :vncserver_proxyclient_address  => '127.0.0.2',
         :vncproxy_host                  => false
       )
       should contain_class('nova::compute::libvirt').with(
         :libvirt_type     => 'kvm',
-        :vncserver_listen => '0.0.0.0'
+        :vncserver_listen => '127.0.0.2'
       )
       should contain_nova_config('DEFAULT/multi_host').with( :value => 'False' )
       should contain_nova_config('DEFAULT/send_arp_for_ha').with( :value => 'False' )
@@ -65,6 +65,20 @@ describe 'openstack::compute' do
         :enabled           => false,
         :install_service   => false
       })
+      should contain_class('cinder').with(
+        :rabbit_password => 'rabbit_pw',
+        :rabbit_host     => '127.0.0.1',
+        :sql_connection  => 'mysql://user:pass@host/dbcinder',
+        :verbose         => 'False'
+      )
+      should contain_class('cinder::volume')
+      should contain_class('cinder::volume::iscsi').with(
+        :iscsi_ip_address => '127.0.0.2',
+        :volume_group     => 'cinder-volumes'
+      )
+      should contain_nova_config('DEFAULT/volume_api_class').with(
+        :value => 'nova.volume.cinder.API'
+      )
     }
   end
 
@@ -123,44 +137,14 @@ describe 'openstack::compute' do
     end
   end
 
-  describe "when enabling volume management" do
-    before do
-      params.merge!( :manage_volumes => true )
-    end
-
-    it do
-      should contain_nova_config('DEFAULT/multi_host').with({ 'value' => 'False'})
-      should_not contain_class('nova::api')
-      should contain_class('nova::network').with({
-        'enabled' => false,
-        'install_service' => false
-      })
-    end
-  end
-
   context 'with cinder' do
     before do
       params.merge!(
-        :cinder => true
+        :manage_volumes => false
       )
     end
+    it { should_not contain_class('cinder::volume') }
 
-    it 'configures cinder' do
-      should contain_class('cinder::base').with(
-        :rabbit_password => 'rabbit_pw',
-        :rabbit_host     => '127.0.0.1',
-        :sql_connection  => 'mysql://user:pass@host/dbcinder',
-        :verbose         => 'False'
-      )
-      should contain_class('cinder::volume')
-      should contain_class('cinder::volume::iscsi').with(
-        :iscsi_ip_address => '127.0.0.1',
-        :volume_group     => 'cinder-volumes'
-      )
-      should contain_nova_config('DEFAULT/volume_api_class').with(
-        :value => 'nova.volume.cinder.API'
-      )
-    end
   end
 
   describe 'when quantum is false' do

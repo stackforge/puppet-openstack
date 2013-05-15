@@ -548,6 +548,14 @@ The process for contributing code is as follows:
 * Please visit http://wiki.openstack.org/GerritWorkflow and follow the instructions there to upload your change to Gerrit.
 * Please add rspec tests for your code if applicable
 
+## Upgrade warning
+
+The current version of the code is intended for the 2.0 release of the openstack modules and
+has the following know backwards incompatible breaking changes from 1.x.
+
+* the cinder parameter has been removed (b/c support for nova-volumes has been removed).
+  The manage_volumes parameter indicates is cinder volumes should be managed.
+
 ## Future features:
 
   efforts are underway to implement the following additional features:
