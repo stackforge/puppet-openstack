@@ -103,6 +103,10 @@ class openstack::controller (
   $glance_db_user          = 'glance',
   $glance_db_dbname        = 'glance',
   $glance_api_servers      = undef,
+  $glance_backend          = 'file',
+  # Glance Swift Backend
+  $swift_store_user        = 'swift_store_user',
+  $swift_store_key         = 'swift_store_key',
   # Nova
   $nova_admin_tenant_name  = 'services',
   $nova_admin_user         = 'nova',
@@ -230,14 +234,18 @@ class openstack::controller (
 
   ######## BEGIN GLANCE ##########
   class { 'openstack::glance':
-    verbose                   => $verbose,
-    db_type                   => $db_type,
-    db_host                   => $db_host,
-    glance_db_user            => $glance_db_user,
-    glance_db_dbname          => $glance_db_dbname,
-    glance_db_password        => $glance_db_password,
-    glance_user_password      => $glance_user_password,
-    enabled                   => $enabled,
+    verbose          => $verbose,
+    db_type          => $db_type,
+    db_host          => $db_host,
+    keystone_host    => '127.0.0.1',
+    db_user          => $glance_db_user,
+    db_name          => $glance_db_dbname,
+    db_password      => $glance_db_password,
+    user_password    => $glance_user_password,
+    backend          => $glance_backend,
+    swift_store_user => $swift_store_user,
+    swift_store_key  => $swift_store_key,
+    enabled          => $enabled,
   }
 
   ######## BEGIN NOVA ###########

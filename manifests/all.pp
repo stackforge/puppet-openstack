@@ -196,14 +196,14 @@ class openstack::all (
 
   ######## GLANCE ##########
   class { 'openstack::glance':
-    verbose                   => $verbose,
-    db_type                   => $db_type,
-    db_host                   => '127.0.0.1',
-    glance_db_user            => $glance_db_user,
-    glance_db_dbname          => $glance_db_dbname,
-    glance_db_password        => $glance_db_password,
-    glance_user_password      => $glance_user_password,
-    enabled                   => $enabled,
+    verbose       => $verbose,
+    db_type       => $db_type,
+    db_host       => '127.0.0.1',
+    db_user       => $glance_db_user,
+    db_name       => $glance_db_dbname,
+    db_password   => $glance_db_password,
+    user_password => $glance_user_password,
+    enabled       => $enabled,
   }
 
   ######## NOVA ###########
