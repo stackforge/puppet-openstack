@@ -180,6 +180,7 @@ class openstack::keystone (
   class { '::keystone':
     verbose        => $verbose,
     debug          => $verbose,
+    bind_host      => $bind_host,
     catalog_type   => 'sql',
     admin_token    => $admin_token,
     enabled        => $enabled,
