@@ -19,6 +19,8 @@ describe 'openstack::controller' do
       :glance_user_password    => 'glance_pass',
       :nova_db_password        => 'nova_pass',
       :nova_user_password      => 'nova_pass',
+      :cinder_db_password      => 'cinder_pass',
+      :cinder_user_password    => 'cinder_pass',
       :secret_key              => 'secret_key',
       :quantum                 => false,
       :vncproxy_host           => '10.0.0.1',
@@ -123,7 +125,6 @@ describe 'openstack::controller' do
         )
       end
       it do
-        should contain_class('nova::volume')
         should_not contain_class('quantum::db::mysql')
         should_not contain_class('cinder::db::mysql')
       end
@@ -424,7 +425,7 @@ describe 'openstack::controller' do
         default_params.merge(:cinder => false)
       end
       it 'should not contain cinder classes' do
-        should_not contain_class('cinder::base')
+        should_not contain_class('cinder')
         should_not contain_class('cinder::api')
         should_not contain_class('cinder:"scheduler')
       end
@@ -435,7 +436,7 @@ describe 'openstack::controller' do
         default_params
       end
       it 'should configure cinder using defaults' do
-        should contain_class('cinder::base').with(
+        should contain_class('cinder').with(
           :verbose         => 'False',
           :sql_connection  => 'mysql://cinder:cinder_pass@127.0.0.1/cinder?charset=utf8',
           :rabbit_password => 'rabbit_pw'
@@ -458,7 +459,7 @@ describe 'openstack::controller' do
         )
       end
       it 'should configure cinder using defaults' do
-        should contain_class('cinder::base').with(
+        should contain_class('cinder').with(
           :verbose         => 'True',
           :sql_connection  => 'mysql://baz:bar@127.0.0.2/blah?charset=utf8',
           :rabbit_password => 'rabbit_pw2'

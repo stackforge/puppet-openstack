@@ -54,14 +54,14 @@ class openstack::compute (
   $vncproxy_host                 = undef,
   $vncserver_listen              = false,
   # cinder / volumes
-  $cinder                        = true,
-  $cinder_sql_connection         = undef,
   $manage_volumes                = true,
+  $cinder_sql_connection         = false,
   $volume_group                  = 'cinder-volumes',
   $iscsi_ip_address              = '127.0.0.1',
+  $setup_test_volume             = false,
   # General
   $migration_support             = false,
-  $verbose                       = 'False',
+  $verbose                       = false,
   $enabled                       = true
 ) {
 
@@ -199,25 +199,30 @@ class openstack::compute (
     }
   }
 
-  if ($cinder) {
-    class { 'cinder::base':
-      rabbit_password => $rabbit_password,
-      rabbit_host     => $rabbit_host,
-      sql_connection  => $cinder_sql_connection,
-      verbose         => $verbose,
+  if $manage_volumes {
+
+    if ! $cinder_sql_connection {
+      fail('cinder sql connection must be set when cinder is being configured by openstack::compute')
     }
-    class { 'cinder::volume': }
-    class { 'cinder::volume::iscsi':
-      iscsi_ip_address => $iscsi_ip_address,
-      volume_group     => $volume_group,
+
+    class { 'openstack::cinder::storage':
+      sql_connection      => $cinder_sql_connection,
+      rabbit_password     => $rabbit_password,
+      rabbit_userid       => $rabbit_user,
+      rabbit_host         => $rabbit_host,
+      rabbit_virtual_host => $rabbit_virtual_host,
+      volume_group        => $volume_group,
+      iscsi_ip_address    => $iscsi_ip_address,
+      enabled             => $enabled,
+      verbose             => $verbose,
+      setup_test_volume   => $setup_test_volume,
+      volume_driver       => 'iscsi',
     }
 
     # set in nova::api
     if ! defined(Nova_config['DEFAULT/volume_api_class']) {
       nova_config { 'DEFAULT/volume_api_class': value => 'nova.volume.cinder.API' }
     }
-  } else {
-    # Set up nova-volume
   }
 
 }

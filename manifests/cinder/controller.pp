@@ -1,6 +1,7 @@
 class openstack::cinder::controller(
   $rabbit_password,
   $keystone_password,
+  $db_password,
   $rpc_backend              = 'cinder.openstack.common.rpc.impl_kombu',
   $keystone_tenant          = 'services',
   $keystone_enabled         = true,
@@ -17,7 +18,6 @@ class openstack::cinder::controller(
   # Database. Currently mysql is the only option.
   $db_type                  = 'mysql',
   $db_user                  = 'cinder',
-  $db_password              = 'cinder_pass',
   $db_host                  = '127.0.0.1',
   $db_dbname                = 'cinder',
   $package_ensure           = present,
@@ -34,7 +34,9 @@ class openstack::cinder::controller(
   ####### DATABASE SETUP ######
   # set up mysql server
   if ($db_type == 'mysql') {
-      $sql_connection = "mysql://${db_user}:${db_password}@${db_host}/${db_dbname}?charset=utf8"
+    $sql_connection = "mysql://${db_user}:${db_password}@${db_host}/${db_dbname}?charset=utf8"
+  } else {
+    fail("Unsupported db_type ${db_type}")
   }
 
   class {'::cinder':
