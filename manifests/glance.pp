@@ -6,18 +6,22 @@
 #   - Keystone for authentication
 #   - keystone tenant: services
 #   - keystone username: glance
-#   - storage backend: file
+#   - storage backend: file (default) or Swift
 #
 # === Parameters
 #
 # [db_host] Host where DB resides. Required.
-# [glance_user_password] Password for glance auth user. Required.
-# [glance_db_password] Password for glance DB. Required.
+# [user_password] Password for glance auth user. Required.
+# [db_password] Password for glance DB. Required.
 # [keystone_host] Host whre keystone is running. Optional. Defaults to '127.0.0.1'
 # [auth_uri] URI used for auth. Optional. Defaults to "http://${keystone_host}:5000/"
 # [db_type] Type of sql databse to use. Optional. Defaults to 'mysql'
-# [glance_db_user] Name of glance DB user. Optional. Defaults to 'glance'
-# [glance_db_dbname] Name of glance DB. Optional. Defaults to 'glance'
+# [db_user] Name of glance DB user. Optional. Defaults to 'glance'
+# [db_name] Name of glance DB. Optional. Defaults to 'glance'
+# [backend] Backends used to store images.  Defaults to file.
+# [swift_store_user] The Swift service user account. Defaults to undef
+# [swift_store_key]  The Swift service user password Defaults to undef
+# [swift_store_auth_addres] The URL where the Swift auth service lives. Defaults to "http://${keystone_host}:5000/v2.0/"
 # [verbose] Log verbosely. Optional. Defaults to 'False'
 # [enabled] Used to indicate if the service should be active (true) or passive (false).
 #   Optional. Defaults to true
@@ -25,28 +29,32 @@
 # === Example
 #
 # class { 'openstack::glance':
-#   glance_user_password => 'changeme',
-#   db_password          => 'changeme',
-#   db_host              => '127.0.0.1',
+#   user_password => 'changeme',
+#   db_password   => 'changeme',
+#   db_host       => '127.0.0.1',
 # }
 
 class openstack::glance (
   $db_host,
-  $glance_user_password,
-  $glance_db_password,
-  $keystone_host        = '127.0.0.1',
-  $auth_uri             = "http://127.0.0.1:5000/",
-  $db_type              = 'mysql',
-  $glance_db_user       = 'glance',
-  $glance_db_dbname     = 'glance',
-  $verbose              = 'False',
-  $enabled              = true
+  $user_password,
+  $db_password,
+  $keystone_host            = '127.0.0.1',
+  $auth_uri                 = "http://127.0.0.1:5000/",
+  $db_type                  = 'mysql',
+  $db_user                  = 'glance',
+  $db_name                  = 'glance',
+  $backend                  = 'file',
+  $swift_store_user         = undef,
+  $swift_store_key          = undef,
+  $swift_store_auth_address = "http://127.0.0.1:5000/v2.0/",
+  $verbose                  = 'False',
+  $enabled                  = true
 ) {
 
   # Configure the db string
   case $db_type {
     'mysql': {
-      $sql_connection = "mysql://${glance_db_user}:${glance_db_password}@${db_host}/${glance_db_dbname}"
+      $sql_connection = "mysql://${db_user}:${db_password}@${db_host}/${db_name}"
     }
   }
 
@@ -59,7 +67,7 @@ class openstack::glance (
     auth_host         => $keystone_host,
     keystone_tenant   => 'services',
     keystone_user     => 'glance',
-    keystone_password => $glance_user_password,
+    keystone_password => $user_password,
     sql_connection    => $sql_connection,
     enabled           => $enabled,
   }
@@ -73,12 +81,24 @@ class openstack::glance (
     auth_type         => 'keystone',
     keystone_tenant   => 'services',
     keystone_user     => 'glance',
-    keystone_password => $glance_user_password,
+    keystone_password => $user_password,
     sql_connection    => $sql_connection,
     enabled           => $enabled,
   }
 
   # Configure file storage backend
-  class { 'glance::backend::file': }
+  if($backend == 'swift') {
+    class { 'glance::backend::swift':
+      swift_store_user                    => $swift_store_user,
+      swift_store_key                     => $swift_store_key,
+      swift_store_auth_address            => $swift_store_auth_address,
+      swift_store_create_container_on_put => 'true'
+    }
+  } elsif($backend == 'file') {
+  # Configure file storage backend
+    class { 'glance::backend::file': }
+  } else {
+    fail("Undefined backend ${backend}")
+  }
 
 }
