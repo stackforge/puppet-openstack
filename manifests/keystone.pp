@@ -5,7 +5,7 @@
 #
 # === Parameters
 #
-# [db_host] Host where DB resides. Required.
+# [db_host] Host where DB resides. Optional. Defaults to 127.0.0.1..
 # [keystone_db_password] Password for keystone DB. Required.
 # [keystone_admin_token]. Auth token for keystone admin. Required.
 # [admin_email] Email address of system admin. Required.
@@ -39,7 +39,6 @@
 #  }
 
 class openstack::keystone (
-  $db_host,
   $db_password,
   $admin_token,
   $admin_email,
@@ -48,8 +47,9 @@ class openstack::keystone (
   $nova_user_password,
   $cinder_user_password,
   $quantum_user_password,
-  $swift_user_password      = false,
   $public_address,
+  $db_host                  = '127.0.0.1',
+  $swift_user_password      = false,
   $db_type                  = 'mysql',
   $db_user                  = 'keystone',
   $db_name                  = 'keystone',
