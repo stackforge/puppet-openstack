@@ -366,6 +366,7 @@ describe 'openstack::controller' do
         should contain_class('nova::consoleauth').with(:enabled => true)
         should contain_class('nova::scheduler').with(:enabled => true)
         should contain_class('nova::objectstore').with(:enabled => true)
+        should contain_class('nova::conductor').with(:enabled => true)
         should contain_class('nova::vncproxy').with(
           :enabled         => true,
           :host            => '10.0.0.1'
