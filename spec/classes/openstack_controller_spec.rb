@@ -517,7 +517,6 @@ describe 'openstack::controller' do
 
         should contain_class('quantum::agents::l3').with( {
           :external_network_bridge => 'br-ex',
-          :auth_password           => 'q_pass',
         } )
 
         should contain_class('nova::network::quantum').with({

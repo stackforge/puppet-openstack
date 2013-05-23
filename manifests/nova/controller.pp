@@ -187,7 +187,6 @@ class openstack::nova::controller (
 
     class { 'quantum::agents::l3':
       external_network_bridge => 'br-ex',
-      auth_password           => $quantum_user_password,
     }
 
     class { 'nova::network::quantum':
