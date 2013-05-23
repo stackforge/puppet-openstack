@@ -64,10 +64,14 @@ describe 'openstack::controller' do
 
       let :params do
         default_params.merge(
-          :enabled => true,
-          :db_type => 'mysql',
-          :quantum => true,
-          :cinder  => true
+          :enabled                => true,
+          :db_type                => 'mysql',
+          :quantum                => true,
+          :metadata_shared_secret => 'secret',
+          :bridge_interface       => 'eth1',
+          :quantum_user_password  => 'q_pass',
+          :quantum_db_password    => 'q_db_pass',
+          :cinder                 => true
         )
       end
 
@@ -105,7 +109,7 @@ describe 'openstack::controller' do
          )
          should contain_class('quantum::db::mysql').with(
            :user          => 'quantum',
-           :password      => 'quantum_pass',
+           :password      => 'q_db_pass',
            :dbname        => 'quantum',
            :allowed_hosts => '%'
          )
@@ -341,7 +345,7 @@ describe 'openstack::controller' do
 
       it 'should contain enabled nova services' do
         should contain_class('nova::rabbitmq').with(
-          :userid       => 'nova',
+          :userid       => 'openstack',
           :password     => 'rabbit_pw',
           :virtual_host => '/',
           :enabled      => true
@@ -349,7 +353,7 @@ describe 'openstack::controller' do
         should contain_class('nova').with(
           :sql_connection      => 'mysql://nova:nova_pass@127.0.0.1/nova',
           :rabbit_host         => '127.0.0.1',
-          :rabbit_userid       => 'nova',
+          :rabbit_userid       => 'openstack',
           :rabbit_password     => 'rabbit_pw',
           :rabbit_virtual_host => '/',
           :image_service       => 'nova.image.glance.GlanceImageService',
@@ -479,8 +483,11 @@ describe 'openstack::controller' do
         default_params.merge({
           :quantum => true,
           :verbose => true,
-          :quantum_user_password => 'q_pass',
-          :public_interface      => 'eth_27'
+          :quantum_user_password  => 'q_pass',
+          :bridge_interface       => 'eth_27',
+          :internal_address       => '10.0.0.3',
+          :quantum_db_password    => 'q_db_pass',
+          :metadata_shared_secret => 'secret'
         })
       end
 
@@ -488,46 +495,31 @@ describe 'openstack::controller' do
 
       it 'should configure quantum' do
 
-        should contain_class('quantum').with({
-          :rabbit_user      => 'nova',
-          :rabbit_password  => 'rabbit_pw',
-          :verbose          => true,
-          :debug            => true,
-        })
-
-        should contain_class('quantum::server').with({
-         :auth_password => 'q_pass',
-        })
-
-        should contain_class('quantum::plugins::ovs').with({
-          :sql_connection      => 'mysql://quantum:quantum_pass@127.0.0.1/quantum?charset=utf8',
-
-        })
-
-        should contain_class('quantum::agents::ovs').with( {
-          :bridge_uplinks => ["br-ex:eth_27"],
-          :bridge_mappings  => ['external:br-ex'],
-          :enable_tunneling => true,
-          :local_ip         => '127.0.0.1',
-        } )
-
-        should contain_class('quantum::agents::dhcp').with( {
-          :use_namespaces => 'False',
-        } )
-
-        should contain_class('quantum::agents::l3').with( {
-          :external_network_bridge => 'br-ex',
-          :auth_password           => 'q_pass',
-        } )
-
-        should contain_class('nova::network::quantum').with({
-          :quantum_admin_password    => 'q_pass',
-          :quantum_auth_strategy     => 'keystone',
-          :quantum_url               => "http://127.0.0.1:9696",
-          :quantum_admin_tenant_name => 'services',
-          :quantum_admin_username    => 'quantum',
-          :quantum_admin_auth_url    => "http://127.0.0.1:35357/v2.0",
-        })
+        should contain_class('openstack::quantum').with(
+          :db_host               => '127.0.0.1',
+          :rabbit_host           => '127.0.0.1',
+          :rabbit_user           => 'openstack',
+          :rabbit_password       => 'rabbit_pw',
+          :rabbit_virtual_host   => '/',
+          :ovs_local_ip          => '10.0.0.3',
+          :bridge_uplinks        => ["br-ex:eth_27"],
+          :bridge_mappings       => ["default:br-ex"],
+          :enable_ovs_agent      => false,
+          :firewall_driver       => 'quantum.agent.linux.iptables_firewall.OVSHybridIptablesFirewallDriver',
+          :db_name               => 'quantum',
+          :db_user               => 'quantum',
+          :db_password           => 'q_db_pass',
+          :enable_dhcp_agent     => true,
+          :enable_l3_agent       => true,
+          :enable_metadata_agent => true,
+          :auth_url              => 'http://127.0.0.1:35357/v2.0',
+          :user_password         => 'q_pass',
+          :shared_secret         => 'secret',
+          :keystone_host         => '127.0.0.1',
+          :enabled               => true,
+          :enable_server         => true,
+          :verbose               => true
+        )
 
       end
 
