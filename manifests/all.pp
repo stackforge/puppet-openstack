@@ -20,7 +20,7 @@
 #  [network_config] Used to specify network manager specific parameters .Optional. Defualts to {}.
 #  [mysql_root_password] The root password to set for the mysql database. Optional. Defaults to sql_pass'.
 #  [rabbit_password] The password to use for the rabbitmq user. Optional. Defaults to rabbit_pw'
-#  [rabbit_user] The rabbitmq user to use for auth. Optional. Defaults to nova'.
+#  [rabbit_user] The rabbitmq user to use for auth. Optional. Defaults to openstack.
 #  [admin_email] The admin's email address. Optional. Defaults to someuser@some_fake_email_address.foo'.
 #  [admin_password] The default password of the keystone admin. Optional. Defaults to ChangeMe'.
 #  [keystone_db_password] The default password for the keystone db user. Optional. Defaults to keystone_pass'.
@@ -107,7 +107,7 @@ class openstack::all (
   $network_config          = {},
   $quantum                 = true,
   # Rabbit
-  $rabbit_user             = 'nova',
+  $rabbit_user             = 'openstack',
   # Horizon
   $horizon                 = true,
   $cache_server_ip         = '127.0.0.1',

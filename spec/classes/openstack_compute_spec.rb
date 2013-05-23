@@ -32,7 +32,7 @@ describe 'openstack::compute' do
       should contain_class('nova').with(
         :sql_connection      => 'mysql://user:pass@host/dbname',
         :rabbit_host         => '127.0.0.1',
-        :rabbit_userid       => 'nova',
+        :rabbit_userid       => 'openstack',
         :rabbit_password     => 'rabbit_pw',
         :rabbit_virtual_host => '/',
         :image_service       => 'nova.image.glance.GlanceImageService',
@@ -68,7 +68,7 @@ describe 'openstack::compute' do
       should contain_class('openstack::cinder::storage').with(
         :sql_connection      => 'mysql://user:pass@host/dbcinder',
         :rabbit_password     => 'rabbit_pw',
-        :rabbit_userid       => 'nova',
+        :rabbit_userid       => 'openstack',
         :rabbit_host         => '127.0.0.1',
         :rabbit_virtual_host => '/',
         :volume_group        => 'cinder-volumes',
@@ -165,6 +165,7 @@ describe 'openstack::compute' do
           'enabled' => true,
           'install_service' => true
         })
+        should_not contain_class('openstack::quantum')
       end
 
       describe 'with defaults' do
@@ -241,32 +242,48 @@ describe 'openstack::compute' do
         :internal_address      => '127.0.0.1',
         :public_interface      => 'eth3',
         :quantum               => true,
-        :keystone_host         => '127.0.0.1',
-        :quantum_host          => '127.0.0.1',
+        :keystone_host         => '127.0.0.3',
+        :quantum_host          => '127.0.0.2',
         :quantum_user_password => 'quantum_user_password'
       )
     end
 
     it 'should configure quantum' do
-      should contain_class('quantum').with(
-        :verbose         => false,
-        :debug           => false,
-        :rabbit_host     => params[:rabbit_host],
-        :rabbit_password => params[:rabbit_password]
+      should contain_class('openstack::quantum').with(
+        :db_host           => '127.0.0.1',
+        :ovs_local_ip      => params[:internal_address],
+        :rabbit_host       => params[:rabbit_host],
+        :rabbit_user       => 'openstack',
+        :rabbit_password   => params[:rabbit_password],
+        :enable_ovs_agent  => true,
+        :firewall_driver   => false,
+        :enable_l3_agent   => false,
+        :enable_dhcp_agent => false,
+        :auth_url          => 'http://127.0.0.1:35357/v2.0',
+        :user_password     => params[:quantum_user_password],
+        :keystone_host     => params[:keystone_host],
+        :enabled           => true,
+        :enable_server     => false,
+        :verbose           => false
       )
-      should contain_class('quantum::agents::ovs').with(
-        :enable_tunneling => true,
-        :local_ip         => '127.0.0.1'
+
+      should contain_class('nova::compute::quantum').with(
+        :libvirt_vif_driver => 'nova.virt.libvirt.vif.LibvirtGenericVIFDriver'
       )
-      should contain_class('nova::compute::quantum')
+
       should contain_class('nova::network::quantum').with(
         :quantum_admin_password    => 'quantum_user_password',
         :quantum_auth_strategy     => 'keystone',
-        :quantum_url               => "http://127.0.0.1:9696",
+        :quantum_url               => "http://127.0.0.2:9696",
         :quantum_admin_tenant_name => 'services',
         :quantum_admin_username    => 'quantum',
-        :quantum_admin_auth_url    => "http://127.0.0.1:35357/v2.0"
+        :quantum_admin_auth_url    => "http://127.0.0.3:35357/v2.0"
       )
+
+      should_not contain_class('quantum::server')
+      should_not contain_class('quantum::plugins::ovs')
+      should_not contain_class('quantum::agents::dhcp')
+      should_not contain_class('quantum::agents::l3')
     end
   end
 

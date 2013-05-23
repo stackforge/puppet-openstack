@@ -5,8 +5,6 @@
 #
 # === Parameters
 #
-# See params.pp
-#
 # === Examples
 #
 # class { 'openstack::nova::compute':
@@ -33,17 +31,25 @@ class openstack::compute (
   $multi_host                    = false,
   $enabled_apis                  = 'ec2,osapi_compute,metadata',
   # Quantum
-  $quantum                       = false,
-  $quantum_host                  = false,
+  $quantum                       = true,
   $quantum_user_password         = false,
-  $keystone_host                 = false,
+  $quantum_admin_tenant_name     = 'services',
+  $quantum_admin_user            = 'quantum',
+  $enable_ovs_agent              = true,
+  $enable_l3_agent               = false,
+  $enable_dhcp_agent             = false,
+  $quantum_auth_url              = "http://127.0.0.1:35357/v2.0",
+  $keystone_host                 = '127.0.0.1',
+  $quantum_host                  = '127.0.0.1',
+  $ovs_local_ip                  = false,
   # Nova
   $nova_admin_tenant_name        = 'services',
   $nova_admin_user               = 'nova',
   $purge_nova_config             = true,
+  $libvirt_vif_driver            = 'nova.virt.libvirt.vif.LibvirtGenericVIFDriver',
   # Rabbit
   $rabbit_host                   = '127.0.0.1',
-  $rabbit_user                   = 'nova',
+  $rabbit_user                   = 'openstack',
   $rabbit_virtual_host           = '/',
   # Glance
   $glance_api_servers            = false,
@@ -64,6 +70,12 @@ class openstack::compute (
   $verbose                       = false,
   $enabled                       = true
 ) {
+
+  if $ovs_local_ip {
+    $ovs_local_ip_real = $ovs_local_ip
+  } else {
+    $ovs_local_ip_real = $internal_address
+  }
 
   if $vncserver_listen {
     $vncserver_listen_real = $vncserver_listen
@@ -156,9 +168,6 @@ class openstack::compute (
     }
   } else {
 
-    if ! $quantum_host {
-      fail('quantum host must be specified when quantum is installed on compute instances')
-    }
     if ! $quantum_user_password {
       fail('quantum user password must be set when quantum is configured')
     }
@@ -166,37 +175,45 @@ class openstack::compute (
       fail('keystone host must be configured when quantum is installed')
     }
 
-    class { 'quantum':
-      verbose         => $verbose,
-      debug           => $verbose,
-      rabbit_host     => $rabbit_host,
-      rabbit_user     => $rabbit_user,
-      rabbit_password => $rabbit_password,
-      #sql_connection  => $quantum_sql_connection,
+    class { 'openstack::quantum':
+      # Database
+      db_host           => $db_host,
+      # Networking
+      ovs_local_ip      => $ovs_local_ip_real,
+      # Rabbit
+      rabbit_host       => $rabbit_host,
+      rabbit_user       => $rabbit_user,
+      rabbit_password   => $rabbit_password,
+      # Quantum OVS
+      enable_ovs_agent  => $enable_ovs_agent,
+      firewall_driver   => false,
+      # Quantum L3 Agent
+      enable_l3_agent   => $enable_l3_agent,
+      enable_dhcp_agent => $enable_dhcp_agent,
+      auth_url          => $quantum_auth_url,
+      user_password     => $quantum_user_password,
+      # Keystone
+      keystone_host     => $keystone_host,
+      # General
+      enabled           => $enabled,
+      enable_server     => false,
+      verbose           => $verbose,
     }
 
-    class { 'quantum::agents::ovs':
-      enable_tunneling => true,
-      local_ip         => $internal_address,
+    class { 'nova::compute::quantum':
+      libvirt_vif_driver => $libvirt_vif_driver,
     }
 
-    class { 'nova::compute::quantum': }
-
-    # does this have to be installed on the compute node?
-    # NOTE
+    # Configures nova.conf entries applicable to Quantum.
     class { 'nova::network::quantum':
       quantum_admin_password    => $quantum_user_password,
       quantum_auth_strategy     => 'keystone',
-      quantum_url               => "http://${keystone_host}:9696",
-      quantum_admin_tenant_name => 'services',
-      quantum_admin_username    => 'quantum',
-      quantum_admin_auth_url    => "http://${keystone_host}:35357/v2.0"
+      quantum_url               => "http://${quantum_host}:9696",
+      quantum_admin_username    => $quantum_admin_user,
+      quantum_admin_tenant_name => $quantum_admin_tenant_name,
+      quantum_admin_auth_url    => "http://${keystone_host}:35357/v2.0",
     }
 
-    nova_config {
-      'DEFAULT/linuxnet_interface_driver':       value => 'nova.network.linux_net.LinuxOVSInterfaceDriver';
-      'DEFAULT/linuxnet_ovs_integration_bridge': value => 'br-int';
-    }
   }
 
   if $manage_volumes {
