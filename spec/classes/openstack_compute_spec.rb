@@ -13,8 +13,8 @@ describe 'openstack::compute' do
       :nova_admin_tenant_name    => 'services',
       :nova_admin_user           => 'nova',
       :enabled_apis              => 'ec2,osapi_compute,metadata',
-      :sql_connection            => 'mysql://user:pass@host/dbname',
-      :cinder_sql_connection     => 'mysql://user:pass@host/dbcinder',
+      :nova_db_password          => 'pass',
+      :cinder_db_password        => 'cinder_pass',
       :quantum                   => false,
       :fixed_range               => '10.0.0.0/16'
     }
@@ -30,7 +30,7 @@ describe 'openstack::compute' do
   describe "when using default class parameters" do
     it {
       should contain_class('nova').with(
-        :sql_connection      => 'mysql://user:pass@host/dbname',
+        :sql_connection      => 'mysql://nova:pass@127.0.0.1/nova',
         :rabbit_host         => '127.0.0.1',
         :rabbit_userid       => 'openstack',
         :rabbit_password     => 'rabbit_pw',
@@ -66,7 +66,7 @@ describe 'openstack::compute' do
         :install_service   => false
       })
       should contain_class('openstack::cinder::storage').with(
-        :sql_connection      => 'mysql://user:pass@host/dbcinder',
+        :sql_connection      => 'mysql://cinder:cinder_pass@127.0.0.1/cinder',
         :rabbit_password     => 'rabbit_pw',
         :rabbit_userid       => 'openstack',
         :rabbit_host         => '127.0.0.1',
@@ -87,8 +87,9 @@ describe 'openstack::compute' do
         :private_interface   => 'eth1',
         :internal_address    => '127.0.0.1',
         :public_interface    => 'eth2',
-        :sql_connection      => 'mysql://user:passwd@host/name',
         :nova_user_password  => 'nova_pass',
+        :nova_db_user        => 'nova_user',
+        :nova_db_name        => 'novadb',
         :rabbit_host         => 'my_host',
         :rabbit_password     => 'my_rabbit_pw',
         :rabbit_user         => 'my_rabbit_user',
@@ -102,7 +103,7 @@ describe 'openstack::compute' do
     end
     it do
       should contain_class('nova').with(
-        :sql_connection      => 'mysql://user:passwd@host/name',
+        :sql_connection      => 'mysql://nova_user:pass@127.0.0.1/novadb',
         :rabbit_host         => 'my_host',
         :rabbit_userid       => 'my_rabbit_user',
         :rabbit_password     => 'my_rabbit_pw',
