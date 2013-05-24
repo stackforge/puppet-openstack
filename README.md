@@ -555,6 +555,8 @@ has the following know backwards incompatible breaking changes from 1.x.
 
 * the cinder parameter has been removed (b/c support for nova-volumes has been removed).
   The manage_volumes parameter indicates is cinder volumes should be managed.
+* the names of the sql connection parameters of the openstack::compute class have changed
+  from sql_connetion to individual parameters for the db user,name,password,host.
 
 ## Future features:
 
