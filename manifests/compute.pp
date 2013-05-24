@@ -3,7 +3,9 @@
 #
 # Manifest to install/configure nova-compute
 #
-# === Parameters
+# [purge_nova_config]
+#   Whether unmanaged nova.conf entries should be purged.
+#   (optional) Defaults to false.
 #
 # === Examples
 #
@@ -45,7 +47,7 @@ class openstack::compute (
   # Nova
   $nova_admin_tenant_name        = 'services',
   $nova_admin_user               = 'nova',
-  $purge_nova_config             = true,
+  $purge_nova_config             = false,
   $libvirt_vif_driver            = 'nova.virt.libvirt.vif.LibvirtGenericVIFDriver',
   # Rabbit
   $rabbit_host                   = '127.0.0.1',

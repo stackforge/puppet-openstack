@@ -87,4 +87,8 @@ describe 'openstack::all' do
     end
     it { should contain_nova_config('DEFAULT/auto_assign_floating_ip').with(:value => 'True')}
   end
+
+  context 'nova' do
+    it { should_not contain_resources('nova_config').with_purge(true) }
+  end
 end

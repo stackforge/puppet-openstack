@@ -344,6 +344,7 @@ describe 'openstack::controller' do
     context 'with default params' do
 
       it 'should contain enabled nova services' do
+        should_not contain_resources('nova_config').with_purge(true)
         should contain_class('nova::rabbitmq').with(
           :userid       => 'openstack',
           :password     => 'rabbit_pw',

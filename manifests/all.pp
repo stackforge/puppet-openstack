@@ -31,7 +31,7 @@
 #  [glance_user_password] The password of the glance service user. Optional. Defaults to 'glance_pass'.
 #  [secret_key] The secret key for horizon. Optional. Defaults to 'dummy_secret_key'.
 #  [verbose] If the services should log verbosely. Optional. Defaults to false.
-#  [purge_nova_config] Whether unmanaged nova.conf entries should be purged. Optional. Defaults to true.
+#  [purge_nova_config] Whether unmanaged nova.conf entries should be purged. Optional. Defaults to false.
 #  [libvirt_type] The virualization type being controlled by libvirt.  Optional. Defaults to 'kvm'.
 #  [volume_group] The name of the volume group to use for nova volume allocation. Optional. Defaults to 'cinder-volumes'.
 #  [horizon] (bool) is horizon installed. Defaults to: true
@@ -96,7 +96,7 @@ class openstack::all (
   # Nova
   $nova_db_user            = 'nova',
   $nova_db_dbname          = 'nova',
-  $purge_nova_config       = true,
+  $purge_nova_config       = false,
   # Network
   $network_manager         = 'nova.network.manager.FlatDHCPManager',
   $fixed_range             = '10.0.0.0/24',

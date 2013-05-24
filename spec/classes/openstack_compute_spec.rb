@@ -39,6 +39,7 @@ describe 'openstack::compute' do
         :glance_api_servers  => false,
         :verbose             => false
       )
+      should_not contain_resources('nova_config').with_purge(true)
       should contain_class('nova::compute').with(
         :enabled                        => true,
         :vnc_enabled                    => true,

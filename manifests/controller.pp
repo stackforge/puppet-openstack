@@ -18,6 +18,11 @@
 # [glance_user_password] Glance service user password.
 # [nova_db_password] Nova DB password.
 # [nova_user_password] Nova service password.
+#
+# [purge_nova_config]
+#   Whether unmanaged nova.conf entries should be purged.
+#   (optional) Defaults to false.
+#
 # [rabbit_password] Rabbit password.
 # [rabbit_user] Rabbit User. Optional. Defaults to openstack.
 # [rabbit_virtual_host] Rabbit virtual host path for Nova. Defaults to '/'.
@@ -123,7 +128,7 @@ class openstack::controller (
   $nova_admin_user         = 'nova',
   $nova_db_user            = 'nova',
   $nova_db_dbname          = 'nova',
-  $purge_nova_config       = true,
+  $purge_nova_config       = false,
   $enabled_apis            = 'ec2,osapi_compute,metadata',
   # Nova Networking
   $public_interface        = false,
