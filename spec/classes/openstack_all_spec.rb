@@ -11,6 +11,8 @@ describe 'openstack::all' do
       :admin_email           => 'some_user@some_fake_email_address.foo',
       :mysql_root_password   => 'foo',
       :admin_password        => 'ChangeMe',
+      :rabbit_user           => 'nova',
+      :rabbit_host           => '127.0.0.1',
       :rabbit_password       => 'rabbit_pw',
       :keystone_db_password  => 'keystone_pass',
       :keystone_admin_token  => 'keystone_admin_token',
@@ -19,7 +21,9 @@ describe 'openstack::all' do
       :nova_db_password      => 'nova_pass',
       :nova_user_password    => 'nova_pass',
       :secret_key            => 'secret_key',
-      :quantum               => false
+      :quantum               => false,
+      :enabled               => true,
+      :verbose               => true
     }
   end
 
@@ -58,24 +62,30 @@ describe 'openstack::all' do
         params.merge!(
           :cinder               => true,
           :cinder_user_password => 'cinder_ks_passw0rd',
+          :cinder_db_dbname     => 'cinder',
+          :db_type              => 'mysql',
+          :db_host              => 'localhost',
+          :volume_group         => 'cinder-volumes',
+          :cinder_test          => true,
           :cinder_db_password   => 'cinder_db_passw0rd'
         )
       end
 
       it 'configures cinder' do
-        should contain_class('cinder::base').with(
-          :verbose         => 'False',
-          :sql_connection  => "mysql://cinder:cinder_db_passw0rd@127.0.0.1/cinder?charset=utf8",
-          :rabbit_password => 'rabbit_pw'
-        )
-        should contain_class('cinder::api').with(
-          :keystone_password => 'cinder_ks_passw0rd'
-        )
-        should contain_class('cinder::scheduler')
-        should contain_class('cinder::volume')
-        should contain_class('cinder::volume::iscsi').with(
-          :iscsi_ip_address => '127.0.0.1',
-          :volume_group     => 'cinder-volumes'
+        should contain_class('openstack::cinder::all').with(
+          :rabbit_userid        => 'nova',
+          :rabbit_host          => '127.0.0.1',
+          :rabbit_password      => 'rabbit_pw',
+          :keystone_password    => 'cinder_ks_passw0rd',
+          :db_password          => 'cinder_db_passw0rd',
+          :db_dbname            => 'cinder',
+          :db_user              => 'cinder',
+          :db_type              => 'mysql',
+          :db_host              => 'localhost',
+          :volume_group         => 'cinder-volumes',
+          :setup_test_volume    => true,
+          :enabled              => true,
+          :verbose              => true
         )
       end
     end
