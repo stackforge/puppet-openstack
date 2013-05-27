@@ -98,6 +98,7 @@ class openstack::controller (
   $keystone_db_dbname      = 'keystone',
   $keystone_admin_tenant   = 'admin',
   $keystone_bind_address   = '0.0.0.0',
+  $keystone_host           = '127.0.0.1',
   $region                  = 'RegionOne',
   # Glance
   $glance_db_user          = 'glance',
@@ -128,6 +129,7 @@ class openstack::controller (
   # Rabbit
   $rabbit_user             = 'nova',
   $rabbit_virtual_host     = '/',
+  $rabbit_host             = '127.0.0.1',
   # Horizon
   $horizon                 = true,
   $cache_server_ip         = '127.0.0.1',
@@ -143,6 +145,7 @@ class openstack::controller (
   $cinder                  = true,
   $cinder_db_user          = 'cinder',
   $cinder_db_dbname        = 'cinder',
+  $cinder_bind_address     = '0.0.0.0',
   # quantum
   $quantum                 = false,
   $quantum_db_user         = 'quantum',
@@ -316,7 +319,7 @@ class openstack::controller (
     }
 
     class { 'openstack::cinder::controller':
-      bind_host          => $bind_host,
+      bind_host          => $cinder_bind_address,
       keystone_auth_host => $keystone_host,
       keystone_password  => $cinder_user_password,
       rabbit_password    => $rabbit_password,
