@@ -144,6 +144,7 @@ class openstack::controller (
   $auto_assign_floating_ip = false,
   $network_config          = {},
   # Rabbit
+  $rabbit_host             = '127.0.0.1',
   $rabbit_user             = 'openstack',
   $rabbit_virtual_host     = '/',
   # Horizon
@@ -161,6 +162,7 @@ class openstack::controller (
   $cinder                  = true,
   $cinder_db_user          = 'cinder',
   $cinder_db_dbname        = 'cinder',
+  $cinder_bind_address     = '0.0.0.0',
   # Quantum
   $quantum                 = true,
   $bridge_interface        = undef,
@@ -272,7 +274,7 @@ class openstack::controller (
     verbose          => $verbose,
     db_type          => $db_type,
     db_host          => $db_host,
-    keystone_host    => '127.0.0.1',
+    keystone_host    => $keystone_host,
     db_user          => $glance_db_user,
     db_name          => $glance_db_dbname,
     db_password      => $glance_db_password,
@@ -398,7 +400,7 @@ class openstack::controller (
     }
 
     class { 'openstack::cinder::controller':
-      bind_host          => $bind_host,
+      bind_host          => $cinder_bind_address,
       keystone_auth_host => $keystone_host,
       keystone_password  => $cinder_user_password,
       rabbit_password    => $rabbit_password,
