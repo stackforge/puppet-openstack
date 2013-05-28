@@ -6,7 +6,16 @@
 #
 # === Parameters
 #
-# See params.pp
+# [quantum]
+#   Specifies if nova should be configured to use quantum.
+#   (optional) Defaults to false (indicating nova-networks should be used)
+#
+# [quantum_user_password]
+#   password that nova uses to authenticate with quantum.
+#
+# [metadata_shared_secret] Secret used to authenticate between nova and the
+#   quantum metadata services.
+#   (Optional). Defaults to undef.
 #
 # === Examples
 #
@@ -43,11 +52,9 @@ class openstack::nova::controller (
   $public_interface          = undef,
   $private_interface         = undef,
   # quantum
-  $quantum                   = false,
-  $quantum_db_dbname         = 'quantum',
-  $quantum_db_user           = 'quantum',
-  $quantum_db_password       = 'quantum_pass',
-  $quantum_user_password     = 'quantum_pass',
+  $quantum                   = true,
+  $quantum_user_password     = false,
+  $metadata_shared_secret    = undef,
   # Nova
   $nova_admin_tenant_name    = 'services',
   $nova_admin_user           = 'nova',
@@ -55,7 +62,7 @@ class openstack::nova::controller (
   $nova_db_dbname            = 'nova',
   $enabled_apis              = 'ec2,osapi_compute,metadata',
   # Rabbit
-  $rabbit_user               = 'nova',
+  $rabbit_user               = 'openstack',
   $rabbit_virtual_host       = '/',
   # Database
   $db_type                   = 'mysql',
@@ -64,9 +71,10 @@ class openstack::nova::controller (
   # VNC
   $vnc_enabled               = true,
   $vncproxy_host             = undef,
-  # General
+  # Keystone
   $keystone_host             = '127.0.0.1',
-  $verbose                   = 'False',
+  # General
+  $verbose                   = false,
   $enabled                   = true
 ) {
 
@@ -114,12 +122,13 @@ class openstack::nova::controller (
 
   # Configure nova-api
   class { 'nova::api':
-    enabled           => $enabled,
-    admin_tenant_name => $nova_admin_tenant_name,
-    admin_user        => $nova_admin_user,
-    admin_password    => $nova_user_password,
-    enabled_apis      => $enabled_apis,
-    auth_host         => $keystone_host,
+    enabled                              => $enabled,
+    admin_tenant_name                    => $nova_admin_tenant_name,
+    admin_user                           => $nova_admin_user,
+    admin_password                       => $nova_user_password,
+    enabled_apis                         => $enabled_apis,
+    auth_host                            => $keystone_host,
+    quantum_metadata_proxy_shared_secret => $metadata_shared_secret,
   }
 
 
@@ -142,6 +151,13 @@ class openstack::nova::controller (
       }
     }
 
+    if ! $private_interface  {
+      fail('private interface must be set when nova networking is used')
+    }
+    if ! $public_interface  {
+      fail('public interface must be set when nova networking is used')
+    }
+
     class { 'nova::network':
       private_interface => $private_interface,
       public_interface  => $public_interface,
@@ -155,39 +171,10 @@ class openstack::nova::controller (
       install_service   => $enable_network_service,
     }
   } else {
-    # Set up Quantum
-    $quantum_sql_connection = "mysql://${quantum_db_user}:${quantum_db_password}@${db_host}/${quantum_db_dbname}?charset=utf8"
-    class { 'quantum':
-      rabbit_user     => $rabbit_user,
-      rabbit_password => $rabbit_password,
-      #sql_connection  => $quantum_sql_connection,
-      verbose         => $verbose,
-      debug           => $verbose,
-    }
+    # Configure Nova for Quantum networking
 
-    class { 'quantum::server':
-      auth_password => $quantum_user_password,
-    }
-
-    class { 'quantum::plugins::ovs':
-      sql_connection      => $quantum_sql_connection,
-      tenant_network_type => 'gre',
-    }
-
-    class { 'quantum::agents::ovs':
-      bridge_uplinks   => ["br-ex:${public_interface}"],
-      bridge_mappings  => ['external:br-ex'],
-      enable_tunneling => true,
-      local_ip         => $internal_address,
-    }
-
-    class { 'quantum::agents::dhcp':
-      use_namespaces => False,
-    }
-
-    class { 'quantum::agents::l3':
-      external_network_bridge => 'br-ex',
-      auth_password           => $quantum_user_password,
+    if ! $quantum_user_password {
+      fail('quantum_user_password must be specified when quantum is configured')
     }
 
     class { 'nova::network::quantum':
