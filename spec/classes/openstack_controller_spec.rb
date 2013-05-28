@@ -443,7 +443,8 @@ describe 'openstack::controller' do
         should contain_class('cinder').with(
           :verbose         => 'False',
           :sql_connection  => 'mysql://cinder:cinder_pass@127.0.0.1/cinder?charset=utf8',
-          :rabbit_password => 'rabbit_pw'
+          :rabbit_password => 'rabbit_pw',
+          :rabbit_user     => 'openstack'
         )
         should contain_class('cinder::api').with_keystone_password('cinder_pass')
         should contain_class('cinder::scheduler')

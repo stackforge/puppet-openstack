@@ -1,7 +1,14 @@
+#
+# == Parameters
+#
+#  [rabbit_userid]
+#    User used to authenticate to rabbitmq.
+#    (optional) Defaults to openstack.
+#
 class openstack::cinder::storage(
   $sql_connection,
   $rabbit_password,
-  $rabbit_userid         = 'guest',
+  $rabbit_userid         = 'openstack',
   $rabbit_host           = '127.0.0.1',
   $rabbit_hosts          = undef,
   $rabbit_port           = '5672',

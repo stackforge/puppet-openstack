@@ -1,3 +1,11 @@
+# Class that configures cinder controllers
+#
+# == Parameters
+#
+# [rabbit_userid]
+#   User used to authenticate to rabbitmq.
+#   (optional) defaults to openstack.
+#
 class openstack::cinder::controller(
   $rabbit_password,
   $keystone_password,
@@ -10,7 +18,7 @@ class openstack::cinder::controller(
   $keystone_auth_port       = '35357',
   $keystone_auth_protocol   = 'http',
   $keystone_service_port    = '5000',
-  $rabbit_userid            = 'guest',
+  $rabbit_userid            = 'openstack',
   $rabbit_host              = '127.0.0.1',
   $rabbit_hosts             =  undef,
   $rabbit_port              = '5672',

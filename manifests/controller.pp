@@ -398,6 +398,7 @@ class openstack::controller (
       keystone_password  => $cinder_user_password,
       rabbit_password    => $rabbit_password,
       rabbit_host        => $rabbit_host,
+      rabbit_user        => $rabbit_user,
       db_password        => $cinder_db_password,
       db_dbname          => $cinder_db_dbname,
       db_user            => $cinder_db_user,

@@ -21,7 +21,7 @@ describe 'openstack::cinder::storage' do
   it 'should configure cinder and cinder::volume using defaults and required parameters' do
     should contain_class('cinder').with(
       :sql_connection      => required_params[:sql_connection],
-      :rabbit_userid       => 'guest',
+      :rabbit_userid       => 'openstack',
       :rabbit_password     => required_params[:rabbit_password],
       :rabbit_host         => '127.0.0.1',
       :rabbit_port         => '5672',

@@ -80,7 +80,7 @@
 #
 # [rabbit_user]
 #   Name of rabbit user.
-#   (optional) defaults to rabbit_user.
+#   (optional) defaults to openstack.
 #
 # [rabbit_host]
 #   Host where rabbitmq is running.
@@ -157,7 +157,7 @@ class openstack::quantum (
   # Quantum Authentication Information
   $auth_url               = 'http://localhost:35357/v2.0',
   # Rabbit Information
-  $rabbit_user            = 'rabbit_user',
+  $rabbit_user            = 'openstack'
   $rabbit_host            = '127.0.0.1',
   $rabbit_virtual_host    = '/',
   # Database. Currently mysql is the only option.
