@@ -507,7 +507,7 @@ describe 'openstack::controller' do
           :ovs_local_ip          => '10.0.0.3',
           :bridge_uplinks        => ["br-ex:eth_27"],
           :bridge_mappings       => ["default:br-ex"],
-          :enable_ovs_agent      => false,
+          :enable_ovs_agent      => true,
           :firewall_driver       => 'quantum.agent.linux.iptables_firewall.OVSHybridIptablesFirewallDriver',
           :db_name               => 'quantum',
           :db_user               => 'quantum',

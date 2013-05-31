@@ -167,7 +167,7 @@ class openstack::controller (
   $quantum                 = true,
   $bridge_interface        = undef,
   $external_bridge_name    = 'br-ex',
-  $enable_ovs_agent        = false,
+  $enable_ovs_agent        = true,
   $enable_dhcp_agent       = true,
   $enable_l3_agent         = true,
   $enable_metadata_agent   = true,
