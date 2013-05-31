@@ -42,7 +42,9 @@ class openstack::cinder::storage(
       volume_group     => $volume_group,
     }
     if $setup_test_volume {
-      class {'::cinder::setup_test_volume':}
+      class {'::cinder::setup_test_volume':
+        volume_name => $volume_group,
+      }
     }
   } else {
     warning("Unsupported volume driver: ${volume_driver}, make sure you are configuring this yourself")

@@ -2,16 +2,11 @@ require 'spec_helper'
 
 describe 'openstack::cinder::storage' do
 
-
-  let :required_params do
+  let :params do
     {
       :sql_connection  => 'mysql://a:b:c:d',
       :rabbit_password => 'rabpass'
     }
-  end
-
-  let :params do
-    required_params
   end
 
   let :facts do
@@ -20,9 +15,9 @@ describe 'openstack::cinder::storage' do
 
   it 'should configure cinder and cinder::volume using defaults and required parameters' do
     should contain_class('cinder').with(
-      :sql_connection      => required_params[:sql_connection],
+      :sql_connection      => params[:sql_connection],
       :rabbit_userid       => 'guest',
-      :rabbit_password     => required_params[:rabbit_password],
+      :rabbit_password     => params[:rabbit_password],
       :rabbit_host         => '127.0.0.1',
       :rabbit_port         => '5672',
       :rabbit_hosts        => nil,
@@ -43,8 +38,8 @@ describe 'openstack::cinder::storage' do
   end
 
   describe 'with a volume driver other than iscsi' do
-    let :params do
-      required_params.merge(
+    before do
+      params.merge!(
         :volume_driver => 'netapp'
       )
     end
@@ -52,12 +47,22 @@ describe 'openstack::cinder::storage' do
   end
 
   describe 'when setting up test volumes for iscsi' do
-    let :params do
-      required_params.merge(
-        :setup_test_volume => 'setup_test_volume'
+    before do
+      params.merge!(
+        :setup_test_volume => true
       )
     end
-    it { should contain_class('cinder::setup_test_volume') }
+    it { should contain_class('cinder::setup_test_volume').with(
+      :volume_name => 'cinder-volumes'
+    )}
+    describe 'when volume_group is set' do
+      before do
+        params.merge!(:volume_group => 'foo')
+      end
+      it { should contain_class('cinder::setup_test_volume').with(
+        :volume_name => 'foo'
+      )}
+    end
   end
 
 end
