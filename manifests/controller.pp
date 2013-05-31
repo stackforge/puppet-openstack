@@ -403,6 +403,7 @@ class openstack::controller (
       bind_host          => $cinder_bind_address,
       keystone_auth_host => $keystone_host,
       keystone_password  => $cinder_user_password,
+      rabbit_userid      => $rabbit_user,
       rabbit_password    => $rabbit_password,
       rabbit_host        => $rabbit_host,
       db_password        => $cinder_db_password,
