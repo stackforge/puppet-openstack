@@ -1,24 +1,649 @@
-* 2012-11-02 1.0.0
-- add basic quantum support
-- replace nova-volumes with cinder
-- improve travisci support
-- fail explicitly for unsupported db types
-- style updates
-- Add live migration support
-- stop exporting/collecting resources.
-- make nova-network conditional
-- unset default parameters for passwords
-- Remove collection code from openstack::nova::compute
-- Expand tests for compute and controller
-- add additional roles for multi_node deployments
-* 2012-10-08 0.1.0
-- testing improvements
-- compute.pp's admin_password should sync with $nova_user_password of controller.pp
-- Add missing send_arp_for_ha for multi_host mode
-- add enable parameter
-- fix rabbitmq connection
-- enable floating ip for all in one
-- add secret key for horizon
-- add swift manifests
-* 2012-06-08 0.1.0
-- initial release
+2013-06-01 Cody Herriges
+
+        * [15514e0] Prepare repository for a Puppet Forge release
+
+2013-05-31 Dan Bode
+
+        * [ea39c77] ensure controller sets cinder's rabbit user
+        * [986a928] ensure cinder volume_group sets the created volume
+
+2013-05-30 Mathieu Gagné
+
+        * [8be286c] Fix params missing in openstack::controller
+
+2013-05-29 Dan Bode
+
+        * [aed432f] refactor db connections for compute
+
+2013-05-28 Dan Bode
+
+        * [990d850] set purging to false
+
+2013-05-24 Dan Bode
+
+        * [94a4096] refactor quantum configuration
+
+2013-05-23 Dan Bode
+
+        * [3c1d324] set floating_ip in test_file to false
+
+2013-05-22 Dan Bode
+
+        * [76c3059] update cinder config in controller/compute
+
+2013-05-21 Mathieu Gagné
+
+        * [6f969ef] Add puppet-lint to Gemfile
+
+2013-05-21 Gerrit Code Review
+
+        * [cbcf056] add nova-conductor
+
+2013-05-21 Dan Bode
+
+        * [17fef3d] glance refactor
+
+2013-05-18 Joe Topjian
+
+        * [7bdab85] Remove unneeded parameters
+
+2013-05-16 Mathieu Gagné
+
+        * [2fc62f9] provide a default for db_host
+
+2013-05-15 Dan Bode
+
+        * [6acb425] allow configuration of keystone bind_host
+        * [107bd2a] do not create nova volumes endpoints
+        * [71b2e0d] remove extra $
+
+2013-05-14 Konrad Scherer
+
+        * [3362922] Fix typo in all.pp and add test
+
+2013-05-14 Dan Bode
+
+        * [b4aa935] refactor of cinder manifests
+
+2013-05-13 Mathieu Gagné
+
+        * [c51fe41] Add rspec tests for cinder
+        * [5427528] Update puppet-quantum repository url
+
+2013-05-13 Joe Topjian
+
+        * [f3cb8e4] Fix references to nova-volume
+
+2013-05-13 Dan Bode
+
+        * [0be9919] Add docs and unit tests for horizon
+
+2013-05-03 newptone
+
+        * [8c3ca87] Make swift::keystone::auth address params configurable
+
+2013-05-03 Gerrit Code Review
+
+        * [5dbd806] Rename the param controller_node_address
+
+2013-05-02 newptone
+
+        * [416f336] Add the new openstack::cinder class.
+
+2013-05-02 Mathieu Gagné
+
+        * [6b2e1cb] Replace deprecated :rubygems source
+
+2013-05-01 Gerrit Code Review
+
+        * [2d15aa2] Fix the swift test script deployment error
+
+2013-04-30 Kristian Øllegaard
+
+        * [d35805c] Single quotes around  auth file password
+
+2013-04-30 Dan Bode
+
+        * [03556cd] Add param use_no_cache to the openstack::auth_file
+
+2013-04-29 Mathieu Gagné
+
+        * [d9ba68c] Fix rspec tests to support latest apache module
+
+2013-04-25 Gerrit Code Review
+
+        * [7f2eb3f] Make nova::api params configurable
+
+2013-04-24 Jan Weiher
+
+        * [e0d1225] Fix paths
+
+2013-04-23 Gerrit Code Review
+
+        * [f6164b5] Add vncproxy_host option
+
+2013-04-23 Dan Bode
+
+        * [9fdcd8b] fix nova::network::quantum parameters
+
+2013-04-16 newptone
+
+        * [6da81bf] Update the repo urls in the other.yaml
+
+2013-04-16 Mathieu Gagné
+
+        * [3645843] Update puppet-vswitch repository url
+        * [8fa6013] Update puppet-quantum repo url in other_repos.yaml
+
+2013-04-16 Dan Bode
+
+        * [684845d] update README
+        * [44815ef] update nova_config to add sections to nova_config
+
+2013-04-10 Dan Bode
+
+        * [b766f95] quantum for folsom
+        * [3b7c558] update fixtures
+        * [c95da8f] add gitreview
+
+2013-03-05 Dan Bode
+
+        * [ec4cb37] update travis to use the standard one
+
+2013-03-03 Dan Bode
+
+        * [dd3c65c] update spec test script
+
+2013-03-01 Dan Bode
+
+        * [0bf75ae] update 2.6.x version to 2.6.17 for travis
+        * [849e432] set execute bit on test_file
+        * [1fe95ff] Add swift to keystone class
+
+2013-02-15 Belmiro Moreira
+
+        * [f94e447] Update manifests/keystone.pp
+
+2013-01-31 Fwiffo
+
+        * [f8f6e6d] on ubuntu 12.10, path should be /etc/puppet/puppet.conf
+
+2013-01-02 Dan Bode
+
+        * [cf900c3] Update README.md
+        * [c8b91dc] Update README.md
+        * [b5103a1] Update README.md
+        * [766faf8] Update README.md
+        * [53d9bfd] Update README.md
+        * [2aec81a] add apache as a spec test dep
+        * [24cfc1b] Update README.md
+
+2012-12-11 Dan Bode
+
+        * [8a2f0a5] do not display wget progress
+
+2012-11-30 xxl667
+
+        * [2727e4f] Pass rabbit_user to cinder on controller node
+
+2012-11-25 Dan Bode
+
+        * [34e7f6a] Edit test script template
+
+2012-11-13 Aimon Bustardo
+
+        * [f9e22a5] Add rspec test for nova-volume addition
+        * [c21ce0d] add nova-volume class.
+
+2012-11-07 Dan Bode
+
+        * [eb3e229] add spec tests
+
+2012-11-07 Aimon Bustardo
+
+        * [2d4b7fb] FIX: add missing arg. ADD: tests
+        * [0a967ea] Merge pull request #130 from bodepd/aimon_specs
+
+2012-11-06 Aimon Bustardo
+
+        * [4262368] Fixed bad variable name
+        * [e9d5447] typo
+        * [2283204] typo
+        * [7d45133] Make Horiuzon installation optional
+        * [9b052cd] revert optional horizon for separate pull requests
+        * [843a2e0] Add rabbit_virtual_host support to openstack controller module .. feature exists in puppetlabs-nova already. Also Made installation of Horizon optional.
+        * [0a31e07] Add rabbit_virtual_host support to openstack controller module .. feature exists in puppetlabs-nova already. Also Made installation of Horizon optional.
+
+2012-11-02 Dan Bode
+
+        * [02fc412] update version
+        * [ac6eba3] 1.0.3
+        * [cee96ad] 1.0.2
+        * [8ddf2a2] update to use quantum
+        * [d3c56c8] removed quantum as a dep.
+        * [f322255] update module dep
+        * [5416498] Relase 1.0.0
+        * [ad142c3] fix test failures
+
+2012-11-01 Dan Bode
+
+        * [6f76b4f] quantum updates
+
+2012-10-29 Dan Bode
+
+        * [cf70688] Fix typo
+        * [09370e1] fix test file error
+        * [d1054c6] Add quantum to compute, all and controller
+        * [69eeea3] Add vswitch as testing sep
+
+2012-10-28 Dan Bode
+
+        * [69adc83] update fixtures.
+        * [728bbb6] remove trailing comma
+        * [3205a06] fix spec tests
+        * [33f0fc1] fail explicitly for unsupported db types
+        * [8da819b] fix minor compute issues
+        * [c8a15df] fix vncproxy_host
+        * [49e6488] change controller params
+        * [6126c74] style updates
+        * [57d50f5] Add gitignore
+        * [60c5559] update fixtures
+
+2012-10-25 Dan Bode
+
+        * [7726221] remove ref to invalid variable
+        * [d3645fe] update other repos for folsom
+        * [ecf1033] update cinder def in compute
+
+2012-10-24 Dan Bode
+
+        * [5b293a1] do not use other class param values as default
+        * [5463abb] remove defaults for controller passwords
+        * [da518f6] remove unused compute params
+        * [94f5b51] refactor all.pp
+        * [7e9d206] reorganize class params for controller
+        * [89002eb] add vnc_enabled flag
+        * [7254a33] style updates
+        * [7f969c5] Add live migration support
+        * [ea22f02] stop exporting resources.
+        * [867b783] Add cinder config to nova::compute
+        * [69e48a2] re-add nova-network support
+        * [7bba3d5] Add support for setting regions.
+
+2012-10-23 Dan Bode
+
+        * [b3a2cbe] Add travis file
+
+2012-10-16 Dan Bode
+
+        * [f001bfa] removed trailing whitespace.
+        * [52871a3] add inifile repo as a testing dep
+        * [03546bc] nova-network work. cinder and quantum logic
+        * [6b84c12] update params
+        * [346e51d] update log_debug,log_verbose to debug,verbose
+        * [c9e1ed4] Change log_verbose and log_debug to verbose and debug
+        * [07d66ad] Removed unused network configs
+        * [d8747ed] update test file to work with quantum
+        * [8200961] set root_password
+        * [c612934] replaced nova::nework with quantum.
+        * [cca646e] class params cannot be dep on other class params
+        * [0ee00d7] Add cinder support
+        * [49173c6] total refactor of openstack::compute
+        * [83952b9] add --no-cahce to all nova calls in tests
+        * [eaf3d80] remove some class param default chains
+        * [f06d4d9] add keystone_host to the controller
+        * [c51463d] remove openstack::nova::compute
+        * [1a62606] shorten names of keystone db class params
+        * [fd305d2] change public_address back to controller_node
+        * [e1392b3] Set defaults in openstack::all class
+        * [16cedd9] Remove unused public controller node.
+        * [d85d6f2] Remove auth_file
+        * [c1600bc] Update default for keystone admin_address
+        * [92c80bd] Update class parameter documentation
+        * [45eccb2] Refactor parameter defaults
+        * [f608594] Add conditional dependency
+        * [67a317b] change exported_resources param to export_resources
+        * [c8895dc] Add openstack::compute
+        * [f1e8a37] Support passive mysql servers
+        * [bcb75dd] Add configuration for cache_server setting in horizon.
+        * [1a8a61a] Support enabled for keystone
+        * [c6dd87e] Always configure network
+        * [bb96698] unset default for public_interface
+        * [afafbd3] Always create nova class
+        * [4e26840] Pass enabled flag to nova::vncproxy
+        * [7f16726] Remove collection code from openstack::nova::compute
+        * [90a7a67] Fix bug in variable naming
+        * [9644278] Expand tests for compute and controller
+        * [0f7f032] Further edits
+        * [55f7f2b] Further edits.
+        * [1e95338] temporary commit.
+        * [7acaad1] Began putting params in individual manifests instead of a single params.pp file.
+        * [89beb23] Beginning cleanup/refactor of puppetlabs-openstack.
+
+2012-10-08 Dan Bode
+
+        * [10f1541] 0.2.0 release
+
+2012-08-21 Joe Topjian
+
+        * [472dafd] Added swift manifests
+
+2012-08-20 Joe Topjian
+
+        * [97d719f] Keystone admin tenant and mysql root password
+
+2012-08-06 Zack Smith
+
+        * [45534e2] Update keystone bind_host value to 0.0.0.0
+
+2012-07-16 Dan Bode
+
+        * [4957cc3] Update xinetd url to use puppetlabs version
+
+2012-07-12 Andy Edmonds
+
+        * [6771da8] vnc_enabled should be a literal boolean value
+
+2012-07-10 François Charlier
+
+        * [4ddc4bc] Add the secret_key parameter to the Horizon class
+
+2012-07-10 Branan Purvine-Riley
+
+        * [a580de8] (#15205) Enable multihost by default in the example
+
+2012-07-02 Soren Hansen
+
+        * [1d7c391] Make public urls use public_address in all-in-one
+
+2012-06-29 Branan Purvine-Riley
+
+        * [b453c95] Enable floating IP on all-in-one setup
+
+2012-06-29 Andy Edmonds
+
+        * [ca379e0] $verbose should not be quoted
+
+2012-06-27 Andy Edmonds
+
+        * [36986a1] $auto_assign_floating_ip needs to be a boolean and not string
+
+2012-06-26 Branan Purvine-Riley
+
+        * [b611ed7] Fix rabbitmq connection when not exporting resources
+
+2012-06-25 Dan Bode
+
+        * [ac0cad4] Adds rake task for pull request stats
+        * [0ca48ee] Add template to create test file
+        * [aa2b981] Add enabled parameter to nova::controller
+        * [cc1b526] Update README to specify promisc mode for interfaces as a req
+
+2012-06-20 Wong Hoi Sing Edison
+
+        * [772168c] Also disable send_arp_for_ha when multi_host is false.
+        * [b8c7b9a] Add optional auto_assign_floating_ip parameter.
+        * [cb4ea70] Add missing send_arp_for_ha for multi_host mode, reference from devstack.
+
+2012-06-19 Wong Hoi Sing Edison
+
+        * [1242f8c] Update default UEC image import with Ubuntu 12.04.
+        * [69e46af] compute.pp's admin_password should sync with $nova_user_password of controller.pp.
+        * [83d38ec] Add missing  for openstack_compute.
+
+2012-06-18 Branan Purvine-Riley
+
+        * [786ef59] Add gemfile for jenkins job
+
+2012-06-18 BUSSY Jean-Daniel
+
+        * [be0addf] Yaml added to fix "uninitialized constant YAML" error
+
+2012-06-15 Dan Bode
+
+        * [e9923f2] Remove Puppet reference from rake task.
+
+2012-06-15 Branan Purvine-Riley
+
+        * [d834daf] Wrap puppetlabs_spec_helper in a begin/rescue
+
+2012-06-13 Sebastien Badia
+
+        * [5687d79] Typo fixed_network_range
+
+2012-06-12 Sebastien Badia
+
+        * [3cbdab7] Typo correct (for the moment openstack is avail. only on wheezy)
+
+2012-06-12 Robert Starmer
+
+        * [fba5fdf] reversed nova_test.sh updates, fixed misspelling in controller.pp; added parameters needed to enable additional horizon services
+        * [e6c3608] updates based on pull request
+        * [73c1ac6] updated nova_test.sh to include floating IP and security_groups, and controller.pp to support a change in the horizon module (more horizon services)
+
+2012-06-12 Branan Purvine-Riley
+
+        * [54193ad] Use >= for all module dependencies
+        * [bbd719a] spell mysql correctly
+        * [f706647] Cleanup documentation in prep for release
+        * [3a3940d] Use i386 instead of x86_64 cirros image in the test script
+
+2012-06-11 Dan Bode
+
+        * [c4d50b4] Refactor README in preparation for release.
+
+2012-06-10 Dan Bode
+
+        * [0ee4c8b] Style update
+
+2012-06-07 Dan Bode
+
+        * [13295cb] Clean up openstack::compute example manifest
+        * [a749027] Fix syntax errors
+        * [cfc99e1] Improvements to example site.pp
+        * [2709736] Update service user param names
+        * [8b9c670] update examples/site.pp
+        * [eb84da4] Add inline documentation.
+        * [4984730] Change admin_user_password to admin_password
+
+2012-06-07 Branan Purvine-Riley
+
+        * [9e9a01c] Add modulefile and changelog for initial forge release
+
+2012-06-01 Branan Purvine-Riley
+
+        * [6d50c3f] Write spec test for openstack::compute
+
+2012-05-25 Dan Bode
+
+        * [4f5d063] Allow nova volume vg name to be overridden in openstack::all
+        * [5eab169] Add volume management option for compute nodes
+
+2012-05-22 Dan Bode
+
+        * [6e8f566] Change fixed_range default to /24
+        * [13f0c78] Add nova::volume:iscsi class to nova::all
+        * [83eccdf] Ensure that verbose is set for nova class
+        * [db70dbe] Change verbose default to false
+
+2012-05-15 Craig Tracey
+
+        * [d519815] Adding puppet-sysctl to other_repos.yaml
+
+2012-05-14 Dan Bode
+
+        * [3eadf46] Link to issues
+        * [53642fb] Update repo paths
+
+2012-05-14 Craig Tracey
+
+        * [a7e2cd5] Add example usage of modulepath
+        * [af66ddc] Update repos file to support alternative modulepath support
+        * [ca6b95b] Add support for alternative modulepath
+
+2012-05-10 Soren Hansen
+
+        * [3e419bc] Use rabbit_host parameter
+        * [f19f225] Remove network_host parameter
+        * [2b6b247] Fix typo
+
+2012-05-10 Dan Bode
+
+        * [880ba86] Add files for spec tests.
+        * [6c6439a] Add LICENSE and inline documentation.
+        * [1c6c46f] Revert "Use rabbit_host parameter"
+
+2012-05-08 Dan Bode
+
+        * [3916873] Refactor network code
+        * [935ae8a] Ensure that libvirt type can be overridden
+        * [8a10508] Ensure that verbose can be set for nova
+        * [525b3fb] Update bindhost to 0.0.0.0
+        * [6004cea] Add openstack::auth_file class
+
+2012-05-01 Dan Bode
+
+        * [af5e539] Ensure vncproxy is enabled.
+
+2012-05-01 Branan Purvine-Riley
+
+        * [386860c] Fi controller.pp for cidr
+        * [705817d] Remove avaiable_ips from nova-vm-net now that we have CIDR
+        * [84ea550] README cleanups/fixes
+
+2012-04-30 Dan Bode
+
+        * [3f1f6a9] Update to use master of everything
+        * [4d76d70] Total rewrite of the openstack project
+
+2012-04-22 Dan Bode
+
+        * [af2e047] Add horizon submodule
+
+2012-04-19 Dan Bode
+
+        * [5909ef5] update submodules
+        * [834e8d9] update mysql commt
+        * [6527b4b] update keystone submodule
+        * [6a751c6] update glance commit
+
+2012-04-10 Dan Bode
+
+        * [0068436] Update submodules
+
+2012-04-08 Dan Bode
+
+        * [80c454f] Fix repo for xinetd
+        * [65b2ea1] Fix submodule typo
+        * [760be6b] Update typo in gitmodule file
+        * [c0aa104] Update mysql to use my latest version
+        * [ec7b23e] Update commits
+        * [8ab5220] Updates all repos to point at master
+        * [42bfb34] Removed glance and nova tests
+        * [322f877] update modules
+        * [8d5930d] Update vagrant provision scripts
+        * [9483fc7] Updated submodule to point at latest version
+
+2011-10-04 Dan Bode
+
+        * [a0421e9] (maint) update README
+        * [773d785] (#9782) Allow deprecated auth
+
+2011-10-03 Dan Bode
+
+        * [ce458af] update to latest version of glance.
+        * [6a11f9c] (#9874) Add openstack diablo ppa
+        * [b9a45d8] (#9871) update nova submodule
+
+2011-08-16 James Turnbull
+
+        * [99a8c7d] Incremented nova module
+
+2011-07-28 Dan Bode
+
+        * [6935d06] Update commit ids to latest version.
+        * [7267b90] ignore files in graph dir
+        * [2de7271] committing graphs dir.
+
+2011-07-13 hitman
+
+        * [17ec07c] fix puppetlabs-nova module to correct name nova
+        * [4e0cfb9] add special notes for installing puppet 2.6.8 on ubuntu 11.04
+
+2011-07-13 Dan Bode
+
+        * [c984a57] updated rabbitmq commit id.
+        * [d74c907] updated commit id for nova.
+
+2011-07-12 Dan Bode
+
+        * [aca3fee] added graphs directory.
+        * [bf9191b] not ignoring graphs directory
+        * [ca4a217] Updating rake and vagrant file.
+
+2011-06-30 Dan Bode
+
+        * [b2abf13] Checked in .gitignore to allow an images dir
+        * [fa44b15] updated Rakefile
+        * [44dfe17] updated vagrant build utilities:
+        * [fb4809a] split tests out into nova and glance tests.
+        * [1f0495a] updated image service.
+        * [604b591] ignore graphs.
+
+2011-06-24 Dan Bode
+
+        * [7cc29e3] updated nova commit id.
+        * [b94c5f9] updating my vagrant file, manifests and scripts
+        * [4da89a3] updated submodules and site.pp
+        * [e04cc31] updated to latest version of create_resources.
+
+2011-06-23 Dan Bode
+
+        * [55307d0] updated commit id for mysql.
+        * [8b1756a] added glance params back
+        * [21f6232] updated nova commit id.
+        * [1dee680] updated commit id for create_resources.
+        * [d73fdeb] updated git submodule to correct URL.
+        * [b3f664a] Added my additional test manifests
+        * [fe43143] added create_resources as a submodule.
+
+2011-06-22 James Turnbull
+
+        * [5bf5686] Added edits to README based on Dan's comments.
+
+2011-06-22 Dan Bode
+
+        * [75851ad] Added stuff related to my testing of multi-node
+        * [076a3f3] updated commit ids
+
+2011-06-21 James Turnbull
+
+        * [3945265] Added basic README updates.
+        * [b46f0b9] Added some more stuff to the test script.
+
+2011-06-21 Dan Bode
+
+        * [935fd3e] updated commit ids.
+        * [b739538] Added vagrant testing specific files.
+        * [d6b5799] updated gitignore and commit ids for submodules.
+
+2011-06-18 Dan Bode
+
+        * [3ac4dc5] moved nova all test to manifest.
+        * [7af1df9] updated rabbitmq commit id.
+        * [8fd04c8] Fixed bug in test script.
+        * [aa7a9fc] updated nova commit id again.
+        * [177cfc6] updated nova commit id.
+        * [b66311a] updated tests and notes for single node install.
+
+2011-06-17 Dan Bode
+
+        * [f4b9cf3] update commit ids for nova and mysql
+        * [39a0a28] added some notes that explain how to install nova
+
+2011-06-16 Dan Bode
+
+        * [f6684b0] Added initial README.
+        * [41be5df] updated submodules.
+        * [598828c] committing initial git submodules
+
