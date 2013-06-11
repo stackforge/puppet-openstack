@@ -56,6 +56,15 @@ describe 'openstack::cinder::all' do
     should_not contain_class('cinder::setup_test_volume')
   end
 
+  describe 'with manage_volumes set to false' do
+    before do
+      params.merge!(
+        :manage_volumes => false
+      )
+    end
+    it { should_not contain_class('cinder::volume') }
+  end
+
   describe 'with a volume driver other than iscsi' do
     before do
       params.merge!(

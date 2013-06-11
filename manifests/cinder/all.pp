@@ -29,6 +29,7 @@ class openstack::cinder::all(
   $volume_driver            = 'iscsi',
   $iscsi_ip_address         = '127.0.0.1',
   $setup_test_volume        = false,
+  $manage_volumes           = true,
   $verbose                  = false
 ) {
 
@@ -73,24 +74,26 @@ class openstack::cinder::all(
     enabled                => $enabled,
   }
 
-  class {'::cinder::volume':
-    package_ensure => $package_ensure,
-    enabled        => $enabled,
-  }
+  if $manage_volumes {
+    class {'::cinder::volume':
+      package_ensure => $package_ensure,
+      enabled        => $enabled,
+    }
 
-  if $volume_driver {
-    if $volume_driver == 'iscsi' {
-      class { 'cinder::volume::iscsi':
-        iscsi_ip_address => $iscsi_ip_address,
-        volume_group     => $volume_group,
-      }
-      if $setup_test_volume {
-        class {'::cinder::setup_test_volume':
-          volume_name => $volume_group,
+    if $volume_driver {
+      if $volume_driver == 'iscsi' {
+        class { 'cinder::volume::iscsi':
+          iscsi_ip_address => $iscsi_ip_address,
+          volume_group     => $volume_group,
         }
+        if $setup_test_volume {
+          class {'::cinder::setup_test_volume':
+            volume_name => $volume_group,
+          }
+        }
+      } else {
+        warning("Unsupported volume driver: ${volume_driver}, make sure you are configuring this yourself")
       }
-    } else {
-      warning("Unsupported volume driver: ${volume_driver}, make sure you are configuring this yourself")
     }
   }
 }
