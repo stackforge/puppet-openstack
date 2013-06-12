@@ -321,7 +321,8 @@ class openstack::all (
     'nova::scheduler',
     'nova::objectstore',
     'nova::cert',
-    'nova::consoleauth'
+    'nova::consoleauth',
+    'nova::conductor'
   ]:
     enabled => $enabled,
   }
