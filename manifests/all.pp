@@ -82,6 +82,7 @@ class openstack::all (
   $quantum_user_password   = 'quantum_pass',
   $quantum_db_password     = 'quantum_pass',
   # Database
+  $db_host                = '127.0.0.1',
   $db_type                 = 'mysql',
   $mysql_account_security  = true,
   $allowed_hosts           = ['127.0.0.%'],
@@ -108,6 +109,7 @@ class openstack::all (
   $quantum                 = true,
   # Rabbit
   $rabbit_user             = 'openstack',
+  $rabbit_host             = '127.0.0.1',
   # Horizon
   $horizon                 = true,
   $cache_server_ip         = '127.0.0.1',
@@ -335,21 +337,20 @@ class openstack::all (
 
   ######### Cinder Controller Services ########
   if ($cinder) {
-    class { "cinder::base":
-      verbose         => $verbose,
-      sql_connection  => "mysql://${cinder_db_user}:${cinder_db_password}@127.0.0.1/${cinder_db_dbname}?charset=utf8",
-      rabbit_password => $rabbit_password,
-    }
-
-    class { 'cinder::api':
-      keystone_password => $cinder_user_password,
-    }
-
-    class { 'cinder::scheduler': }
-    class { 'cinder::volume': }
-    class { 'cinder::volume::iscsi':
-      iscsi_ip_address => '127.0.0.1',
-      volume_group     => $volume_group,
+    class { "openstack::cinder::all":
+      keystone_password  => $cinder_user_password,
+      rabbit_userid      => $rabbit_user,
+      rabbit_password    => $rabbit_password,
+      rabbit_host        => $rabbit_host,
+      db_password        => $cinder_db_password,
+      db_dbname          => $cinder_db_dbname,
+      db_user            => $cinder_db_user,
+      db_type            => $db_type,
+      db_host            => $db_host,
+      volume_group       => $volume_group,
+      setup_test_volume  => $cinder_test,
+      enabled            => $enabled,
+      verbose            => $verbose,
     }
   } else {
     # Set up nova-volume
