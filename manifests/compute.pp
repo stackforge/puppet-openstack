@@ -143,8 +143,8 @@ class openstack::compute (
     if $multi_host {
       include keystone::python
       nova_config {
-        'DEFAULT/multi_host':      value => 'True';
-        'DEFAULT/send_arp_for_ha': value => 'True';
+        'DEFAULT/multi_host':      value => true;
+        'DEFAULT/send_arp_for_ha': value => true;
       }
       if ! $public_interface {
         fail('public_interface must be defined for multi host compute nodes')
@@ -160,8 +160,8 @@ class openstack::compute (
     } else {
       $enable_network_service = false
       nova_config {
-        'DEFAULT/multi_host':      value => 'False';
-        'DEFAULT/send_arp_for_ha': value => 'False';
+        'DEFAULT/multi_host':      value => false;
+        'DEFAULT/send_arp_for_ha': value => false;
       }
     }
 
