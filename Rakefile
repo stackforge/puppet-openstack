@@ -26,10 +26,15 @@ namespace :modules do
     repos_to_clone = (repos['repo_paths'] || {})
     branches_to_checkout = (repos['checkout_branches'] || {})
     repos_to_clone.each do |remote, local|
-      # I should check to see if the file is there?
       outpath = File.join(modulepath, local)
-      output = `git clone #{remote} #{outpath}`
-      puts output
+      if File.exists?(outpath)
+        FileUtils.cd outpath
+        output = `git pull --rebase`
+        puts output
+      else
+        output = `git clone #{remote} #{outpath}`
+        puts output
+      end
     end
     branches_to_checkout.each do |local, branch|
       Dir.chdir(File.join(modulepath, local)) do
