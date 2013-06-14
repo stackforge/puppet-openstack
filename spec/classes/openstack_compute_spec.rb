@@ -67,7 +67,7 @@ describe 'openstack::compute' do
         :install_service   => false
       })
       should contain_class('openstack::cinder::storage').with(
-        :sql_connection      => 'mysql://cinder:cinder_pass@127.0.0.1/cinder',
+        :db_password         => 'cinder_pass',
         :rabbit_password     => 'rabbit_pw',
         :rabbit_userid       => 'openstack',
         :rabbit_host         => '127.0.0.1',
@@ -90,7 +90,7 @@ describe 'openstack::compute' do
         :public_interface    => 'eth2',
         :nova_user_password  => 'nova_pass',
         :nova_db_user        => 'nova_user',
-        :nova_db_name        => 'novadb',
+        :nova_db_dbname      => 'novadb',
         :rabbit_host         => 'my_host',
         :rabbit_password     => 'my_rabbit_pw',
         :rabbit_user         => 'my_rabbit_user',
