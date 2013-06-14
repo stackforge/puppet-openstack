@@ -27,7 +27,7 @@ class openstack::compute (
   $db_host                       = '127.0.0.1',
   # Nova Database
   $nova_db_user                  = 'nova',
-  $nova_db_name                  = 'nova',
+  $nova_db_dbname                = 'nova',
   # Network
   $public_interface              = undef,
   $private_interface             = undef,
@@ -69,7 +69,7 @@ class openstack::compute (
   $manage_volumes                = true,
   $cinder_db_password            = false,
   $cinder_db_user                = 'cinder',
-  $cinder_db_name                = 'cinder',
+  $cinder_db_dbname              = 'cinder',
   $volume_group                  = 'cinder-volumes',
   $iscsi_ip_address              = '127.0.0.1',
   $setup_test_volume             = false,
@@ -104,7 +104,7 @@ class openstack::compute (
     }
   }
 
-  $nova_sql_connection = "mysql://${nova_db_user}:${nova_db_password}@${db_host}/${nova_db_name}"
+  $nova_sql_connection = "mysql://${nova_db_user}:${nova_db_password}@${db_host}/${nova_db_dbname}"
 
   class { 'nova':
     sql_connection      => $nova_sql_connection,
@@ -232,14 +232,16 @@ class openstack::compute (
       fail('cinder_db_password must be set when cinder is being configured')
     }
 
-    $cinder_sql_connection = "mysql://${cinder_db_user}:${cinder_db_password}@${db_host}/${cinder_db_name}"
-
     class { 'openstack::cinder::storage':
-      sql_connection      => $cinder_sql_connection,
       rabbit_password     => $rabbit_password,
       rabbit_userid       => $rabbit_user,
       rabbit_host         => $rabbit_host,
       rabbit_virtual_host => $rabbit_virtual_host,
+      db_password         => $cinder_db_password,
+      db_dbname           => $cinder_db_dbname,
+      db_user             => $cinder_db_user,
+      db_type             => 'mysql',
+      db_host             => $db_host,
       volume_group        => $volume_group,
       iscsi_ip_address    => $iscsi_ip_address,
       enabled             => $enabled,

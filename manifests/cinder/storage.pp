@@ -1,11 +1,16 @@
 class openstack::cinder::storage(
-  $sql_connection,
   $rabbit_password,
+  $db_password,
   $rabbit_userid         = 'guest',
   $rabbit_host           = '127.0.0.1',
   $rabbit_hosts          = undef,
   $rabbit_port           = '5672',
   $rabbit_virtual_host   = '/',
+  # Database. Currently mysql is the only option.
+  $db_type               = 'mysql',
+  $db_user               = 'cinder',
+  $db_host               = '127.0.0.1',
+  $db_dbname             = 'cinder',
   $package_ensure        = 'present',
   $api_paste_config      = '/etc/cinder/api-paste.ini',
   $volume_package_ensure = 'present',
@@ -16,6 +21,14 @@ class openstack::cinder::storage(
   $setup_test_volume     = false,
   $verbose               = false
 ) {
+
+  ####### DATABASE SETUP ######
+  # set up mysql server
+  if ($db_type == 'mysql') {
+    $sql_connection = "mysql://${db_user}:${db_password}@${db_host}/${db_dbname}?charset=utf8"
+  } else {
+    fail("Unsupported db_type ${db_type}")
+  }
 
   class {'::cinder':
     sql_connection      => $sql_connection,
