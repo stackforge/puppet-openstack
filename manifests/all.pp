@@ -1,70 +1,111 @@
 #
-# == Class: openstack::all
-#
 # Class that performs a basic openstack all in one installation.
 #
 # === Parameters
 #
-#  [public_address] Public address used by vnchost. Required.
-#  [public_interface] The interface used to route public traffic by the
-#    network service.
-#  [private_interface] The private interface used to bridge the VMs into a common network.
-#  [floating_range] The floating ip range to be created. If it is false, then no floating ip range is created.
-#    Optional. Defaults to false.
-#  [fixed_range] The fixed private ip range to be created for the private VM network. Optional. Defaults to '10.0.0.0/24'.
-#  [network_manager] The network manager to use for the nova network service.
-#    Optional. Defaults to 'nova.network.manager.FlatDHCPManager'.
-#  [auto_assign_floating_ip] Rather configured to automatically allocate and
+# [public_interface] Public interface used to route public traffic. Required.
+# [public_address] Public address for public endpoints. Required.
+# [private_interface] Interface used for vm networking connectivity. Required.
+# [internal_address] Internal address used for management. Required.
+# [mysql_root_password] Root password for mysql server.
+# [admin_email] Admin email.
+# [admin_password] Admin password.
+# [keystone_db_password] Keystone database password.
+# [keystone_admin_token] Admin token for keystone.
+# [keystone_bind_address] Address that keystone api service should bind to.
+#   Optional. Defaults to '0.0.0.0'.
+# [glance_db_password] Glance DB password.
+# [glance_user_password] Glance service user password.
+# [nova_db_password] Nova DB password.
+# [nova_user_password] Nova service password.
+#
+# [purge_nova_config]
+#   Whether unmanaged nova.conf entries should be purged.
+#   (optional) Defaults to false.
+#
+# [rabbit_password] Rabbit password.
+# [rabbit_user] Rabbit User. Optional. Defaults to openstack.
+# [rabbit_virtual_host] Rabbit virtual host path for Nova. Defaults to '/'.
+# [network_manager] Nova network manager to use.
+# [fixed_range] Range of ipv4 network for vms.
+# [floating_range] Floating ip range to create.
+# [create_networks] Rather network and floating ips should be created.
+# [num_networks] Number of networks that fixed range should be split into.
+# [multi_host] Rather node should support multi-host networking mode for HA.
+#   Optional. Defaults to false.
+# [auto_assign_floating_ip] Rather configured to automatically allocate and
 #   assign a floating IP address to virtual instances when they are launched.
 #   Defaults to false.
-#  [network_config] Used to specify network manager specific parameters .Optional. Defualts to {}.
-#  [mysql_root_password] The root password to set for the mysql database. Optional. Defaults to sql_pass'.
-#  [rabbit_password] The password to use for the rabbitmq user. Optional. Defaults to rabbit_pw'
-#  [rabbit_user] The rabbitmq user to use for auth. Optional. Defaults to openstack.
-#  [admin_email] The admin's email address. Optional. Defaults to someuser@some_fake_email_address.foo'.
-#  [admin_password] The default password of the keystone admin. Optional. Defaults to ChangeMe'.
-#  [keystone_db_password] The default password for the keystone db user. Optional. Defaults to keystone_pass'.
-#  [keystone_admin_token] The default auth token for keystone. Optional. Defaults to keystone_admin_token'.
-#  [nova_db_password] The nova db password. Optional. Defaults to nova_pass'.
-#  [nova_user_password] The password of the keystone user for the nova service. Optional. Defaults to nova_pass'.
-#  [glance_db_password] The password for the db user for glance. Optional. Defaults to 'glance_pass'.
-#  [glance_user_password] The password of the glance service user. Optional. Defaults to 'glance_pass'.
-#  [secret_key] The secret key for horizon. Optional. Defaults to 'dummy_secret_key'.
-#  [verbose] If the services should log verbosely. Optional. Defaults to false.
-#  [purge_nova_config] Whether unmanaged nova.conf entries should be purged. Optional. Defaults to false.
-#  [libvirt_type] The virualization type being controlled by libvirt.  Optional. Defaults to 'kvm'.
-#  [volume_group] The name of the volume group to use for nova volume allocation. Optional. Defaults to 'cinder-volumes'.
-#  [horizon] (bool) is horizon installed. Defaults to: true
+# [network_config] Hash that can be used to pass implementation specifc
+#   network settings. Optioal. Defaults to {}
+# [verbose] Whether to log services at verbose.
+# Horizon related config - assumes puppetlabs-horizon code
+# [secret_key]          secret key to encode cookies
+# [cache_server_ip]     local memcached instance ip
+# [cache_server_port]   local memcached instance port
+# [horizon]             (bool) is horizon installed. Defaults to: true
+# [quantum]             (bool) is quantum installed
+#   The next is an array of arrays, that can be used to add call-out links to the dashboard for other apps.
+#   There is no specific requirement for these apps to be for monitoring, that's just the defacto purpose.
+#   Each app is defined in two parts, the display name, and the URI
+# [metadata_shared_secret]
+#   Shared secret used by nova and quantum to authenticate metadata.
+#   (optional) Defaults to false.
+#
+# [firewall_driver]
+#   Driver used to implement firewall rules.
+#   (optional) Defaults to 'quantum.agent.linux.iptables_firewall.OVSHybridIptablesFirewallDriver'.
+#
+# [quantum_auth_url]
+#   Url used to quantum to contact the authentication service.
+#  (optional) Default to http://127.0.0.1:35357/v2.0.
+#
+# [horizon_app_links]     array as in '[ ["Nagios","http://nagios_addr:port/path"],["Ganglia","http://ganglia_addr"] ]'
+# [enabled] Whether services should be enabled. This parameter can be used to
+#   implement services in active-passive modes for HA. Optional. Defaults to true.
+#
 # === Examples
 #
-#  class { 'openstack::all':
-#    public_address       => '192.168.1.1',
-#    mysql_root_password  => 'changeme',
-#    rabbit_password      => 'changeme',
-#    keystone_db_password => 'changeme',
-#    keystone_admin_token => '12345',
-#    admin_email          => 'my_email@mw.com',
-#    admin_password       => 'my_admin_password',
-#    nova_db_password     => 'changeme',
-#    nova_user_password   => 'changeme',
-#    glance_db_password   => 'changeme',
-#    glance_user_password => 'changeme',
-#    secret_key           => 'dummy_secret_key',
-#  }
-#
-# === Authors
-#
-# Dan Bode <bodepd@gmail.com>
-#
+# class { 'openstack::all':
+#   public_address         => '192.168.0.3',
+#   public_interface       => eth0,
+#   private_interface      => eth1,
+#   internal_address       => '192.168.1.3',
+#   mysql_root_password    => 'changeme',
+#   allowed_hosts          => ['127.0.0.%', '192.168.1.%'],
+#   admin_email            => 'my_email@mw.com',
+#   admin_password         => 'my_admin_password',
+#   keystone_db_password   => 'changeme',
+#   keystone_admin_token   => '12345',
+#   glance_db_password     => 'changeme',
+#   glance_user_password   => 'changeme',
+#   nova_db_password       => 'changeme',
+#   nova_user_password     => 'changeme',
+#   secret_key             => 'dummy_secret_key',
+#   nova_user_password     => 'changeme',
+#   nova_db_password       => 'changeme',
+#   glance_user_password   => 'changeme',
+#   glance_db_password     => 'changeme',
+#   cinder_user_password   => 'changeme',
+#   cinder_db_password     => 'changeme',
+#   keystone_db_password   => 'changeme',
+#   admin_password         => 'changeme',
+#   rabbit_password        => 'changeme',
+#   keystone_admin_token   => 'changeme',
+#   quantum_user_password  => 'changeme',
+#   quantum_db_password    => 'changeme',
+#   secret_key             => 'dummy_secret_key',
+#   bridge_interface       => 'eth0',
+#   metadata_shared_secret => 'shared_md_secret',
+#   enable_ovs_agent       => true,
+# }
 #
 class openstack::all (
   # Required Network
   $public_address,
   $public_interface,
-  $private_interface,
   $admin_email,
   # required password
-  $mysql_root_password,
   $admin_password,
   $rabbit_password,
   $keystone_db_password,
@@ -74,77 +115,144 @@ class openstack::all (
   $nova_db_password,
   $nova_user_password,
   $secret_key,
-  $internal_address = '127.0.0.1',
   # cinder and quantum password are not required b/c they are
   # optional. Not sure what to do about this.
-  $cinder_user_password    = 'cinder_pass',
-  $cinder_db_password      = 'cinder_pass',
-  $quantum_user_password   = 'quantum_pass',
-  $quantum_db_password     = 'quantum_pass',
+  $quantum_user_password   = false,
+  $quantum_db_password     = false,
+  $cinder_user_password    = false,
+  $cinder_db_password      = false,
   # Database
+  $db_host                 = '127.0.0.1',
   $db_type                 = 'mysql',
+  $mysql_root_password     = 'sql_pass',
   $mysql_account_security  = true,
-  $allowed_hosts           = ['127.0.0.%'],
+  $mysql_bind_address      = '0.0.0.0',
+  $allowed_hosts           = '%',
   # Keystone
+  $keystone_host           = '127.0.0.1',
   $keystone_db_user        = 'keystone',
   $keystone_db_dbname      = 'keystone',
   $keystone_admin_tenant   = 'admin',
+  $keystone_bind_address   = '0.0.0.0',
   $region                  = 'RegionOne',
-  # Glance Required
+  # Glance
   $glance_db_user          = 'glance',
   $glance_db_dbname        = 'glance',
+  $glance_api_servers      = undef,
+  $glance_backend          = 'file',
+  # Glance Swift Backend
+  $swift_store_user        = 'swift_store_user',
+  $swift_store_key         = 'swift_store_key',
   # Nova
+  $nova_admin_tenant_name  = 'services',
+  $nova_admin_user         = 'nova',
   $nova_db_user            = 'nova',
   $nova_db_dbname          = 'nova',
   $purge_nova_config       = false,
-  # Network
+  $enabled_apis            = 'ec2,osapi_compute,metadata',
+  # Virtualization
+  $libvirt_type            = 'kvm',
+  $migration_support       = false,
+  # Nova Networking
+  $private_interface       = false,
+  $internal_address        = false,
+  $admin_address           = false,
   $network_manager         = 'nova.network.manager.FlatDHCPManager',
   $fixed_range             = '10.0.0.0/24',
   $floating_range          = false,
   $create_networks         = true,
   $num_networks            = 1,
+  $multi_host              = false,
   $auto_assign_floating_ip = false,
   $network_config          = {},
-  $quantum                 = true,
   # Rabbit
+  $rabbit_host             = '127.0.0.1',
   $rabbit_user             = 'openstack',
+  $rabbit_virtual_host     = '/',
   # Horizon
   $horizon                 = true,
   $cache_server_ip         = '127.0.0.1',
   $cache_server_port       = '11211',
   $horizon_app_links       = undef,
+  # VNC
+  $vnc_enabled             = true,
+  $vncproxy_host           = false,
+  # cinder
   # if the cinder management components should be installed
   $cinder                  = true,
   $cinder_db_user          = 'cinder',
   $cinder_db_dbname        = 'cinder',
+  $cinder_bind_address     = '0.0.0.0',
+  $manage_volumes          = true,
   $volume_group            = 'cinder-volumes',
-  $cinder_test             = false,
-  #
+  $iscsi_ip_address        = '127.0.0.1',
+  # Quantum
+  $quantum                 = true,
+  $bridge_interface        = undef,
+  $external_bridge_name    = 'br-ex',
+  $enable_ovs_agent        = true,
+  $enable_dhcp_agent       = true,
+  $enable_l3_agent         = true,
+  $enable_metadata_agent   = true,
+  $metadata_shared_secret  = false,
+  $firewall_driver         = 'quantum.agent.linux.iptables_firewall.OVSHybridIptablesFirewallDriver',
   $quantum_db_user         = 'quantum',
-  $quantum_db_dbname       = 'quantum',
-  # Virtaulization
-  $libvirt_type            = 'kvm',
-  # VNC
-  $vnc_enabled             = true,
+  $quantum_db_name         = 'quantum',
+  $quantum_auth_url        = 'http://127.0.0.1:35357/v2.0',
+  $enable_quantum_server   = true,
+  $ovs_local_ip            = false,
   # General
-  $enabled                 = true,
-  $verbose                 = 'False'
+  $verbose                 = false,
+  $enabled                 = true
 ) {
+
+  if $ovs_local_ip {
+    $ovs_local_ip_real = $ovs_local_ip
+  } else {
+    $ovs_local_ip_real = $internal_address
+  }
+
+  if $internal_address {
+    $internal_address_real = $internal_address
+  } else {
+    $internal_address_real = $public_address
+  }
+  if $admin_address {
+    $admin_address_real = $admin_address
+  } else {
+    $admin_address_real = $internal_address_real
+  }
+  if $vncproxy_host {
+    $vncproxy_host_real = $vncproxy_host
+  } else {
+    $vncproxy_host_real = $public_address
+  }
+  if $vncserver_listen {
+    $vncserver_listen_real = $vncserver_listen
+  } else {
+    $vncserver_listen_real = $internal_address
+  }
+  if $glance_api_servers {
+    $glance_api_servers_real = $glance_api_servers
+  } else {
+    $glance_api_servers_real = "$internal_address_real:9292"
+  }
+
 
   # Ensure things are run in order
   Class['openstack::db::mysql'] -> Class['openstack::keystone']
   Class['openstack::db::mysql'] -> Class['openstack::glance']
+  Class['openstack::db::mysql'] -> Class['openstack::nova::controller']
 
+  ####### DATABASE SETUP ######
   # set up mysql server
   if ($db_type == 'mysql') {
     if ($enabled) {
       Class['glance::db::mysql'] -> Class['glance::registry']
-      $nova_db = "mysql://${nova_db_user}:${nova_db_password}@127.0.0.1/nova?charset=utf8"
-    } else {
-      $nova_db = false
     }
     class { 'openstack::db::mysql':
       mysql_root_password    => $mysql_root_password,
+      mysql_bind_address     => $mysql_bind_address,
       mysql_account_security => $mysql_account_security,
       keystone_db_user       => $keystone_db_user,
       keystone_db_password   => $keystone_db_password,
@@ -167,47 +275,53 @@ class openstack::all (
       enabled                => $enabled,
     }
   } else {
-    fail("unsupported db type: ${db_type}")
+    fail("Unsupported db : ${db_type}")
   }
 
   ####### KEYSTONE ###########
   class { 'openstack::keystone':
-    verbose                   => $verbose,
-    db_type                   => $db_type,
-    db_host                   => '127.0.0.1',
-    db_password               => $keystone_db_password,
-    db_name                   => $keystone_db_dbname,
-    db_user                   => $keystone_db_user,
-    admin_token               => $keystone_admin_token,
-    admin_tenant              => $keystone_admin_tenant,
-    admin_email               => $admin_email,
-    admin_password            => $admin_password,
-    public_address            => $public_address,
-    internal_address          => '127.0.0.1',
-    admin_address             => '127.0.0.1',
-    region                    => $region,
-    glance_user_password      => $glance_user_password,
-    nova_user_password        => $nova_user_password,
-    cinder                    => $cinder,
-    cinder_user_password      => $cinder_user_password,
-    quantum                   => $quantum,
-    quantum_user_password     => $quantum_user_password,
+    verbose               => $verbose,
+    db_type               => $db_type,
+    db_host               => $db_host,
+    db_password           => $keystone_db_password,
+    db_name               => $keystone_db_dbname,
+    db_user               => $keystone_db_user,
+    admin_token           => $keystone_admin_token,
+    admin_tenant          => $keystone_admin_tenant,
+    admin_email           => $admin_email,
+    admin_password        => $admin_password,
+    public_address        => $public_address,
+    internal_address      => $internal_address_real,
+    admin_address         => $admin_address_real,
+    region                => $region,
+    glance_user_password  => $glance_user_password,
+    nova_user_password    => $nova_user_password,
+    cinder                => $cinder,
+    cinder_user_password  => $cinder_user_password,
+    quantum               => $quantum,
+    quantum_user_password => $quantum_user_password,
+    enabled               => $enabled,
+    bind_host             => $keystone_bind_address,
   }
 
-  ######## GLANCE ##########
+
+  ######## BEGIN GLANCE ##########
   class { 'openstack::glance':
-    verbose       => $verbose,
-    db_type       => $db_type,
-    db_host       => '127.0.0.1',
-    db_user       => $glance_db_user,
-    db_name       => $glance_db_dbname,
-    db_password   => $glance_db_password,
-    user_password => $glance_user_password,
-    enabled       => $enabled,
+    verbose          => $verbose,
+    db_type          => $db_type,
+    db_host          => $db_host,
+    keystone_host    => $keystone_host,
+    db_user          => $glance_db_user,
+    db_name          => $glance_db_dbname,
+    db_password      => $glance_db_password,
+    user_password    => $glance_user_password,
+    backend          => $glance_backend,
+    swift_store_user => $swift_store_user,
+    swift_store_key  => $swift_store_key,
+    enabled          => $enabled,
   }
 
-  ######## NOVA ###########
-
+  ######## BEGIN NOVA ###########
   #
   # indicates that all nova config entries that we did
   # not specifify in Puppet should be purged from file
@@ -218,155 +332,167 @@ class openstack::all (
     }
   }
 
-  # Install / configure rabbitmq
-  class { 'nova::rabbitmq':
-    userid   => $rabbit_user,
-    password => $rabbit_password,
-    enabled  => $enabled,
+  # Install / configure nova-compute
+  class { '::nova::compute':
+    enabled                       => $enabled,
+    vnc_enabled                   => $vnc_enabled,
+    vncserver_proxyclient_address => $internal_address_real,
+    vncproxy_host                 => $vncproxy_host,
   }
 
-  # Configure Nova
-  class { 'nova':
-    sql_connection     => $nova_db,
-    rabbit_userid      => $rabbit_user,
-    rabbit_password    => $rabbit_password,
-    image_service      => 'nova.image.glance.GlanceImageService',
-    glance_api_servers => 'localhost:9292',
-    verbose            => $verbose,
-    rabbit_host        => '127.0.0.1',
+  # Configure libvirt for nova-compute
+  class { 'nova::compute::libvirt':
+    libvirt_type      => $libvirt_type,
+    vncserver_listen  => $vncserver_listen_real,
+    migration_support => $migration_support,
   }
 
-  # Configure nova-api
-  class { 'nova::api':
-    enabled           => $enabled,
-    admin_password    => $nova_user_password,
-    auth_host         => 'localhost',
+  class { 'openstack::nova::controller':
+    # Database
+    db_host                 => $db_host,
+    # Network
+    network_manager         => $network_manager,
+    network_config          => $network_config,
+    floating_range          => $floating_range,
+    fixed_range             => $fixed_range,
+    public_address          => $public_address,
+    admin_address           => $admin_address,
+    internal_address        => $internal_address_real,
+    auto_assign_floating_ip => $auto_assign_floating_ip,
+    create_networks         => $create_networks,
+    num_networks            => $num_networks,
+    multi_host              => $multi_host,
+    public_interface        => $public_interface,
+    private_interface       => $private_interface,
+    # Quantum
+    quantum                 => $quantum,
+    quantum_user_password   => $quantum_user_password,
+    metadata_shared_secret  => $metadata_shared_secret,
+    # Nova
+    nova_admin_tenant_name  => $nova_admin_tenant_name,
+    nova_admin_user         => $nova_admin_user,
+    nova_user_password      => $nova_user_password,
+    nova_db_password        => $nova_db_password,
+    nova_db_user            => $nova_db_user,
+    nova_db_dbname          => $nova_db_dbname,
+    enabled_apis            => $enabled_apis,
+    # Rabbit
+    rabbit_user             => $rabbit_user,
+    rabbit_password         => $rabbit_password,
+    rabbit_virtual_host     => $rabbit_virtual_host,
+    # Glance
+    glance_api_servers      => $glance_api_servers_real,
+    # VNC
+    vnc_enabled            => $vnc_enabled,
+    vncproxy_host          => $vncproxy_host_real,
+    # General
+    verbose                 => $verbose,
+    enabled                 => $enabled,
   }
 
-  if $enabled {
-    $really_create_networks = $create_networks
-  } else {
-    $really_create_networks = false
-  }
+  ######### Quantum Controller Services ########
+  if ($quantum) {
 
-  if $quantum == false {
-    # Configure nova-network
-    class { 'nova::network':
-      private_interface => $private_interface,
-      public_interface  => $public_interface,
-      fixed_range       => $fixed_range,
-      floating_range    => $floating_range,
-      network_manager   => $network_manager,
-      config_overrides  => $network_config,
-      create_networks   => $really_create_networks,
-      num_networks      => $num_networks,
-      enabled           => $enabled,
+    if ! $quantum_user_password {
+      fail('quantum_user_password must be set when configuring quantum')
+    }
+
+    if ! $quantum_db_password {
+      fail('quantum_db_password must be set when configuring quantum')
+    }
+
+    if ! $bridge_interface {
+      fail('bridge_interface must be set when configuring quantum')
+    }
+
+    class { 'openstack::quantum':
+      # Database
+      db_host               => $db_host,
+      # Rabbit
+      rabbit_host           => $rabbit_host,
+      rabbit_user           => $rabbit_user,
+      rabbit_password       => $rabbit_password,
+      rabbit_virtual_host   => $rabbit_virtual_host,
+      # Quantum OVS
+      ovs_local_ip          => $ovs_local_ip_real,
+      bridge_uplinks        => ["${external_bridge_name}:${bridge_interface}"],
+      bridge_mappings       => ["default:${external_bridge_name}"],
+      enable_ovs_agent      => $enable_ovs_agent,
+      firewall_driver       => $firewall_driver,
+      # Database
+      db_name               => $quantum_db_name,
+      db_user               => $quantum_db_user,
+      db_password           => $quantum_db_password,
+      # Quantum agents
+      enable_dhcp_agent     => $enable_dhcp_agent,
+      enable_l3_agent       => $enable_l3_agent,
+      enable_metadata_agent => $enable_metadata_agent,
+      auth_url              => $quantum_auth_url,
+      user_password         => $quantum_user_password,
+      shared_secret         => $metadata_shared_secret,
+      # Keystone
+      keystone_host         => $keystone_host,
+      # General
+      enabled               => $enabled,
+      enable_server         => $enable_quantum_server,
+      verbose               => $verbose,
+    }
+    class { 'nova::compute::quantum':
+      libvirt_vif_driver => $libvirt_vif_driver,
     }
   } else {
-    # Set up Quantum
-    $quantum_sql_connection = "mysql://${quantum_db_user}:${quantum_db_password}@127.0.0.1/${quantum_db_dbname}?charset=utf8"
 
-    class { 'quantum':
-      verbose         => $verbose,
-      debug           => $verbose,
-      rabbit_host     => '127.0.0.1',
-      rabbit_user     => $rabbit_user,
-      rabbit_password => $rabbit_password,
+    if ! $fixed_range {
+      fail("Must specify the fixed range when using nova-networks")
     }
 
-    class { 'quantum::server':
-      auth_password => $quantum_user_password,
-    }
-
-    class { 'quantum::agents::dhcp': }
-
-    class { 'nova::compute::quantum': }
-
-    nova_config {
-      'DEFAULT/linuxnet_interface_driver':       value => 'nova.network.linux_net.LinuxOVSInterfaceDriver';
-      'DEFAULT/linuxnet_ovs_integration_bridge': value => 'br-int';
-    }
-
-    class { 'quantum::plugins::ovs':
-      sql_connection      => $quantum_sql_connection,
-      tenant_network_type => 'gre',
-      # I need to know what this does...
-      local_ip            => '10.0.0.1',
-      enable_tunneling    => true,
-    }
-
-    class { 'quantum::agents::ovs':
-      bridge_uplinks => ["br-virtual:${private_interface}"],
-    }
-
-    class { 'nova::network::quantum':
-    #$fixed_range,
-      quantum_admin_password    => $quantum_user_password,
-    #$use_dhcp                  = 'True',
-    #$public_interface          = undef,
-      quantum_connection_host   => 'localhost',
-      quantum_auth_strategy     => 'keystone',
-      quantum_url               => "http://127.0.0.1:9696",
-      quantum_admin_tenant_name => 'services',
-      #quantum_admin_username    => 'quantum',
-      quantum_admin_auth_url    => "http://127.0.0.1:35357/v2.0",
-    }
-  }
-
-  if $auto_assign_floating_ip {
-    nova_config { 'DEFAULT/auto_assign_floating_ip': value => 'True' }
-  }
-
-  class { [
-    'nova::scheduler',
-    'nova::objectstore',
-    'nova::cert',
-    'nova::consoleauth'
-  ]:
-    enabled => $enabled,
-  }
-
-  if $vnc_enabled {
-    class { 'nova::vncproxy':
-      host          => $public_address,
-      enabled       => $enabled,
+    if $multi_host {
+      include keystone::python
+      nova_config {
+        'DEFAULT/send_arp_for_ha': value => true;
+      }
+    } else {
+      nova_config {
+        'DEFAULT/multi_host':      value => false;
+        'DEFAULT/send_arp_for_ha': value => false;
+      }
     }
   }
 
   ######### Cinder Controller Services ########
   if ($cinder) {
-    class { "cinder::base":
-      verbose         => $verbose,
-      sql_connection  => "mysql://${cinder_db_user}:${cinder_db_password}@127.0.0.1/${cinder_db_dbname}?charset=utf8",
-      rabbit_password => $rabbit_password,
+
+    if ! $cinder_db_password {
+      fail('Must set cinder db password when setting up a cinder controller')
     }
 
-    class { 'cinder::api':
-      keystone_password => $cinder_user_password,
+    if ! $cinder_user_password {
+      fail('Must set cinder user password when setting up a cinder controller')
     }
 
-    class { 'cinder::scheduler': }
-    class { 'cinder::volume': }
-    class { 'cinder::volume::iscsi':
-      iscsi_ip_address => '127.0.0.1',
-      volume_group     => $volume_group,
+    class { 'openstack::cinder::all':
+      bind_host          => $cinder_bind_address,
+      keystone_auth_host => $keystone_host,
+      keystone_password  => $cinder_user_password,
+      rabbit_userid      => $rabbit_user,
+      rabbit_password    => $rabbit_password,
+      rabbit_host        => $rabbit_host,
+      db_password        => $cinder_db_password,
+      db_dbname          => $cinder_db_dbname,
+      db_user            => $cinder_db_user,
+      db_type            => $db_type,
+      db_host            => $db_host,
+      iscsi_ip_address   => $iscsi_ip_address,
+      setup_test_volume  => $setup_test_volume,
+      manage_volumes     => $manage_volumes,
+      volume_group       => $volume_group,
+      verbose            => $verbose
     }
-  } else {
-    # Set up nova-volume
-  }
 
-  # Install / configure nova-compute
-  class { '::nova::compute':
-    enabled                       => $enabled,
-    vnc_enabled                   => $vnc_enabled,
-    vncserver_proxyclient_address => $internal_address,
-    vncproxy_host                 => $public_address,
-  }
-
-  # Configure libvirt for nova-compute
-  class { 'nova::compute::libvirt':
-    libvirt_type     => $libvirt_type,
-    vncserver_listen => $internal_address,
+    # set in nova::api
+    if ! defined(Nova_config['DEFAULT/volume_api_class']) {
+      nova_config { 'DEFAULT/volume_api_class': value => 'nova.volume.cinder.API' }
+    }
   }
 
   ######## Horizon ########
@@ -378,5 +504,4 @@ class openstack::all (
       horizon_app_links => $horizon_app_links,
     }
   }
-
 }
