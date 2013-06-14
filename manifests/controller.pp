@@ -163,6 +163,10 @@ class openstack::controller (
   $cinder_db_user          = 'cinder',
   $cinder_db_dbname        = 'cinder',
   $cinder_bind_address     = '0.0.0.0',
+  $manage_volumes          = false,
+  $volume_group            = 'cinder-volumes',
+  $iscsi_ip_address        = '127.0.0.1',
+  $setup_test_volume       = false,
   # Quantum
   $quantum                 = true,
   $bridge_interface        = undef,
@@ -415,8 +419,28 @@ class openstack::controller (
       scheduler_enabled  => $enabled,
       verbose            => $verbose
     }
-  }
 
+    if $manage_volumes {
+
+      class { 'openstack::cinder::storage':
+        rabbit_password     => $rabbit_password,
+        rabbit_userid       => $rabbit_user,
+        rabbit_host         => $rabbit_host,
+        rabbit_virtual_host => $rabbit_virtual_host,
+        db_password         => $cinder_db_password,
+        db_dbname           => $cinder_db_dbname,
+        db_user             => $cinder_db_user,
+        db_type             => $db_type,
+        db_host             => $db_host,
+        volume_group        => $volume_group,
+        iscsi_ip_address    => $iscsi_ip_address,
+        enabled             => $enabled,
+        verbose             => $verbose,
+        setup_test_volume   => $setup_test_volume,
+        volume_driver       => 'iscsi',
+      }
+    }
+  }
   ######## Horizon ########
   if ($horizon) {
     class { 'openstack::horizon':
