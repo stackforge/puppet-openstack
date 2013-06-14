@@ -1,0 +1,9 @@
+Verified+2: Jenkins
+Code-Review+1: François Charlier <francois.charlier@enovance.com>
+Approved+1: Mathieu Gagné <mgagne@iweb.com>
+Code-Review+2: Mathieu Gagné <mgagne@iweb.com>
+Submitted-by: Jenkins
+Submitted-at: Fri, 14 Jun 2013 15:04:19 +0000
+Reviewed-on: https://review.openstack.org/32996
+Project: stackforge/puppet-openstack
+Branch: refs/heads/master
