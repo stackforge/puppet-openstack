@@ -4,7 +4,7 @@ describe 'openstack::cinder::storage' do
 
   let :params do
     {
-      :sql_connection  => 'mysql://a:b:c:d',
+      :db_password     => 'db_password',
       :rabbit_password => 'rabpass'
     }
   end
@@ -15,7 +15,7 @@ describe 'openstack::cinder::storage' do
 
   it 'should configure cinder and cinder::volume using defaults and required parameters' do
     should contain_class('cinder').with(
-      :sql_connection      => params[:sql_connection],
+      :sql_connection      => "mysql://cinder:#{params[:db_password]}@127.0.0.1/cinder?charset=utf8",
       :rabbit_userid       => 'guest',
       :rabbit_password     => params[:rabbit_password],
       :rabbit_host         => '127.0.0.1',
