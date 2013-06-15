@@ -29,7 +29,10 @@ login_user='ubuntu'
 
 
 # create a pub/priv keypair
-ssh-keygen -f /tmp/id_rsa -t rsa -N ''
+key_path=/tmp/id_rsa
+if [ ! -f $key_path ]; then
+  ssh-keygen -f /tmp/id_rsa -t rsa -N ''
+fi
 
 #add the public key to nova.
 nova --no-cache keypair-add --pub_key /tmp/id_rsa.pub key_cirros
@@ -86,15 +89,18 @@ sleep <%= sleep_time %>
 # Wait  and then try to SSH to the node, leveraging the private key
 # we generated earlier.
 sleep <%= sleep_time %>
-ssh $login_user@$floating_ip -i /tmp/id_rsa -o StrictHostKeyChecking=no hostname
+ssh -i /tmp/id_rsa -o StrictHostKeyChecking=no $login_user@$floating_ip
 <% end -%>
 
 <% if quantum %>
 # get port
 ip_addr=`nova show $instance_name | grep 'net1 network' | awk -F'|' '{print $3}'`
 port_id=`quantum port-list | grep $ip_addr | awk -F' ' '{print $2}'`
-quantum floatingip-create --port_id $port_id $quantum_public_net
+floating_ip=`quantum floatingip-create --port_id $port_id $quantum_public_net | grep floating_ip_address | awk '{print $4}'`
+quantum security-group-rule-create --protocol icmp --direction ingress default
+quantum security-group-rule-create --protocol tcp --port-range-min 22 \
+  --port-range-max 22 --direction ingress default
 sleep <%= sleep_time %>
-ssh $login_user@$floating_ip -i /tmp/id_rsa -o StrictHostKeyChecking=no hostname
+ssh -i /tmp/id_rsa -o StrictHostKeyChecking=no $login_user@$floating_ip
 <% end %>
 exit 0
