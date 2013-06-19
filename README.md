@@ -25,14 +25,16 @@ The Openstack Puppet Modules are a flexible Puppet implementation capable of con
 * [horizon](http://horizon.openstack.org/)   (web front end)
 * [cinder](http://cinder.openstack.org/)     (block storage exporting)
 
-These modules are based on the [openstack documentation](http://docs.openstack.org/)
+[Puppet Modules](http://docs.puppetlabs.com/learning/modules1.html#modules) are a collection of related contents that can be used to model the configuration of a discrete service.
+
+These Puppet modules are based on the [openstack documentation](http://docs.openstack.org/).
 
 Module Description
 ------------------
 
 There are a lot of moving pieces in Openstack, consequently there are several Puppet modules needed to cover all these pieces.  Each module is then made up of several class definitions, resource declarations, defined resources, and custom types/providers.  A common pattern to reduce this complexity in Puppet is to create a composite module that bundles all these component type modules into a common set of configurations.  The openstack module is doing this compositing and exposing a set of variables needed to be successful in getting a functional stack up and running.  Multiple companies and individuals contributed to this module with the goal of producing a quick way to build single and multi-node installations that was based off documented Openstack best practices.
 
-**Dependencies**
+**Pre-module Dependencies**
 
 * [Puppet](http://docs.puppetlabs.com/puppet/) 2.7.12 or greater
 * [Facter](http://www.puppetlabs.com/puppet/related-projects/facter/) 1.6.1 or greater (versions that support the osfamily fact)
@@ -48,6 +50,19 @@ Setup
 **What the openstack module affects**
 
 * The entirety of Openstack!
+
+### Installing Puppet
+
+Puppet Labs provides two tools for getting started with managing configuration modeling with Puppet, Puppet Enterprise or its underlying opensource projects, i.e. Puppet and MCollective.
+
+* [Puppet Enterprise](http://docs.puppetlabs.com/#puppet-enterprisepelatest) is a complete configuration management platform, with an optimized set of components proven to work well together.  Is free up to 10 nodes so if you're just using Puppet for Openstack management this might just work perfectly.  It will come configured with a handful of extra components that make for a richer experience, like a web interface for managing the orchestration of Puppet and certificate management.
+* [Puppet](http://docs.puppetlabs.com/#puppetpuppet) manages your servers: you describe machine configurations in an easy-to-read declarative language, and Puppet will bring your systems into the desired state and keep them there.  This is the opensource version of Puppet and should be available in your operating system's package repositories but it is generally suggested you use the [yum](http://yum.puppetlabs.com) or [apt](http://apt.puppetlabs.com) repositories from Puppet Labs if possible.
+
+Consult the documentation linked above to help you make your decision but don't fret about the choice to much, opensource Puppet agents are compatible with Puppet Enterprise Puppet masters.
+
+### Optional Puppet features
+
+The swift portions of this module needs Puppet's [exported resources](http://docs.puppetlabs.com/puppet/3/reference/lang_exported.html).  Exported resources leverages the PuppetDB to export and share data across other Puppet managed nodes.
 
 ### Installing openstack
 
@@ -89,6 +104,16 @@ Every node that is configured to be a cinder volume service must have a volume g
 
 * Compute nodes should be deployed onto physical hardware.
 * If compute nodes are deployed on virtual machines for testing, the libvirt_type parameter for the openstack::compute class should probably be configured as 'qemu'.  This is because most virtualization technologies do now pass through the virtualization CPU extensions to their virtual machines.
+
+```puppet
+class { 'openstack:compute': libvirt_type => 'qemu' }
+```
+
+**or**
+
+```puppet
+class { 'openstack::all: libvirt_type => 'qemu' }
+```
 
 ### Beginning with openstack
 
@@ -276,7 +301,7 @@ It is recommended that you first configure the controller before configuring you
     openstack_compute1>   puppet agent -t --certname openstack_compute1
     openstack_compute2>   puppet agent -t --certname openstack_compute2
 
-## Verifying an OpenStack deployment
+### Verifying an OpenStack deployment
 
 Once you have installed openstack using Puppet (and assuming you experience no errors), the next step is to verify the installation:
 
@@ -336,7 +361,7 @@ which stores environment variables that can be used for authentication of openst
        it is reachable by its floating ip address (which will require
        some security groups)
 
-## Building your own custom deployment scenario for Openstack
+### Building your own custom deployment scenario for Openstack
 
 The classes included in the Openstack module are implemented using a number of other modules. These modules can be used directly to create a customized openstack deployment.
 
@@ -457,3 +482,6 @@ Release Notes
 * Refactor of glance and cinder related classes.
 * Nova-conductor added.
 * Various cleanups and bug fixes.
+* Adds the option to automatically set up RedHat or Ubuntu supplemental repositories.
+* Class['openstack::all'] refactor that adds support of future compute nodes to be added.
+* The cinder-volume logical volume group is no longer a requirement.
