@@ -24,6 +24,9 @@
 # [glance] Set up glance endpoints and auth. Optional. Defaults to  true
 # [nova] Set up nova endpoints and auth. Optional. Defaults to  true
 # [swift] Set up swift endpoints and auth. Optional. Defaults to false
+# [swift_user_password]
+#   Auth password for swift.
+#   (Optional) Defaults to false.
 # [enabled] If the service is active (true) or passive (false).
 #   Optional. Defaults to  true
 #
