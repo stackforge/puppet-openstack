@@ -175,16 +175,22 @@ describe 'openstack::controller' do
         default_params
       end
 
-      it { should contain_class('keystone').with(
-        :verbose        => 'False',
-        :debug          => 'False',
-        :catalog_type   => 'sql',
-        :enabled        => true,
-        :admin_token    => 'keystone_admin_token',
-        :sql_connection => "mysql://keystone:keystone_pass@127.0.0.1/keystone"
-      ) }
+      it 'should configure default keystone configuration' do
+        
+        should contain_class('openstack::keystone').with(
+          :swift               => false,
+          :swift_user_password => false
+        )
 
-      it 'should contain endpoints' do
+        should contain_class('keystone').with(
+          :verbose        => 'False',
+          :debug          => 'False',
+          :catalog_type   => 'sql',
+          :enabled        => true,
+          :admin_token    => 'keystone_admin_token',
+          :sql_connection => "mysql://keystone:keystone_pass@127.0.0.1/keystone"
+        )
+
         should contain_class('keystone::roles::admin').with(
           :email        => 'some_user@some_fake_email_address.foo',
           :password     => 'ChangeMe',
@@ -209,7 +215,18 @@ describe 'openstack::controller' do
             :admin_address    => '10.0.0.1',
             :region           => 'RegionOne'
           )
-         end
+        end
+      end
+      context 'when configuring swift' do
+        before :each do
+          params.merge!(:swift => true, :swift_user_password => 'foo')
+        end
+        it 'should configure swift auth in keystone' do
+          should contain_class('openstack::keystone').with(
+            :swift               => true,
+            :swift_user_password => 'foo' 
+          )
+        end
       end
     end
     context 'when not enabled' do
