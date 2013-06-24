@@ -63,6 +63,13 @@
 # [horizon_app_links]     array as in '[ ["Nagios","http://nagios_addr:port/path"],["Ganglia","http://ganglia_addr"] ]'
 # [enabled] Whether services should be enabled. This parameter can be used to
 #   implement services in active-passive modes for HA. Optional. Defaults to true.
+# [swift]
+#   Whether or not to configure keystone for swift authorization.
+#   (Optional). Defaults to false.
+#
+# [swift_user_password]
+#   Auth password for swift.
+#   (Optional) Defaults to false. Required if swift is set to true.
 #
 # === Examples
 #
@@ -101,6 +108,7 @@ class openstack::controller (
   $quantum_db_password     = false,
   $cinder_user_password    = false,
   $cinder_db_password      = false,
+  $swift_user_password     = false,
   # Database
   $db_host                 = '127.0.0.1',
   $db_type                 = 'mysql',
@@ -178,6 +186,8 @@ class openstack::controller (
   $quantum_auth_url        = 'http://127.0.0.1:35357/v2.0',
   $enable_quantum_server   = true,
   $ovs_local_ip            = false,
+  # swift
+  $swift                   = false,
   $enabled                 = true
 ) {
 
@@ -264,6 +274,8 @@ class openstack::controller (
     cinder_user_password  => $cinder_user_password,
     quantum               => $quantum,
     quantum_user_password => $quantum_user_password,
+    swift                 => $swift,
+    swift_user_password   => $swift_user_password,
     enabled               => $enabled,
     bind_host             => $keystone_bind_address,
   }
