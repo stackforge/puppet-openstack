@@ -1,0 +1,9 @@
+Verified+2: Jenkins
+Approved+1: Dan Bode <bodepd@gmail.com>
+Code-Review+1: Chris Ricker <chricker@cisco.com>
+Code-Review+2: Mathieu Gagné <mgagne@iweb.com>
+Submitted-by: Jenkins
+Submitted-at: Tue, 25 Jun 2013 22:24:29 +0000
+Reviewed-on: https://review.openstack.org/34257
+Project: stackforge/puppet-openstack
+Branch: refs/heads/master
