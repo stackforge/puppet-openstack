@@ -3,3 +3,4 @@ spec/fixtures/manifests/*
 *swp
 .vendor
 Gemfile.lock
+pkg
