@@ -178,8 +178,9 @@ describe 'openstack::controller' do
       it 'should configure default keystone configuration' do
 
         should contain_class('openstack::keystone').with(
-          :swift               => false,
-          :swift_user_password => false
+          :swift                => false,
+          :swift_user_password  => false,
+          :swift_public_address => false
         )
 
         should contain_class('keystone').with(
@@ -219,12 +220,17 @@ describe 'openstack::controller' do
       end
       context 'when configuring swift' do
         before :each do
-          params.merge!(:swift => true, :swift_user_password => 'foo')
+          params.merge!(
+            :swift                => true,
+            :swift_user_password  => 'foo',
+            :swift_public_address => '10.0.0.2'
+          )
         end
         it 'should configure swift auth in keystone' do
           should contain_class('openstack::keystone').with(
-            :swift               => true,
-            :swift_user_password => 'foo'
+            :swift                => true,
+            :swift_user_password  => 'foo',
+            :swift_public_address => '10.0.0.2'
           )
         end
       end

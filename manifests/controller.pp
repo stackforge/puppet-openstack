@@ -71,6 +71,10 @@
 #   Auth password for swift.
 #   (Optional) Defaults to false. Required if swift is set to true.
 #
+# [swift_public_address]
+#   The swift address used to populate the keystone service catalog.
+#   (optional). Defaults to false.
+#
 # === Examples
 #
 # class { 'openstack::controller':
@@ -188,6 +192,7 @@ class openstack::controller (
   $ovs_local_ip            = false,
   # swift
   $swift                   = false,
+  $swift_public_address    = false,
   $enabled                 = true
 ) {
 
@@ -276,6 +281,7 @@ class openstack::controller (
     quantum_user_password => $quantum_user_password,
     swift                 => $swift,
     swift_user_password   => $swift_user_password,
+    swift_public_address  => $swift_public_address,
     enabled               => $enabled,
     bind_host             => $keystone_bind_address,
   }
