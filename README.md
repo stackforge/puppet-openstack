@@ -29,6 +29,8 @@ The Openstack Puppet Modules are a flexible Puppet implementation capable of con
 
 These Puppet modules are based on the [openstack documentation](http://docs.openstack.org/).
 
+Watch the [Installing OpenStack with Puppet Enterprise](http://www.youtube.com/watch?v=owpi1WF9dws) video on YouTube for a quick look at building a compute and control node.
+
 Module Description
 ------------------
 
