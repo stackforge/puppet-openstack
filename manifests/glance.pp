@@ -14,6 +14,7 @@
 # [db_password] Password for glance DB. Required.
 # [db_host] Host where DB resides. Required.
 # [keystone_host] Host whre keystone is running. Optional. Defaults to '127.0.0.1'
+# [registry_host] Address used by API to find the Registry service. Optional. Defaults to '0.0.0.0'
 # [db_type] Type of sql databse to use. Optional. Defaults to 'mysql'
 # [db_user] Name of glance DB user. Optional. Defaults to 'glance'
 # [db_name] Name of glance DB. Optional. Defaults to 'glance'
@@ -38,6 +39,7 @@ class openstack::glance (
   $db_password,
   $db_host                  = '127.0.0.1',
   $keystone_host            = '127.0.0.1',
+  $registry_host            = '0.0.0.0',
   $db_type                  = 'mysql',
   $db_user                  = 'glance',
   $db_name                  = 'glance',
@@ -60,6 +62,7 @@ class openstack::glance (
   class { 'glance::api':
     verbose           => $verbose,
     debug             => $verbose,
+    registry_host     => $registry_host,
     auth_type         => 'keystone',
     auth_port         => '35357',
     auth_host         => $keystone_host,
