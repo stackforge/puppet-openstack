@@ -14,6 +14,7 @@
 # [db_password] Password for glance DB. Required.
 # [db_host] Host where DB resides. Required.
 # [keystone_host] Host whre keystone is running. Optional. Defaults to '127.0.0.1'
+# [sql_idle_timeout] Timeout for SQL to reap connections. Optional. Defaults to '3600'
 # [db_type] Type of sql databse to use. Optional. Defaults to 'mysql'
 # [db_user] Name of glance DB user. Optional. Defaults to 'glance'
 # [db_name] Name of glance DB. Optional. Defaults to 'glance'
@@ -38,6 +39,7 @@ class openstack::glance (
   $db_password,
   $db_host                  = '127.0.0.1',
   $keystone_host            = '127.0.0.1',
+  $sql_idle_timeout         = '3600',
   $db_type                  = 'mysql',
   $db_user                  = 'glance',
   $db_name                  = 'glance',
@@ -67,6 +69,7 @@ class openstack::glance (
     keystone_user     => 'glance',
     keystone_password => $user_password,
     sql_connection    => $sql_connection,
+    sql_idle_timeout  => $sql_idle_timeout,
     enabled           => $enabled,
   }
 
