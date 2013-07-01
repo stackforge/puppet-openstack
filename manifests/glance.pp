@@ -22,6 +22,7 @@
 # [swift_store_key]  The Swift service user password Defaults to false.
 # [swift_store_auth_addres] The URL where the Swift auth service lives. Defaults to "http://${keystone_host}:5000/v2.0/"
 # [verbose] Log verbosely. Optional. Defaults to 'False'
+# [debug] Log at a debug-level. Optional. Defaults to 'False'
 # [enabled] Used to indicate if the service should be active (true) or passive (false).
 #   Optional. Defaults to true
 #
@@ -46,6 +47,7 @@ class openstack::glance (
   $swift_store_key          = false,
   $swift_store_auth_address = "http://127.0.0.1:5000/v2.0/",
   $verbose                  = 'False',
+  $debug                    = 'False',
   $enabled                  = true
 ) {
 
@@ -59,7 +61,7 @@ class openstack::glance (
   # Install and configure glance-api
   class { 'glance::api':
     verbose           => $verbose,
-    debug             => $verbose,
+    debug             => $debug,
     auth_type         => 'keystone',
     auth_port         => '35357',
     auth_host         => $keystone_host,
@@ -73,7 +75,7 @@ class openstack::glance (
   # Install and configure glance-registry
   class { 'glance::registry':
     verbose           => $verbose,
-    debug             => $verbose,
+    debug             => $debug,
     auth_host         => $keystone_host,
     auth_port         => '35357',
     auth_type         => 'keystone',
