@@ -23,6 +23,7 @@ describe 'openstack::glance' do
         :verbose           => false,
         :debug             => false,
         :registry_host     => '0.0.0.0',
+        :bind_host         => '0.0.0.0',
         :auth_type         => 'keystone',
         :auth_port         => '35357',
         :auth_host         => '127.0.1.1',
@@ -36,6 +37,7 @@ describe 'openstack::glance' do
       should contain_class('glance::registry').with(
         :verbose           => false,
         :debug             => false,
+        :bind_host         => '0.0.0.0',
         :auth_host         => '127.0.1.1',
         :auth_port         => '35357',
         :auth_type         => 'keystone',
