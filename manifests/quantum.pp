@@ -86,6 +86,11 @@
 #   Host where rabbitmq is running.
 #   (optional) 127.0.0.1
 #
+# [rabbit_hosts]
+#   Enable/disable Qauntum to use rabbitmq mirrored queues.
+#   Specifies an array of clustered rabbitmq brokers.
+#   (optional) false
+#
 # [rabbit_virtual_host]
 #   Virtual host to use for rabbitmq.
 #   (optional) Defaults to '/'.
@@ -159,6 +164,7 @@ class openstack::quantum (
   # Rabbit Information
   $rabbit_user            = 'rabbit_user',
   $rabbit_host            = '127.0.0.1',
+  $rabbit_hosts           = false,
   $rabbit_virtual_host    = '/',
   # Database. Currently mysql is the only option.
   $db_type                = 'mysql',
@@ -177,6 +183,7 @@ class openstack::quantum (
     enabled             => $enabled,
     bind_host           => $bind_address,
     rabbit_host         => $rabbit_host,
+    rabbit_hosts        => $rabbit_hosts,
     rabbit_virtual_host => $rabbit_virtual_host,
     rabbit_user         => $rabbit_user,
     rabbit_password     => $rabbit_password,

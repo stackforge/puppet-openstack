@@ -30,6 +30,7 @@ describe 'openstack::quantum' do
         :enabled             => true,
         :bind_host           => '0.0.0.0',
         :rabbit_host         => '127.0.0.1',
+        :rabbit_hosts        => false,
         :rabbit_virtual_host => '/',
         :rabbit_user         => 'rabbit_user',
         :rabbit_password     => 'rabbit_pass',
