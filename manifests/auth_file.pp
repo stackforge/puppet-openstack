@@ -9,7 +9,7 @@ class openstack::auth_file(
   $keystone_admin_token = 'keystone_admin_token',
   $admin_user           = 'admin',
   $admin_tenant         = 'admin',
-  $use_no_cache         = 'true'
+  $use_no_cache         = true
 ) {
   file { '/root/openrc':
     content =>

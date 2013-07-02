@@ -1,4 +1,4 @@
-class { 'openstack::all': 
+class { 'openstack::all':
   public_address       => $::ipaddress_eth0,
   mysql_root_password  => 'password',
   rabbit_password      => 'password',

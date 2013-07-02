@@ -44,7 +44,7 @@ class openstack::compute (
   $enable_ovs_agent              = true,
   $enable_l3_agent               = false,
   $enable_dhcp_agent             = false,
-  $quantum_auth_url              = "http://127.0.0.1:35357/v2.0",
+  $quantum_auth_url              = 'http://127.0.0.1:35357/v2.0',
   $keystone_host                 = '127.0.0.1',
   $quantum_host                  = '127.0.0.1',
   $ovs_local_ip                  = false,
@@ -137,7 +137,7 @@ class openstack::compute (
   if ! $quantum {
 
     if ! $fixed_range {
-      fail("Must specify the fixed range when using nova-networks")
+      fail('Must specify the fixed range when using nova-networks')
     }
 
     if $multi_host {

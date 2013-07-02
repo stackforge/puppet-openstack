@@ -83,6 +83,8 @@ class openstack::nova::controller (
     'mysql': {
       $nova_db = "mysql://${nova_db_user}:${nova_db_password}@${db_host}/${nova_db_dbname}"
     }
+    default: {
+    }
   }
 
   if ($glance_api_servers == undef) {

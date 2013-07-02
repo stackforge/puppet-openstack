@@ -237,7 +237,7 @@ class openstack::all (
   if $glance_api_servers {
     $glance_api_servers_real = $glance_api_servers
   } else {
-    $glance_api_servers_real = "$internal_address_real:9292"
+    $glance_api_servers_real = "${internal_address_real}:9292"
   }
 
 
@@ -385,8 +385,8 @@ class openstack::all (
     # Glance
     glance_api_servers      => $glance_api_servers_real,
     # VNC
-    vnc_enabled            => $vnc_enabled,
-    vncproxy_host          => $vncproxy_host_real,
+    vnc_enabled             => $vnc_enabled,
+    vncproxy_host           => $vncproxy_host_real,
     # General
     verbose                 => $verbose,
     enabled                 => $enabled,
@@ -445,7 +445,7 @@ class openstack::all (
   } else {
 
     if ! $fixed_range {
-      fail("Must specify the fixed range when using nova-networks")
+      fail('Must specify the fixed range when using nova-networks')
     }
 
     if $multi_host {

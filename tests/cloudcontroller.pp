@@ -1,4 +1,4 @@
-class { 'openstack::controller': 
+class { 'openstack::controller':
   public_address       => $::ipaddress_eth0,
   mysql_root_password  => 'password',
   allowed_hosts        => ['127.0.0.%', '192.168.1.%'],

@@ -23,7 +23,7 @@ class openstack::repo::rdo {
       source => 'puppet:///modules/openstack/RPM-GPG-KEY-RDO-Grizzly',
       owner  => root,
       group  => root,
-      mode   => 644,
+      mode   => '0644',
       before => Yumrepo['rdo-release'],
     }
     Yumrepo['rdo-release'] -> Package<||>

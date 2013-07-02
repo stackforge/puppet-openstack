@@ -32,26 +32,26 @@ class openstack::client (
 ) {
 
   if $ceilometer {
-    include 'ceilometer::client'
+    include ceilometer::client
   }
 
   if $cinder {
-    include 'cinder::client'
+    include cinder::client
   }
 
   if $glance {
-    include 'glance::client'
+    include glance::client
   }
 
   if $keystone {
-    include 'keystone::client'
+    include keystone::client
   }
 
   if $nova {
-    include 'nova::client'
+    include nova::client
   }
 
   if $quantum {
-    include 'quantum::client'
+    include quantum::client
   }
 }
