@@ -31,8 +31,8 @@ describe 'openstack::keystone' do
 
     it 'should configure keystone and all default endpoints' do
       should contain_class('keystone').with(
-        :verbose        => 'False',
-        :debug          => 'False',
+        :verbose        => false,
+        :debug          => false,
         :bind_host      => '0.0.0.0',
         :idle_timeout   => '200',
         :catalog_type   => 'sql',

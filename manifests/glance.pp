@@ -22,8 +22,8 @@
 # [swift_store_user] The Swift service user account. Defaults to false.
 # [swift_store_key]  The Swift service user password Defaults to false.
 # [swift_store_auth_addres] The URL where the Swift auth service lives. Defaults to "http://${keystone_host}:5000/v2.0/"
-# [verbose] Log verbosely. Optional. Defaults to 'False'
-# [debug] Log at a debug-level. Optional. Defaults to 'False'
+# [verbose] Log verbosely. Optional. Defaults to false.
+# [debug] Log at a debug-level. Optional. Defaults to false.
 # [enabled] Used to indicate if the service should be active (true) or passive (false).
 #   Optional. Defaults to true
 #
@@ -48,8 +48,8 @@ class openstack::glance (
   $swift_store_user         = false,
   $swift_store_key          = false,
   $swift_store_auth_address = 'http://127.0.0.1:5000/v2.0/',
-  $verbose                  = 'False',
-  $debug                    = 'False',
+  $verbose                  = false,
+  $debug                    = false,
   $enabled                  = true
 ) {
 
@@ -103,7 +103,7 @@ class openstack::glance (
       swift_store_user                    => $swift_store_user,
       swift_store_key                     => $swift_store_key,
       swift_store_auth_address            => $swift_store_auth_address,
-      swift_store_create_container_on_put => 'True',
+      swift_store_create_container_on_put => true,
     }
   } elsif($backend == 'file') {
   # Configure file storage backend

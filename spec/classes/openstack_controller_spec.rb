@@ -184,8 +184,8 @@ describe 'openstack::controller' do
         )
 
         should contain_class('keystone').with(
-          :verbose        => 'False',
-          :debug          => 'False',
+          :verbose        => false,
+          :debug          => false,
           :catalog_type   => 'sql',
           :enabled        => true,
           :admin_token    => 'keystone_admin_token',
@@ -265,8 +265,8 @@ describe 'openstack::controller' do
       it 'should contain enabled glance with defaults' do
 
         should contain_class('glance::api').with(
-          :verbose           => 'False',
-          :debug             => 'False',
+          :verbose           => false,
+          :debug             => false,
           :auth_type         => 'keystone',
           :auth_host         => '127.0.0.1',
           :auth_port         => '35357',
@@ -278,8 +278,8 @@ describe 'openstack::controller' do
         )
 
         should contain_class('glance::registry').with(
-          :verbose           => 'False',
-          :debug             => 'False',
+          :verbose           => false,
+          :debug             => false,
           :auth_type         => 'keystone',
           :auth_host         => '127.0.0.1',
           :auth_port         => '35357',
@@ -313,7 +313,7 @@ describe 'openstack::controller' do
 
       let :params do
         default_params.merge(
-          :verbose               => 'False',
+          :verbose               => false,
           :glance_user_password  => 'glance_pass2',
           :glance_db_password    => 'glance_pass3',
           :db_host               => '127.0.0.2',
@@ -325,8 +325,8 @@ describe 'openstack::controller' do
 
       it 'should override params for glance' do
         should contain_class('glance::api').with(
-          :verbose           => 'False',
-          :debug             => 'False',
+          :verbose           => false,
+          :debug             => false,
           :auth_type         => 'keystone',
           :auth_host         => '127.0.0.1',
           :auth_port         => '35357',
@@ -337,8 +337,8 @@ describe 'openstack::controller' do
         )
 
         should contain_class('glance::registry').with(
-          :verbose           => 'False',
-          :debug             => 'False',
+          :verbose           => false,
+          :debug             => false,
           :auth_type         => 'keystone',
           :auth_host         => '127.0.0.1',
           :auth_port         => '35357',
@@ -382,7 +382,7 @@ describe 'openstack::controller' do
           :rabbit_virtual_host => '/',
           :image_service       => 'nova.image.glance.GlanceImageService',
           :glance_api_servers  => '10.0.0.1:9292',
-          :verbose             => 'False'
+          :verbose             => false
         )
         should contain_class('nova::api').with(
           :enabled           => true,
@@ -405,9 +405,9 @@ describe 'openstack::controller' do
     end
     context 'when auto assign floating ip is assigned' do
       let :params do
-        default_params.merge(:auto_assign_floating_ip => 'true')
+        default_params.merge(:auto_assign_floating_ip => true)
       end
-      it { should contain_nova_config('DEFAULT/auto_assign_floating_ip').with(:value => 'True')}
+      it { should contain_nova_config('DEFAULT/auto_assign_floating_ip').with(:value => true)}
     end
     context 'when not enabled' do
       let :params do
@@ -465,7 +465,7 @@ describe 'openstack::controller' do
       end
       it 'should configure cinder using defaults' do
         should contain_class('cinder').with(
-          :verbose         => 'False',
+          :verbose         => false,
           :sql_connection  => 'mysql://cinder:cinder_pass@127.0.0.1/cinder?charset=utf8',
           :rabbit_password => 'rabbit_pw'
         )
@@ -477,7 +477,7 @@ describe 'openstack::controller' do
     context 'when overriding config' do
       let :params do
         default_params.merge(
-          :verbose              => 'True',
+          :verbose              => true,
           :rabbit_user          => 'rabbituser',
           :rabbit_password      => 'rabbit_pw2',
           :cinder_user_password => 'foo',
@@ -489,7 +489,7 @@ describe 'openstack::controller' do
       end
       it 'should configure cinder using defaults' do
         should contain_class('cinder').with(
-          :verbose         => 'True',
+          :verbose         => true,
           :sql_connection  => 'mysql://baz:bar@127.0.0.2/blah?charset=utf8',
           :rabbit_password => 'rabbit_pw2',
           :rabbit_userid   => 'rabbituser'
@@ -576,7 +576,7 @@ describe 'openstack::controller' do
         let :params do
           default_params.merge(:quantum => false, :multi_host => true)
         end
-        it { should contain_nova_config('DEFAULT/multi_host').with(:value => 'True')}
+        it { should contain_nova_config('DEFAULT/multi_host').with(:value => true)}
         it {should contain_class('nova::network').with(
           :create_networks   => true,
           :enabled           => false,

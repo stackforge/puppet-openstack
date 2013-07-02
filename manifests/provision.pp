@@ -75,24 +75,24 @@ class openstack::provision(
 
   keystone_tenant { $tenant_name:
     ensure      => present,
-    enabled     => 'True',
+    enabled     => true,
     description => 'default tenant',
   }
   keystone_user { $username:
     ensure      => present,
-    enabled     => 'True',
+    enabled     => true,
     tenant      => $tenant_name,
     password    => $password,
   }
 
   keystone_tenant { $alt_tenant_name:
     ensure      => present,
-    enabled     => 'True',
+    enabled     => true,
     description => 'alt tenant',
   }
   keystone_user { $alt_username:
     ensure      => present,
-    enabled     => 'True',
+    enabled     => true,
     tenant      => $alt_tenant_name,
     password    => $alt_password,
   }
@@ -111,7 +111,7 @@ class openstack::provision(
 
   quantum_network { $public_network_name:
     ensure          => present,
-    router_external => 'True',
+    router_external => true,
     tenant_name     => $admin_tenant_name,
   }
   quantum_subnet { $public_subnet_name:
