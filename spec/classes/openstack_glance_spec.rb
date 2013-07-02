@@ -20,8 +20,8 @@ describe 'openstack::glance' do
   describe 'with only required parameters' do
     it 'should configure with applicable defaults' do
       should contain_class('glance::api').with(
-        :verbose           => 'False',
-        :debug             => 'False',
+        :verbose           => false,
+        :debug             => false,
         :auth_type         => 'keystone',
         :auth_port         => '35357',
         :auth_host         => '127.0.1.1',
@@ -32,8 +32,8 @@ describe 'openstack::glance' do
         :enabled           => true
       )
       should contain_class('glance::registry').with(
-        :verbose           => 'False',
-        :debug             => 'False',
+        :verbose           => false,
+        :debug             => false,
         :auth_host         => '127.0.1.1',
         :auth_port         => '35357',
         :auth_type         => 'keystone',
@@ -82,7 +82,7 @@ describe 'openstack::glance' do
         :swift_store_user                    => 'dan',
         :swift_store_key                     => '123',
         :swift_store_auth_address            => 'http://127.0.0.1:5000/v2.0/',
-        :swift_store_create_container_on_put => 'True'
+        :swift_store_create_container_on_put => true
       )
     end
 

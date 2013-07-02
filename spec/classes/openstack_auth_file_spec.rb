@@ -33,7 +33,7 @@ describe 'openstack::auth_file' do
           :keystone_admin_token  => 'keystone',
           :admin_user            => 'nova',
           :admin_tenant          => 'nova',
-          :use_no_cache          => 'false',
+          :use_no_cache          => false,
         }
       end
 
