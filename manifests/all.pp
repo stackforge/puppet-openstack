@@ -177,6 +177,7 @@ class openstack::all (
   # VNC
   $vnc_enabled             = true,
   $vncproxy_host           = false,
+  $vncserver_listen        = false,
   # cinder
   # if the cinder management components should be installed
   $cinder                  = true,
@@ -184,6 +185,7 @@ class openstack::all (
   $cinder_db_dbname        = 'cinder',
   $cinder_bind_address     = '0.0.0.0',
   $manage_volumes          = true,
+  $setup_test_volume       = false,
   $volume_group            = 'cinder-volumes',
   $iscsi_ip_address        = '127.0.0.1',
   # Quantum
@@ -270,7 +272,7 @@ class openstack::all (
       quantum                => $quantum,
       quantum_db_user        => $quantum_db_user,
       quantum_db_password    => $quantum_db_password,
-      quantum_db_dbname      => $quantum_db_dbname,
+      quantum_db_dbname      => $quantum_db_name,
       allowed_hosts          => $allowed_hosts,
       enabled                => $enabled,
     }

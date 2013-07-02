@@ -390,7 +390,7 @@ describe 'openstack::all' do
         :fixed_range       => '10.0.0.0/24',
         :floating_range    => false,
         :network_manager   => 'nova.network.manager.FlatDHCPManager',
-        :config_overrides  => '',
+        :config_overrides  => {},
         :create_networks   => true,
         :enabled           => true,
         :install_service   => true
