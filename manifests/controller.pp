@@ -249,7 +249,7 @@ class openstack::controller (
       quantum                => $quantum,
       quantum_db_user        => $quantum_db_user,
       quantum_db_password    => $quantum_db_password,
-      quantum_db_dbname      => $quantum_db_dbname,
+      quantum_db_dbname      => $quantum_db_name,
       allowed_hosts          => $allowed_hosts,
       enabled                => $enabled,
     }

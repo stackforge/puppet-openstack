@@ -49,7 +49,7 @@ class openstack::cinder::all(
     rabbit_host         => $rabbit_host,
     rabbit_port         => $rabbit_port,
     rabbit_hosts        => $rabbit_hosts,
-    rabbit_virtual_host => $cinder_rabbit_virtual_host,
+    rabbit_virtual_host => $rabbit_virtual_host,
     package_ensure      => $package_ensure,
     api_paste_config    => $api_paste_config,
     verbose             => $verbose,
