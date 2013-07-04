@@ -1,0 +1,8 @@
+Verified+2: Jenkins
+Approved+1: Nan Liu <nan.liu@gmail.com>
+Code-Review+2: Nan Liu <nan.liu@gmail.com>
+Submitted-by: Jenkins
+Submitted-at: Thu, 04 Jul 2013 01:16:33 +0000
+Reviewed-on: https://review.openstack.org/35357
+Project: stackforge/puppet-openstack
+Branch: refs/heads/master
