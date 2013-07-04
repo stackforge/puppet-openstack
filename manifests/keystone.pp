@@ -6,6 +6,7 @@
 # === Parameters
 #
 # [db_host] Host where DB resides. Optional. Defaults to 127.0.0.1..
+# [idle_timeout] Timeout to reap SQL connections. Optional. Defaults to '200'.
 # [keystone_db_password] Password for keystone DB. Required.
 # [keystone_admin_token]. Auth token for keystone admin. Required.
 # [admin_email] Email address of system admin. Required.
@@ -52,6 +53,7 @@ class openstack::keystone (
   $quantum_user_password,
   $public_address,
   $db_host                  = '127.0.0.1',
+  $idle_timeout             = '200',
   $swift_user_password      = false,
   $db_type                  = 'mysql',
   $db_user                  = 'keystone',
@@ -184,6 +186,7 @@ class openstack::keystone (
     verbose        => $verbose,
     debug          => $verbose,
     bind_host      => $bind_host,
+    idle_timeout   => $idle_timeout,
     catalog_type   => 'sql',
     admin_token    => $admin_token,
     enabled        => $enabled,

@@ -34,6 +34,7 @@ describe 'openstack::keystone' do
         :verbose        => 'False',
         :debug          => 'False',
         :bind_host      => '0.0.0.0',
+        :idle_timeout   => '200',
         :catalog_type   => 'sql',
         :admin_token    => 'token',
         :enabled        => true,
