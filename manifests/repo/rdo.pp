@@ -4,7 +4,7 @@ class openstack::repo::rdo {
 
   if $::osfamily == 'RedHat' {
     $dist = $::operatingsystem ? {
-      'CentOS' => 'epel',
+      /(CentOS|RedHat|Scientific|SLC)/ => 'epel',
       'Fedora' => 'fedora',
     }
     # $lsbmajdistrelease is only available with redhat-lsb installed
