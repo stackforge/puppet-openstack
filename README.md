@@ -487,3 +487,6 @@ Release Notes
 * Class['openstack::all'] refactor that adds support of future compute nodes to be added.
 * The cinder-volume logical volume group is no longer a requirement.
 * Swift can use the disk storage_type
+
+
+Here is some extra text. Please do not merge this.
