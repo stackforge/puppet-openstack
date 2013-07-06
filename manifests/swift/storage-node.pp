@@ -25,12 +25,14 @@ class openstack::swift::storage-node (
         require      => Class['swift'],
       }
     }
-     # make xfs filesystem on physical disk and mount them
+    # make xfs filesystem on physical disk and mount them
     'disk': {
       swift::storage::disk {$storage_devices:
         mnt_base_dir  => $storage_mnt_base_dir,
         byte_size     => $byte_size,
       }
+    }
+    default: {
     }
   }
 

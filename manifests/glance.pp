@@ -47,7 +47,7 @@ class openstack::glance (
   $backend                  = 'file',
   $swift_store_user         = false,
   $swift_store_key          = false,
-  $swift_store_auth_address = "http://127.0.0.1:5000/v2.0/",
+  $swift_store_auth_address = 'http://127.0.0.1:5000/v2.0/',
   $verbose                  = 'False',
   $debug                    = 'False',
   $enabled                  = true

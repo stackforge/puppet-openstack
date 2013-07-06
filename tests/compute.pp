@@ -1,4 +1,4 @@
-class { 'openstack::nova::compute': 
+class { 'openstack::nova::compute':
   exported_resources   => false,
   sql_connection       => 'mysql://foo:bar@192.168.1.1/nova',
   glance_api_servers   => '192.168.1.1:9292',

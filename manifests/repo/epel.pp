@@ -18,7 +18,7 @@ class openstack::repo::epel {
       source => 'puppet:///modules/openstack/RPM-GPG-KEY-EPEL-6',
       owner  => root,
       group  => root,
-      mode   => 644,
+      mode   => '0644',
       before => Yumrepo['epel'],
     }
     Yumrepo['epel'] -> Package<||>

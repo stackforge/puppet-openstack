@@ -350,8 +350,8 @@ class openstack::controller (
     # Glance
     glance_api_servers      => $glance_api_servers,
     # VNC
-    vnc_enabled            => $vnc_enabled,
-    vncproxy_host          => $vncproxy_host_real,
+    vnc_enabled             => $vnc_enabled,
+    vncproxy_host           => $vncproxy_host_real,
     # General
     verbose                 => $verbose,
     enabled                 => $enabled,
@@ -368,9 +368,9 @@ class openstack::controller (
       fail('quantum_db_password must be set when configuring quantum')
     }
 
-   if ! $bridge_interface {
-     fail('bridge_interface must be set when configuring quantum')
-   }
+    if ! $bridge_interface {
+      fail('bridge_interface must be set when configuring quantum')
+    }
 
     class { 'openstack::quantum':
       # Database
