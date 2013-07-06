@@ -168,7 +168,7 @@ class openstack::controller (
   $vnc_enabled             = true,
   $vncproxy_host           = false,
   # General
-  $verbose                 = 'False',
+  $verbose                 = false,
   # cinder
   # if the cinder management components should be installed
   $cinder                  = true,

@@ -143,7 +143,7 @@ class openstack::nova::controller (
   if $quantum == false {
     # Configure nova-network
     if $multi_host {
-      nova_config { 'DEFAULT/multi_host': value => 'True' }
+      nova_config { 'DEFAULT/multi_host': value => true }
       $enable_network_service = false
     } else {
       if $enabled {
@@ -190,7 +190,7 @@ class openstack::nova::controller (
   }
 
   if $auto_assign_floating_ip {
-    nova_config { 'DEFAULT/auto_assign_floating_ip': value => 'True' }
+    nova_config { 'DEFAULT/auto_assign_floating_ip': value => true }
   }
 
   # a bunch of nova services that require no configuration
