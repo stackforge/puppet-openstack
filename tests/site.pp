@@ -65,6 +65,14 @@ node /openstack_all/ {
     fixed_range             => $fixed_network_range,
     verbose                 => $verbose,
     auto_assign_floating_ip => $auto_assign_floating_ip,
+    secret_key              => 'dummy_secret_key',
+    quantum_user_password   => 'quantum_user_password',
+    quantum_db_password     => 'quantum_db_password',
+    cinder_user_password    => 'cinder_user_password',
+    cinder_db_password      => 'cinder_db_password',
+    bridge_interface        => 'br-ex',
+    ovs_local_ip            => '127.0.0.1',
+    metadata_shared_secret  => 'shared_secret',
   }
 
   class { 'openstack::auth_file':

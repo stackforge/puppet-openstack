@@ -176,8 +176,8 @@ class openstack::all (
   $horizon_app_links       = undef,
   # VNC
   $vnc_enabled             = true,
-  $vncproxy_host           = false,
-  $vncserver_listen        = false,
+  $vncproxy_host           = $public_address,
+  $vncserver_listen        = 0.0.0.0,
   # cinder
   # if the cinder management components should be installed
   $cinder                  = true,
