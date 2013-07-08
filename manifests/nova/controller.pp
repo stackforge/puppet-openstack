@@ -62,6 +62,9 @@ class openstack::nova::controller (
   $nova_db_dbname            = 'nova',
   $enabled_apis              = 'ec2,osapi_compute,metadata',
   # Rabbit
+  $rabbit_host               = undef,
+  $rabbit_hosts              = undef,
+  $rabbit_port               = '5672',
   $rabbit_user               = 'openstack',
   $rabbit_virtual_host       = '/',
   # Database
@@ -98,14 +101,19 @@ class openstack::nova::controller (
 
   $sql_connection    = $nova_db
   $glance_connection = $real_glance_api_servers
-  $rabbit_connection = $internal_address
 
-  # Install / configure rabbitmq
-  class { 'nova::rabbitmq':
-    userid        => $rabbit_user,
-    password      => $rabbit_password,
-    enabled       => $enabled,
-    virtual_host  => $rabbit_virtual_host,
+  # Install / configure rabbitmq if it is configured to
+  # be on the local host.
+  if $rabbit_host == undef and $rabbit_hosts == undef {
+    $rabbit_connection = $internal_address
+    class { 'nova::rabbitmq':
+      userid        => $rabbit_user,
+      password      => $rabbit_password,
+      enabled       => $enabled,
+      virtual_host  => $rabbit_virtual_host,
+    }
+  } else {
+    $rabbit_connection = $rabbit_host
   }
 
   # Configure Nova
@@ -118,6 +126,8 @@ class openstack::nova::controller (
     glance_api_servers   => $glance_connection,
     verbose              => $verbose,
     rabbit_host          => $rabbit_connection,
+    rabbit_port          => $rabbit_port,
+    rabbit_hosts         => $rabbit_hosts
   }
 
   # Configure nova-api

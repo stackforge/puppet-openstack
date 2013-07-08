@@ -74,4 +74,49 @@ describe 'openstack::nova::controller' do
     end
   end
 
+  context 'when configuring a separate single rabbit host' do
+    before do
+      params.merge!(
+        :rabbit_host => '10.0.0.1'
+      )
+    end
+    it {
+      should_not contain_class('nova::rabbitmq')
+      should contain_class('nova').with(
+        :rabbit_host => '10.0.0.1'
+      )
+    }
+  end
+
+  context 'when configuring multiple rabbit hosts' do
+    # Redefining params here as I specifically want rabbit_host
+    # to be undefined
+    let :params do
+      {
+        :public_address         => '127.0.0.1',
+        :db_host                => '127.0.0.1',
+        :rabbit_password        => 'rabbit_pass',
+        :nova_user_password     => 'nova_user_pass',
+        :quantum_user_password  => 'quantum_user_pass',
+        :nova_db_password       => 'nova_db_pass',
+        :quantum                => true,
+        :metadata_shared_secret => 'secret',
+        :rabbit_hosts => [
+          '10.0.0.1',
+          '10.0.0.2'
+        ]
+      }
+    end
+    it {
+      should_not contain_class('nova::rabbitmq')
+      should contain_class('nova').with(
+        :rabbit_hosts => [
+          '10.0.0.1',
+          '10.0.0.2'
+        ],
+        :rabbit_host  => 'localhost'
+      )
+    }
+  end
+
 end
