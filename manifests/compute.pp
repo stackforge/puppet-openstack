@@ -67,12 +67,15 @@ class openstack::compute (
   $vncserver_listen              = false,
   # cinder / volumes
   $manage_volumes                = true,
+  $cinder_volume_driver          = 'iscsi',
   $cinder_db_password            = false,
   $cinder_db_user                = 'cinder',
   $cinder_db_name                = 'cinder',
   $volume_group                  = 'cinder-volumes',
   $iscsi_ip_address              = '127.0.0.1',
   $setup_test_volume             = false,
+  $cinder_rbd_user               = 'volumes',
+  $cinder_rbd_pool               = 'volumes',
   # General
   $migration_support             = false,
   $verbose                       = false,
@@ -245,7 +248,9 @@ class openstack::compute (
       enabled             => $enabled,
       verbose             => $verbose,
       setup_test_volume   => $setup_test_volume,
-      volume_driver       => 'iscsi',
+      rbd_user            => $cinder_rbd_user,
+      rbd_pool            => $cinder_rbd_pool,
+      volume_driver       => $cinder_volume_driver,
     }
 
     # set in nova::api
