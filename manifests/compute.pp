@@ -179,10 +179,10 @@ class openstack::compute (
   } else {
 
     if ! $quantum_user_password {
-      fail('quantum user password must be set when quantum is configured')
+      fail('quantum_user_password must be set when quantum is configured')
     }
     if ! $keystone_host {
-      fail('keystone host must be configured when quantum is installed')
+      fail('keystone_host must be configured when quantum is installed')
     }
 
     class { 'openstack::quantum':

@@ -115,7 +115,7 @@ describe 'openstack::quantum' do
     it 'should fail' do
       expect do
         subject
-      end.to raise_error(Puppet::Error, /Shared secret parameter must be set/)
+      end.to raise_error(Puppet::Error, /metadata_shared_secret parameter must be set/)
     end
     context 'with a shared secret' do
       before do

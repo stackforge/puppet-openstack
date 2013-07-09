@@ -236,7 +236,7 @@ class openstack::quantum (
 
   if $enable_metadata_agent {
     if ! $shared_secret {
-      fail('Shared secret parameter must be set when using metadata agent')
+      fail('metadata_shared_secret parameter must be set when using metadata agent')
     }
     class { 'quantum::agents::metadata':
       auth_password  => $user_password,

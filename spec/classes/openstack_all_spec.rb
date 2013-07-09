@@ -85,7 +85,7 @@ describe 'openstack::all' do
         )
       end
       it 'raises an error if no shared metadata key is set' do
-        expect { subject }.to raise_error(Puppet::Error, /Shared secret parameter must be set when using metadata agent/)
+        expect { subject }.to raise_error(Puppet::Error, /metadata_shared_secret parameter must be set when using metadata agent/)
       end
     end
 
