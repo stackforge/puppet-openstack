@@ -148,6 +148,33 @@ describe 'openstack::compute' do
 
   end
 
+  context 'with rbd storage' do
+    before do
+      params.merge!(
+          :cinder_volume_driver => 'rbd',
+          :cinder_rbd_user      => 'volumes',
+          :cinder_rbd_pool      => 'volumes'
+      )
+    end
+    it do
+      should contain_class('openstack::cinder::storage').with(
+                 :sql_connection      => 'mysql://cinder:cinder_pass@127.0.0.1/cinder',
+                 :rabbit_password     => 'rabbit_pw',
+                 :rabbit_userid       => 'openstack',
+                 :rabbit_host         => '127.0.0.1',
+                 :rabbit_virtual_host => '/',
+                 :volume_group        => 'cinder-volumes',
+                 :iscsi_ip_address    => '127.0.0.1',
+                 :enabled             => true,
+                 :verbose             => false,
+                 :setup_test_volume   => false,
+                 :rbd_user            => 'volumes',
+                 :rbd_pool            => 'volumes',
+                 :volume_driver       => 'rbd'
+             )
+    end
+  end
+  
   describe 'when quantum is false' do
 
     describe 'configuring for multi host' do
