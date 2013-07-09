@@ -65,4 +65,22 @@ describe 'openstack::cinder::storage' do
     end
   end
 
+  describe 'when setting up test volumes for rbd' do
+    before do
+      params.merge!(
+          :volume_driver   => 'rbd',
+          :rbd_user        => 'rbd',
+          :rbd_pool        => 'rbd_pool',
+          :rbd_secret_uuid => 'secret'
+      )
+    end
+
+    it { should contain_class('cinder::volume::rbd').with(
+                    :rbd_user => 'rbd',
+                    :rbd_pool => 'rbd_pool',
+                    :rbd_secret_uuid => 'secret'
+                ) }
+
+
+  end
 end
