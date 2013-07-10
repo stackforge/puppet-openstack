@@ -34,6 +34,7 @@ describe 'openstack::quantum' do
         :rabbit_virtual_host => '/',
         :rabbit_user         => 'rabbit_user',
         :rabbit_password     => 'rabbit_pass',
+        :debug               => false,
         :verbose             => false,
         :debug               => false
       )

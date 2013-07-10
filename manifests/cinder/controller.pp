@@ -28,6 +28,7 @@ class openstack::cinder::controller(
   $scheduler_driver         = 'cinder.scheduler.simple.SimpleScheduler',
   $api_enabled              = true,
   $scheduler_enabled        = true,
+  $debug                    = false,
   $verbose                  = false
 ) {
 
@@ -50,6 +51,7 @@ class openstack::cinder::controller(
     rabbit_virtual_host => $rabbit_virtual_host,
     package_ensure      => $package_ensure,
     api_paste_config    => $api_paste_config,
+    debug               => $debug,
     verbose             => $verbose,
   }
 

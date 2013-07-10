@@ -38,6 +38,7 @@
 #   Defaults to false.
 # [network_config] Hash that can be used to pass implementation specifc
 #   network settings. Optioal. Defaults to {}
+# [debug] Whether to log services at debug.
 # [verbose] Whether to log services at verbose.
 # Horizon related config - assumes puppetlabs-horizon code
 # [secret_key]          secret key to encode cookies, …
@@ -168,6 +169,7 @@ class openstack::controller (
   $vnc_enabled             = true,
   $vncproxy_host           = false,
   # General
+  $debug                   = false,
   $verbose                 = false,
   # cinder
   # if the cinder management components should be installed
@@ -259,6 +261,7 @@ class openstack::controller (
 
   ####### KEYSTONE ###########
   class { 'openstack::keystone':
+    debug                 => $debug,
     verbose               => $verbose,
     db_type               => $db_type,
     db_host               => $db_host,
@@ -289,6 +292,7 @@ class openstack::controller (
 
   ######## BEGIN GLANCE ##########
   class { 'openstack::glance':
+    debug            => $debug,
     verbose          => $verbose,
     db_type          => $db_type,
     db_host          => $db_host,
@@ -353,6 +357,7 @@ class openstack::controller (
     vnc_enabled             => $vnc_enabled,
     vncproxy_host           => $vncproxy_host_real,
     # General
+    debug                   => $debug,
     verbose                 => $verbose,
     enabled                 => $enabled,
   }
@@ -402,6 +407,7 @@ class openstack::controller (
       # General
       enabled               => $enabled,
       enable_server         => $enable_quantum_server,
+      debug                 => $debug,
       verbose               => $verbose,
     }
   }
@@ -431,6 +437,7 @@ class openstack::controller (
       db_host            => $db_host,
       api_enabled        => $enabled,
       scheduler_enabled  => $enabled,
+      debug              => $debug,
       verbose            => $verbose
     }
   }

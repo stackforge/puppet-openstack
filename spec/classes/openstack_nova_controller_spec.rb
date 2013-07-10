@@ -38,6 +38,7 @@ describe 'openstack::nova::controller' do
         :rabbit_virtual_host  => '/',
         :image_service        => 'nova.image.glance.GlanceImageService',
         :glance_api_servers   => '127.0.0.1:9292',
+        :debug                => false,
         :verbose              => false,
         :rabbit_host          => '127.0.0.1'
       )

@@ -314,6 +314,7 @@ describe 'openstack::controller' do
       let :params do
         default_params.merge(
           :verbose               => false,
+          :debug                 => false,
           :glance_user_password  => 'glance_pass2',
           :glance_db_password    => 'glance_pass3',
           :db_host               => '127.0.0.2',
@@ -382,6 +383,7 @@ describe 'openstack::controller' do
           :rabbit_virtual_host => '/',
           :image_service       => 'nova.image.glance.GlanceImageService',
           :glance_api_servers  => '10.0.0.1:9292',
+          :debug               => false,
           :verbose             => false
         )
         should contain_class('nova::api').with(
@@ -465,6 +467,7 @@ describe 'openstack::controller' do
       end
       it 'should configure cinder using defaults' do
         should contain_class('cinder').with(
+          :debug           => false,
           :verbose         => false,
           :sql_connection  => 'mysql://cinder:cinder_pass@127.0.0.1/cinder?charset=utf8',
           :rabbit_password => 'rabbit_pw'
@@ -477,6 +480,7 @@ describe 'openstack::controller' do
     context 'when overriding config' do
       let :params do
         default_params.merge(
+          :debug                => true,
           :verbose              => true,
           :rabbit_user          => 'rabbituser',
           :rabbit_password      => 'rabbit_pw2',
@@ -489,6 +493,7 @@ describe 'openstack::controller' do
       end
       it 'should configure cinder using defaults' do
         should contain_class('cinder').with(
+          :debug           => true,
           :verbose         => true,
           :sql_connection  => 'mysql://baz:bar@127.0.0.2/blah?charset=utf8',
           :rabbit_password => 'rabbit_pw2',
@@ -507,8 +512,9 @@ describe 'openstack::controller' do
 
       let :params do
         default_params.merge({
-          :quantum => true,
-          :verbose => true,
+          :quantum                => true,
+          :debug                  => true,
+          :verbose                => true,
           :quantum_user_password  => 'q_pass',
           :bridge_interface       => 'eth_27',
           :internal_address       => '10.0.0.3',
@@ -544,6 +550,7 @@ describe 'openstack::controller' do
           :keystone_host         => '127.0.0.1',
           :enabled               => true,
           :enable_server         => true,
+          :debug                 => true,
           :verbose               => true
         )
 

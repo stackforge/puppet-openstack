@@ -26,6 +26,7 @@ describe 'openstack::cinder::controller' do
       :rabbit_virtual_host => '/',
       :package_ensure      => 'present',
       :api_paste_config    => '/etc/cinder/api-paste.ini',
+      :debug               => false,
       :verbose             => false
     )
     should contain_class('cinder::api').with(

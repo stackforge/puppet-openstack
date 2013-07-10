@@ -74,6 +74,7 @@ class openstack::nova::controller (
   # Keystone
   $keystone_host             = '127.0.0.1',
   # General
+  $debug                     = false,
   $verbose                   = false,
   $enabled                   = true
 ) {
@@ -118,6 +119,7 @@ class openstack::nova::controller (
     rabbit_virtual_host  => $rabbit_virtual_host,
     image_service        => 'nova.image.glance.GlanceImageService',
     glance_api_servers   => $glance_connection,
+    debug                => $debug,
     verbose              => $verbose,
     rabbit_host          => $rabbit_connection,
   }
