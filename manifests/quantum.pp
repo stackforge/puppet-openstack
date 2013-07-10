@@ -107,6 +107,10 @@
 #   User to connect to quantum database as.
 #   (optional) Defaults to quantum.
 #
+# [sql_idle_timeout]
+#   Timeout for sql to reap connections.
+#   (optional) Defaults to '3600'.
+#
 # [bind_address]
 #   Address quantum api server should bind to.
 #  (optional) Defaults to 0.0.0.0.
@@ -172,6 +176,7 @@ class openstack::quantum (
   $db_host                = '127.0.0.1',
   $db_name                = 'quantum',
   $db_user                = 'quantum',
+  $sql_idle_timeout       = '3600',
   # General
   $bind_address           = '0.0.0.0',
   $keystone_host          = '127.0.0.1',
@@ -206,6 +211,7 @@ class openstack::quantum (
     }
     class { 'quantum::plugins::ovs':
       sql_connection      => $sql_connection,
+      sql_idle_timeout    => $sql_idle_timeout,
       tenant_network_type => 'gre',
     }
   }

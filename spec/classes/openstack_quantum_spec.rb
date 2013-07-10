@@ -43,6 +43,7 @@ describe 'openstack::quantum' do
       )
       should contain_class('quantum::plugins::ovs').with(
         :sql_connection      => "mysql://quantum:bar@127.0.0.1/quantum?charset=utf8",
+        :sql_idle_timeout    => '3600',
         :tenant_network_type => 'gre'
       )
     end

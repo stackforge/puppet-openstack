@@ -8,6 +8,8 @@
 # [private_interface] Interface used for vm networking connectivity. Required.
 # [internal_address] Internal address used for management. Required.
 # [mysql_root_password] Root password for mysql server.
+# [sql_idle_timeout] Timeout for sql to reap connections.
+#   (Optional) Defaults to false.
 # [admin_email] Admin email.
 # [admin_password] Admin password.
 # [keystone_db_password] Keystone database password.
@@ -120,6 +122,7 @@ class openstack::controller (
   $mysql_account_security  = true,
   $mysql_bind_address      = '0.0.0.0',
   $allowed_hosts           = '%',
+  $sql_idle_timeout        = false,
   # Keystone
   $keystone_host           = '127.0.0.1',
   $keystone_db_user        = 'keystone',
@@ -265,6 +268,7 @@ class openstack::controller (
     db_password           => $keystone_db_password,
     db_name               => $keystone_db_dbname,
     db_user               => $keystone_db_user,
+    idle_timeout          => $sql_idle_timeout,
     admin_token           => $keystone_admin_token,
     admin_tenant          => $keystone_admin_tenant,
     admin_email           => $admin_email,
@@ -292,6 +296,7 @@ class openstack::controller (
     verbose          => $verbose,
     db_type          => $db_type,
     db_host          => $db_host,
+    sql_idle_timeout => $sql_idle_timeout,
     keystone_host    => $keystone_host,
     db_user          => $glance_db_user,
     db_name          => $glance_db_dbname,
@@ -317,6 +322,7 @@ class openstack::controller (
   class { 'openstack::nova::controller':
     # Database
     db_host                 => $db_host,
+    sql_idle_timeout        => $sql_idle_timeout,
     # Network
     network_manager         => $network_manager,
     network_config          => $network_config,
@@ -375,6 +381,7 @@ class openstack::controller (
     class { 'openstack::quantum':
       # Database
       db_host               => $db_host,
+      sql_idle_timeout      => $sql_idle_timeout,
       # Rabbit
       rabbit_host           => $rabbit_host,
       rabbit_user           => $rabbit_user,
@@ -429,6 +436,7 @@ class openstack::controller (
       db_user            => $cinder_db_user,
       db_type            => $db_type,
       db_host            => $db_host,
+      sql_idle_timeout   => $sql_idle_timeout,
       api_enabled        => $enabled,
       scheduler_enabled  => $enabled,
       verbose            => $verbose

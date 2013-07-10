@@ -33,6 +33,7 @@ describe 'openstack::nova::controller' do
       )
       should contain_class('nova').with(
         :sql_connection       => 'mysql://nova:nova_db_pass@127.0.0.1/nova',
+        :sql_idle_timeout     => '3600',
         :rabbit_userid        => 'openstack',
         :rabbit_password      => 'rabbit_pass',
         :rabbit_virtual_host  => '/',

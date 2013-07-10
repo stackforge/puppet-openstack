@@ -274,6 +274,7 @@ describe 'openstack::controller' do
           :keystone_user     => 'glance',
           :keystone_password => 'glance_pass',
           :sql_connection    => 'mysql://glance:glance_pass@127.0.0.1/glance',
+          :sql_idle_timeout  => false,
           :enabled           => true
         )
 
@@ -333,6 +334,7 @@ describe 'openstack::controller' do
           :keystone_tenant   => 'services',
           :keystone_user     => 'glance',
           :keystone_password => 'glance_pass2',
+          :sql_idle_timeout  => false,
           :sql_connection    => 'mysql://dan:glance_pass3@127.0.0.2/name'
         )
 
@@ -376,6 +378,7 @@ describe 'openstack::controller' do
         )
         should contain_class('nova').with(
           :sql_connection      => 'mysql://nova:nova_pass@127.0.0.1/nova',
+          :sql_idle_timeout    => false,
           :rabbit_host         => '127.0.0.1',
           :rabbit_userid       => 'openstack',
           :rabbit_password     => 'rabbit_pw',
@@ -465,9 +468,10 @@ describe 'openstack::controller' do
       end
       it 'should configure cinder using defaults' do
         should contain_class('cinder').with(
-          :verbose         => false,
-          :sql_connection  => 'mysql://cinder:cinder_pass@127.0.0.1/cinder?charset=utf8',
-          :rabbit_password => 'rabbit_pw'
+          :verbose          => false,
+          :sql_connection   => 'mysql://cinder:cinder_pass@127.0.0.1/cinder?charset=utf8',
+          :sql_idle_timeout => false,
+          :rabbit_password  => 'rabbit_pw'
         )
         should contain_class('cinder::api').with_keystone_password('cinder_pass')
         should contain_class('cinder::scheduler')
@@ -489,10 +493,11 @@ describe 'openstack::controller' do
       end
       it 'should configure cinder using defaults' do
         should contain_class('cinder').with(
-          :verbose         => true,
-          :sql_connection  => 'mysql://baz:bar@127.0.0.2/blah?charset=utf8',
-          :rabbit_password => 'rabbit_pw2',
-          :rabbit_userid   => 'rabbituser'
+          :verbose          => true,
+          :sql_connection   => 'mysql://baz:bar@127.0.0.2/blah?charset=utf8',
+          :sql_idle_timeout => false,
+          :rabbit_password  => 'rabbit_pw2',
+          :rabbit_userid    => 'rabbituser'
         )
         should contain_class('cinder::api').with_keystone_password('foo')
         should contain_class('cinder::scheduler')
