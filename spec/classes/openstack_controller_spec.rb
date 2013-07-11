@@ -12,6 +12,7 @@ describe 'openstack::controller' do
       :admin_email             => 'some_user@some_fake_email_address.foo',
       :admin_password          => 'ChangeMe',
       :rabbit_password         => 'rabbit_pw',
+      :rabbit_cluster_nodes    => false,
       :rabbit_virtual_host     => '/',
       :keystone_db_password    => 'keystone_pass',
       :keystone_admin_token    => 'keystone_admin_token',
@@ -369,14 +370,16 @@ describe 'openstack::controller' do
       it 'should contain enabled nova services' do
         should_not contain_resources('nova_config').with_purge(true)
         should contain_class('nova::rabbitmq').with(
-          :userid       => 'openstack',
-          :password     => 'rabbit_pw',
-          :virtual_host => '/',
-          :enabled      => true
+          :userid               => 'openstack',
+          :password             => 'rabbit_pw',
+          :cluster_disk_nodes   => false,
+          :virtual_host         => '/',
+          :enabled              => true
         )
         should contain_class('nova').with(
           :sql_connection      => 'mysql://nova:nova_pass@127.0.0.1/nova',
           :rabbit_host         => '127.0.0.1',
+          :rabbit_hosts        => false,
           :rabbit_userid       => 'openstack',
           :rabbit_password     => 'rabbit_pw',
           :rabbit_virtual_host => '/',
@@ -478,6 +481,8 @@ describe 'openstack::controller' do
       let :params do
         default_params.merge(
           :verbose              => true,
+          :rabbit_host          => '127.0.0.1',
+          :rabbit_hosts         => false,
           :rabbit_user          => 'rabbituser',
           :rabbit_password      => 'rabbit_pw2',
           :cinder_user_password => 'foo',
@@ -524,6 +529,7 @@ describe 'openstack::controller' do
         should contain_class('openstack::quantum').with(
           :db_host               => '127.0.0.1',
           :rabbit_host           => '127.0.0.1',
+          :rabbit_hosts          => false,
           :rabbit_user           => 'openstack',
           :rabbit_password       => 'rabbit_pw',
           :rabbit_virtual_host   => '/',

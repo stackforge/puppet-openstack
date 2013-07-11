@@ -3,7 +3,7 @@ class openstack::cinder::storage(
   $rabbit_password,
   $rabbit_userid         = 'guest',
   $rabbit_host           = '127.0.0.1',
-  $rabbit_hosts          = undef,
+  $rabbit_hosts          = false,
   $rabbit_port           = '5672',
   $rabbit_virtual_host   = '/',
   $package_ensure        = 'present',

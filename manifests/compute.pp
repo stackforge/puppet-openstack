@@ -7,6 +7,9 @@
 #   Whether unmanaged nova.conf entries should be purged.
 #   (optional) Defaults to false.
 #
+# [rabbit_hosts] An array of IP addresses or Virttual IP address for connecting to a RabbitMQ Cluster.
+#   Optional. Defaults to false.
+#
 # === Examples
 #
 # class { 'openstack::nova::compute':
@@ -55,6 +58,7 @@ class openstack::compute (
   $libvirt_vif_driver            = 'nova.virt.libvirt.vif.LibvirtGenericVIFDriver',
   # Rabbit
   $rabbit_host                   = '127.0.0.1',
+  $rabbit_hosts                  = false,
   $rabbit_user                   = 'openstack',
   $rabbit_virtual_host           = '/',
   # Glance
@@ -114,6 +118,7 @@ class openstack::compute (
     glance_api_servers  => $glance_api_servers,
     verbose             => $verbose,
     rabbit_host         => $rabbit_host,
+    rabbit_hosts        => $rabbit_hosts,
     rabbit_virtual_host => $rabbit_virtual_host,
   }
 

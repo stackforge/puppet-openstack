@@ -26,10 +26,11 @@ describe 'openstack::nova::controller' do
     it 'should configure nova with quantum' do
 
       should contain_class('nova::rabbitmq').with(
-        :userid        => 'openstack',
-        :password      => 'rabbit_pass',
-        :enabled       => true,
-        :virtual_host  => '/'
+        :userid                 => 'openstack',
+        :password               => 'rabbit_pass',
+        :enabled                => true,
+        :cluster_disk_nodes     => false,
+        :virtual_host           => '/'
       )
       should contain_class('nova').with(
         :sql_connection       => 'mysql://nova:nova_db_pass@127.0.0.1/nova',
@@ -39,6 +40,7 @@ describe 'openstack::nova::controller' do
         :image_service        => 'nova.image.glance.GlanceImageService',
         :glance_api_servers   => '127.0.0.1:9292',
         :verbose              => false,
+        :rabbit_hosts         => false,
         :rabbit_host          => '127.0.0.1'
       )
 

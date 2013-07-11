@@ -6,6 +6,12 @@
 #
 # === Parameters
 #
+# [rabbit_hosts] An array of IP addresses or Virttual IP address for connecting to a RabbitMQ Cluster.
+#   Optional. Defaults to false.
+#
+# [rabbit_cluster_nodes] An array of Rabbit Broker IP addresses within the Cluster.
+#   Optional. Defaults to false.
+#
 # [quantum]
 #   Specifies if nova should be configured to use quantum.
 #   (optional) Defaults to false (indicating nova-networks should be used)
@@ -64,6 +70,8 @@ class openstack::nova::controller (
   # Rabbit
   $rabbit_user               = 'openstack',
   $rabbit_virtual_host       = '/',
+  $rabbit_hosts              = false,
+  $rabbit_cluster_nodes      = false,
   # Database
   $db_type                   = 'mysql',
   # Glance
@@ -104,10 +112,11 @@ class openstack::nova::controller (
 
   # Install / configure rabbitmq
   class { 'nova::rabbitmq':
-    userid        => $rabbit_user,
-    password      => $rabbit_password,
-    enabled       => $enabled,
-    virtual_host  => $rabbit_virtual_host,
+    userid                 => $rabbit_user,
+    password               => $rabbit_password,
+    enabled                => $enabled,
+    cluster_disk_nodes     => $rabbit_cluster_nodes,
+    virtual_host           => $rabbit_virtual_host,
   }
 
   # Configure Nova
@@ -120,6 +129,7 @@ class openstack::nova::controller (
     glance_api_servers   => $glance_connection,
     verbose              => $verbose,
     rabbit_host          => $rabbit_connection,
+    rabbit_hosts         => $rabbit_hosts,
   }
 
   # Configure nova-api
