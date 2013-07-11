@@ -241,12 +241,13 @@ describe 'openstack::compute' do
   describe 'when configuring quantum' do
     before do
       params.merge!(
-        :internal_address      => '127.0.0.1',
-        :public_interface      => 'eth3',
-        :quantum               => true,
-        :keystone_host         => '127.0.0.3',
-        :quantum_host          => '127.0.0.2',
-        :quantum_user_password => 'quantum_user_password'
+        :internal_address        => '127.0.0.1',
+        :public_interface        => 'eth3',
+        :quantum                 => true,
+        :keystone_host           => '127.0.0.3',
+        :quantum_host            => '127.0.0.2',
+        :quantum_user_password   => 'quantum_user_password',
+        :quantum_firewall_driver => false
       )
     end
 
@@ -258,7 +259,7 @@ describe 'openstack::compute' do
         :rabbit_user       => 'openstack',
         :rabbit_password   => params[:rabbit_password],
         :enable_ovs_agent  => true,
-        :firewall_driver   => false,
+        :firewall_driver   => params[:quantum_firewall_driver],
         :enable_l3_agent   => false,
         :enable_dhcp_agent => false,
         :auth_url          => 'http://127.0.0.1:35357/v2.0',
