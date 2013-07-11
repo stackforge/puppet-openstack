@@ -146,6 +146,7 @@ class openstack::controller (
   # optional. Not sure what to do about this.
   $quantum_user_password   = false,
   $quantum_db_password     = false,
+  $quantum_core_plugin     = undef,
   $cinder_user_password    = false,
   $cinder_db_password      = false,
   $swift_user_password     = false,
@@ -450,6 +451,8 @@ class openstack::controller (
       db_name               => $quantum_db_name,
       db_user               => $quantum_db_user,
       db_password           => $quantum_db_password,
+      # Plugin
+      core_plugin           => $quantum_core_plugin,
       # Quantum agents
       enable_dhcp_agent     => $enable_dhcp_agent,
       enable_l3_agent       => $enable_l3_agent,

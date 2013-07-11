@@ -189,6 +189,8 @@ class openstack::quantum (
   $db_name                = 'quantum',
   $db_user                = 'quantum',
   $sql_idle_timeout       = '3600',
+  # Plugin
+  $core_plugin            = undef,
   # General
   $bind_address           = '0.0.0.0',
   $keystone_host          = '127.0.0.1',
@@ -198,6 +200,7 @@ class openstack::quantum (
 
   class { '::quantum':
     enabled             => $enabled,
+    core_plugin         => $core_plugin,
     bind_host           => $bind_address,
     rabbit_host         => $rabbit_host,
     rabbit_hosts        => $rabbit_hosts,
