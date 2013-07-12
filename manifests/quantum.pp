@@ -22,6 +22,10 @@
 #   If the server should be installed.
 #   (optional) Defaults to true.
 #
+# [core_plugin]
+#   Set the core plugin to be used by quantum
+#   (optional) Defaults to use the OpenVSwitch plugin.
+#
 # [enable_dhcp_agent]
 #   Whether the dhcp agent should be enabled.
 #   (optional) Defaults to false.
@@ -143,6 +147,8 @@ class openstack::quantum (
   # enable or disable quantum
   $enabled                = true,
   $enable_server          = true,
+  # Set core plugin to use
+  $core_plugin            = 'quantum.plugins.openvswitch.ovs_quantum_plugin.OVSQuantumPluginV2',
   # Set DHCP/L3 Agents on Primary Controller
   $enable_dhcp_agent      = false,
   $enable_l3_agent        = false,
@@ -182,6 +188,7 @@ class openstack::quantum (
   class { '::quantum':
     enabled             => $enabled,
     bind_host           => $bind_address,
+    core_plugin         => $core_plugin,
     rabbit_host         => $rabbit_host,
     rabbit_hosts        => $rabbit_hosts,
     rabbit_virtual_host => $rabbit_virtual_host,
@@ -222,6 +229,16 @@ class openstack::quantum (
       firewall_driver  => $firewall_driver,
     }
   }
+
+  if $core_plugin == 'quantum.plugins.cisco.network_plugin.PluginV2' {
+    class { 'quantum::plugins::cisco':
+      database_name => $db_name,
+      database_user => $db_user,
+      database_pass => $db_password,
+      database_host => $db_host,
+    }
+  }
+
 
   if $enable_dhcp_agent {
     class { 'quantum::agents::dhcp':
