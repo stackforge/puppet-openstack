@@ -177,6 +177,7 @@ class openstack::controller (
   $cinder_bind_address     = '0.0.0.0',
   # Quantum
   $quantum                 = true,
+  $core_plugin             = undef,
   $bridge_interface        = undef,
   $external_bridge_name    = 'br-ex',
   $enable_ovs_agent        = true,
@@ -381,6 +382,7 @@ class openstack::controller (
       rabbit_password       => $rabbit_password,
       rabbit_virtual_host   => $rabbit_virtual_host,
       # Quantum OVS
+      core_plugin           => $core_plugin,
       ovs_local_ip          => $ovs_local_ip_real,
       bridge_uplinks        => ["${external_bridge_name}:${bridge_interface}"],
       bridge_mappings       => ["default:${external_bridge_name}"],
