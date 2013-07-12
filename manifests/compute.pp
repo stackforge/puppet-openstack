@@ -7,6 +7,10 @@
 #   Whether unmanaged nova.conf entries should be purged.
 #   (optional) Defaults to false.
 #
+# [quantum_firewall_driver]
+#   Driver used to implement Quantum firewalling.
+#   (optional) Defaults to false.
+#
 # === Examples
 #
 # class { 'openstack::nova::compute':
@@ -48,6 +52,7 @@ class openstack::compute (
   $keystone_host                 = '127.0.0.1',
   $quantum_host                  = '127.0.0.1',
   $ovs_local_ip                  = false,
+  $quantum_firewall_driver       = false,
   # Nova
   $nova_admin_tenant_name        = 'services',
   $nova_admin_user               = 'nova',
@@ -196,7 +201,7 @@ class openstack::compute (
       rabbit_password   => $rabbit_password,
       # Quantum OVS
       enable_ovs_agent  => $enable_ovs_agent,
-      firewall_driver   => false,
+      firewall_driver   => $quantum_firewall_driver,
       # Quantum L3 Agent
       enable_l3_agent   => $enable_l3_agent,
       enable_dhcp_agent => $enable_dhcp_agent,
