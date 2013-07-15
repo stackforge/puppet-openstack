@@ -14,6 +14,14 @@
 #   (required) A secret key for a particular Django installation. This is used to provide cryptographic signing,
 #   and should be set to a unique, unpredictable value.
 #
+# [*configure_memcached*]
+#   (optional) Enable/disable the use of memcached with Horizon.
+#   Defaults to true.
+#
+# [*memcached_listen_ip*]
+#   (optional) The IP address for binding memcached.
+#   Defaults to undef.
+#
 # [*cache_server_ip*]
 #   (optional) Ip address where the memcache server is listening.
 #   Defaults to '127.0.0.1'.
@@ -55,6 +63,8 @@
 
 class openstack::horizon (
   $secret_key,
+  $configure_memcached   = true,
+  $memcached_listen_ip   = undef,
   $cache_server_ip       = '127.0.0.1',
   $cache_server_port     = '11211',
   $horizon_app_links     = undef,
@@ -65,10 +75,18 @@ class openstack::horizon (
   $api_result_limit      = 1000
 ) {
 
-  class { 'memcached':
-    listen_ip => $cache_server_ip,
-    tcp_port  => $cache_server_port,
-    udp_port  => $cache_server_port,
+  if $configure_memcached {
+    if $memcached_listen_ip {
+      $cache_server_ip_real = $memcached_listen_ip
+    } else {
+      warning('The cache_server_ip parameter is deprecated. Use memcached_listen_ip instead.')
+      $cache_server_ip_real = $cache_server_ip
+    }
+    class { 'memcached':
+      listen_ip => $cache_server_ip_real,
+      tcp_port  => $cache_server_port,
+      udp_port  => $cache_server_port,
+    }
   }
 
   class { '::horizon':
