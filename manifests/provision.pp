@@ -69,7 +69,7 @@ class openstack::provision(
   $identity_uri         = undef,
   $tempest_clone_path   = '/var/lib/tempest',
   $tempest_clone_owner  = 'root',
-  $setup_venv           = false,
+  $setup_venv           = false
 ) {
   ## Users
 
