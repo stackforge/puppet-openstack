@@ -22,6 +22,7 @@ describe 'openstack::controller' do
       :cinder_db_password      => 'cinder_pass',
       :cinder_user_password    => 'cinder_pass',
       :secret_key              => 'secret_key',
+      :mysql_root_password     => 'mysql_root_password',
       :quantum                 => false,
       :vncproxy_host           => '10.0.0.1',
       :nova_admin_tenant_name  => 'services',

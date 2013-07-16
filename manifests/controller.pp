@@ -109,6 +109,7 @@ class openstack::controller (
   $nova_db_password,
   $nova_user_password,
   $secret_key,
+  $mysql_root_password,
   # cinder and quantum password are not required b/c they are
   # optional. Not sure what to do about this.
   $quantum_user_password   = false,
@@ -119,7 +120,6 @@ class openstack::controller (
   # Database
   $db_host                 = '127.0.0.1',
   $db_type                 = 'mysql',
-  $mysql_root_password     = 'sql_pass',
   $mysql_account_security  = true,
   $mysql_bind_address      = '0.0.0.0',
   $sql_idle_timeout        = undef,
