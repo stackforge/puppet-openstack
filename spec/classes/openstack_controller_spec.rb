@@ -155,7 +155,7 @@ describe 'openstack::controller' do
       end
     end
 
-    context 'when account secutiry is not enabled' do
+    context 'when account security is not enabled' do
       let :params do
         default_params.merge(
           {:mysql_account_security => false}
@@ -457,7 +457,8 @@ describe 'openstack::controller' do
       it 'should not contain cinder classes' do
         should_not contain_class('cinder')
         should_not contain_class('cinder::api')
-        should_not contain_class('cinder:"scheduler')
+        should_not contain_class('cinder::scheduler')
+        should_not contain_class('cinder::volume')
       end
     end
 
