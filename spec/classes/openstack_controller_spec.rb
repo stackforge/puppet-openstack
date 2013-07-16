@@ -318,6 +318,7 @@ describe 'openstack::controller' do
           :glance_user_password  => 'glance_pass2',
           :glance_db_password    => 'glance_pass3',
           :db_host               => '127.0.0.2',
+          :sql_idle_timeout      => '30',
           :glance_db_user        => 'dan',
           :glance_db_dbname      => 'name',
           :db_host               => '127.0.0.2'
@@ -334,7 +335,8 @@ describe 'openstack::controller' do
           :keystone_tenant   => 'services',
           :keystone_user     => 'glance',
           :keystone_password => 'glance_pass2',
-          :sql_connection    => 'mysql://dan:glance_pass3@127.0.0.2/name'
+          :sql_connection    => 'mysql://dan:glance_pass3@127.0.0.2/name',
+          :sql_idle_timeout  => '30'
         )
 
         should contain_class('glance::registry').with(
@@ -425,8 +427,19 @@ describe 'openstack::controller' do
         should contain_class('nova::vncproxy').with(:enabled => false)
       end
     end
+    context 'when params are overridden' do
+      let :params do
+        default_params.merge(
+          :sql_idle_timeout => '30'
+        )
+      end
+      it 'should override params for nova' do
+        should contain_class('nova').with(
+          :sql_idle_timeout  => '30'
+        )
+      end
+    end
   end
-
 
   context 'config for horizon' do
 
@@ -488,16 +501,18 @@ describe 'openstack::controller' do
           :cinder_db_password   => 'bar',
           :cinder_db_user       => 'baz',
           :cinder_db_dbname     => 'blah',
+          :sql_idle_timeout     => '30',
           :db_host              => '127.0.0.2'
         )
       end
       it 'should configure cinder using defaults' do
         should contain_class('cinder').with(
-          :debug           => true,
-          :verbose         => true,
-          :sql_connection  => 'mysql://baz:bar@127.0.0.2/blah?charset=utf8',
-          :rabbit_password => 'rabbit_pw2',
-          :rabbit_userid   => 'rabbituser'
+          :debug            => true,
+          :verbose          => true,
+          :sql_connection   => 'mysql://baz:bar@127.0.0.2/blah?charset=utf8',
+          :sql_idle_timeout => '30',
+          :rabbit_password  => 'rabbit_pw2',
+          :rabbit_userid    => 'rabbituser'
         )
         should contain_class('cinder::api').with_keystone_password('foo')
         should contain_class('cinder::scheduler')
@@ -515,6 +530,7 @@ describe 'openstack::controller' do
           :quantum                => true,
           :debug                  => true,
           :verbose                => true,
+          :sql_idle_timeout       => '30',
           :quantum_user_password  => 'q_pass',
           :bridge_interface       => 'eth_27',
           :internal_address       => '10.0.0.3',
@@ -529,6 +545,7 @@ describe 'openstack::controller' do
 
         should contain_class('openstack::quantum').with(
           :db_host               => '127.0.0.1',
+          :sql_idle_timeout      => '30',
           :rabbit_host           => '127.0.0.1',
           :rabbit_user           => 'openstack',
           :rabbit_password       => 'rabbit_pw',

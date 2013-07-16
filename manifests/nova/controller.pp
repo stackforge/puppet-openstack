@@ -17,6 +17,10 @@
 #   quantum metadata services.
 #   (Optional). Defaults to undef.
 #
+# [sql_idle_timeout]
+#   Timeout for sql to reap connections.
+#   (Optional) Defaults to '3600'.
+#
 # === Examples
 #
 # class { 'openstack::nova::controller':
@@ -66,6 +70,7 @@ class openstack::nova::controller (
   $rabbit_virtual_host       = '/',
   # Database
   $db_type                   = 'mysql',
+  $sql_idle_timeout          = '3600',
   # Glance
   $glance_api_servers        = undef,
   # VNC
@@ -114,6 +119,7 @@ class openstack::nova::controller (
   # Configure Nova
   class { 'nova':
     sql_connection       => $sql_connection,
+    sql_idle_timeout     => $sql_idle_timeout,
     rabbit_userid        => $rabbit_user,
     rabbit_password      => $rabbit_password,
     rabbit_virtual_host  => $rabbit_virtual_host,

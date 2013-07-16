@@ -17,6 +17,7 @@ describe 'openstack::cinder::controller' do
   it 'should configure using the default values' do
     should contain_class('cinder').with(
       :sql_connection      => "mysql://cinder:#{params[:db_password]}@127.0.0.1/cinder?charset=utf8",
+      :sql_idle_timeout    => '3600',
       :rpc_backend         => 'cinder.openstack.common.rpc.impl_kombu',
       :rabbit_userid       => 'guest',
       :rabbit_password     => params[:rabbit_password],

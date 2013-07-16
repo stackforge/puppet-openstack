@@ -20,6 +20,7 @@ class openstack::cinder::controller(
   $db_user                  = 'cinder',
   $db_host                  = '127.0.0.1',
   $db_dbname                = 'cinder',
+  $sql_idle_timeout         = '3600',
   $package_ensure           = present,
   $api_package_ensure       = present,
   $scheduler_package_ensure = present,
@@ -42,6 +43,7 @@ class openstack::cinder::controller(
 
   class {'::cinder':
     sql_connection      => $sql_connection,
+    sql_idle_timeout    => $sql_idle_timeout,
     rpc_backend         => $rpc_backend,
     rabbit_userid       => $rabbit_userid,
     rabbit_password     => $rabbit_password,
