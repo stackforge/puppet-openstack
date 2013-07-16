@@ -66,14 +66,14 @@ The swift portions of this module needs Puppet's [exported resources](http://doc
 
 ### Installing openstack
 
-    example% puppet module install puppetlabs/openstack
+    puppet module install puppetlabs/openstack
 
 ### Installing latest unstable openstack module from source
 
-    example% cd /etc/puppetlabs/puppet/modules (usually /etc/puppet/modules on FOSS Puppet)
-    example% git clone git://github.com/stackforge/puppet-openstack.git openstack
-    example% cd openstack
-    example% rake modules:clone
+    cd /etc/puppet/modules
+    git clone git://github.com/stackforge/puppet-openstack.git openstack
+    cd openstack
+    rake modules:clone
 
 **Pre-puppet setup**
 
@@ -90,12 +90,13 @@ The things that follow can be handled by Puppet but are out of scope of this doc
 * All interfaces that are used to bridge traffic for the internal network need to have promiscuous mode set.
 * Below is an example of setting promiscuous mode on an interface on Ubuntu.
 
-    #/etc/network/interfaces
-    auto eth1
-    iface eth1 inet manual
-      up ifconfig $IFACE 0.0.0.0 up
-      up ifconfig $IFACE promisc
-
+```
+#/etc/network/interfaces
+auto eth1
+iface eth1 inet manual
+    up ifconfig $IFACE 0.0.0.0 up
+    up ifconfig $IFACE promisc
+```
 ### Volumes
 
 Every node that is configured to be a cinder volume service must have a volume group called `cinder-volumes`.
@@ -103,16 +104,20 @@ Every node that is configured to be a cinder volume service must have a volume g
 ### Compute nodes
 
 * Compute nodes should be deployed onto physical hardware.
-* If compute nodes are deployed on virtual machines for testing, the libvirt_type parameter for the openstack::compute class should probably be configured as 'qemu'.  This is because most virtualization technologies do now pass through the virtualization CPU extensions to their virtual machines.
+* If compute nodes are deployed on virtual machines for testing, the `libvirt_type` parameter for the `openstack::compute` class should probably be configured as `qemu`.  This is because most virtualization technologies do now pass through the virtualization CPU extensions to their virtual machines.
 
 ```puppet
-class { 'openstack:compute': libvirt_type => 'qemu' }
+class { 'openstack::compute':
+  libvirt_type => 'qemu'
+}
 ```
 
 **or**
 
 ```puppet
-class { 'openstack::all: libvirt_type => 'qemu' }
+class { 'openstack::all':
+  libvirt_type => 'qemu'
+}
 ```
 
 ### Beginning with openstack
@@ -121,7 +126,7 @@ Utlization of this module can come in many forms.  It was designed to be capable
 
 **Defining an all in one configuration**
 
-The openstack::all class provides a single configuration interface that can be
+The `openstack::all` class provides a single configuration interface that can be
 used to deploy all Openstack services on a single host.
 
 This is a great starting place for people who are just kicking the tires with
@@ -148,13 +153,13 @@ For more information on the parameters, check out the inline documentation in th
 
 **Defining a controller configuration**
 
-The openstack::controller class is intended to provide basic support for multi-node Openstack deployments.
+The `openstack::controller` class is intended to provide basic support for multi-node Openstack deployments.
 
 There are two roles in this basic multi-node Openstack deployment:
   * controller - deploys all of the central management services
   * compute    - deploys the actual hypervisor on which VMs are deployed.
 
-The openstack::controller class deploys the following Openstack services:
+The `openstack::controller` class deploys the following Openstack services:
   * keystone
   * horizon
   * glance
@@ -187,9 +192,9 @@ For more information on the parameters, check out the inline documentation in th
 
 **Defining a compute configuration**
 
-The openstack::compute class is used to manage the underlying hypervisor.  A typical multi-host Openstack installation would consist of a single openstack::controller node and multiple openstack::compute nodes (based on the amount of resources being virtualized)
+The `openstack::compute` class is used to manage the underlying hypervisor.  A typical multi-host Openstack installation would consist of a single `openstack::controller` node and multiple `openstack::compute` nodes (based on the amount of resources being virtualized)
 
-The openstack::compute class deploys the following services:
+The `openstack::compute` class deploys the following services:
   * nova
     - compute service (libvirt backend)
     - optionally, the nova network service (if multi_host is enabled)
@@ -222,7 +227,7 @@ Implementation
 
 So far, classes have been discussed as configuration interfaces used to deploy the openstack roles. This section explains how to apply these roles to actual nodes using a puppet site manifest.
 
-The default file name for the site manifest is site.pp. This file should be contained in the puppetmaster's manifestdir:
+The default file name for the site manifest is `site.pp`. This file should be contained in the puppetmaster's manifestdir:
 
 * open source puppet - /etc/puppet/manifests/site.pp
 * Puppet Enterprise - /etc/puppetlabs/puppet/manifests/site.pp
@@ -231,23 +236,29 @@ Node blocks are used to map a node's certificate name to the classes that should
 
 [Node blocks](http://docs.puppetlabs.com/guides/language_guide.html#nodes) can match specific hosts:
 
-    node my_explicit_host {...}
+```puppet
+node my_explicit_host { }
+```
 
 Or they can use regular expression to match sets of hosts
 
-    node /my_similar_hosts/ {...}
+```puppet
+node /my_similar_hosts/ { }
+```
 
-Inside the site.pp file, Puppet resources declared within node blocks are applied to those specified nodes. Resources specified at top-scope are applied to all nodes.
+Inside the `site.pp` file, Puppet resources declared within node blocks are applied to those specified nodes. Resources specified at top-scope are applied to all nodes.
 
 ### Deploying an Openstack all-in-one environment
 
-The easiest way to get started with the openstack::all class is to use the file
+The easiest way to get started with the `openstack::all` class is to use the file
 
     <module_dir>/openstack/tests/site.pp
 
 There is a node entry for
 
-    node /openstack_all/ {...}
+```puppet
+node /openstack_all/ { }
+```
 
 that can be used to deploy a simple nova all-in-one environment.
 
@@ -255,10 +266,11 @@ You can explicitly target this node entry by specifying a matching certname and 
 
     puppet apply /etc/puppet/modules/openstack/tests/site.pp --certname openstack_all
 
-You could also update site.pp with the hostname of the node on which you wish to perform an all-in-one installation:
+You could also update `site.pp` with the hostname of the node on which you wish to perform an all-in-one installation:
 
-    node /<my_node>/ {...}
-
+```puppet
+node /<my_node>/ { }
+```
 If you wish to provision an all-in-one host from a remote puppetmaster, you can run the following command:
 
     puppet agent -td
@@ -267,14 +279,15 @@ If you wish to provision an all-in-one host from a remote puppetmaster, you can 
 
 A Puppet Master should be used when deploying multi-node environments.
 
-The example modules and site.pp should be installed on the Master.
+The example modules and `site.pp` should be installed on the Master.
 
 This file contains entries for:
 
-    node /openstack_controller/ {...}
+```puppet
+node /openstack_controller/ { }
 
-    node /openstack_compute/ {...}
-
+node /openstack_compute/ { }
+```
 Which can be used to assign the respective roles.
 
 (As above, you can replace these default certificate names with the hostnames of your nodes)
@@ -283,10 +296,11 @@ The first step for building out a multi-node deployment scenario is to choose th
 
 Both nodes will need this configuration parameter.
 
-In the example site.pp, replace the following line:
+In the example `site.pp`, replace the following line:
 
-    $controller_node_address = <your_node_ip>
-
+```puppet
+$controller_node_address = <your_node_ip>
+```
 with the IP address of your controller.
 
 It is also possible to use store configs in order for the compute hosts to automatically discover the address of the controller host. Documentation for this may not be available until a later release of the openstack modules.
@@ -307,7 +321,7 @@ Once you have installed openstack using Puppet (and assuming you experience no e
 
 ### openstack::auth_file
 
-The optionstack::auth_file class creates the file:
+The `openstack::auth_file` class creates the file:
 
     /root/openrc
 
@@ -315,15 +329,16 @@ which stores environment variables that can be used for authentication of openst
 
 #### Usage Example:
 
-    class { 'openstack::auth_file':
-      admin_password       => 'my_admin_password',
-      controller_node      => 'my_controller_node',
-      keystone_admin_token => 'my_admin_token',
-    }
-
+```puppet
+class { 'openstack::auth_file':
+  admin_password       => 'my_admin_password',
+  controller_node      => 'my_controller_node',
+  keystone_admin_token => 'my_admin_token',
+}
+```
 ### Verification Process
 
-  1. Ensure that your authentication information is stored in /root/openrc.  This assumes that the class openstack::auth_file had been applied to this node.
+  1. Ensure that your authentication information is stored in /root/openrc.  This assumes that the class `openstack::auth_file` had been applied to this node.
   2. Ensure that your authenthication information is in the user's environment.
 
         source /root/openrc
@@ -341,10 +356,11 @@ which stores environment variables that can be used for authentication of openst
 
   4. Ensure that the test script has been deployed to the node.
 
-        file { '/tmp/test_nova.sh':
-          source => 'puppet:///modules/openstack/nova_test.sh',
-        }
-
+    ```puppet
+    file { '/tmp/test_nova.sh':
+      source => 'puppet:///modules/openstack/nova_test.sh',
+    }
+    ```
   5. Run the test script.
 
         bash /tmp/test_nova.sh
@@ -353,13 +369,13 @@ which stores environment variables that can be used for authentication of openst
 
   6. Log into horizon on port 80 of your controller node and walk through a few operations:
 
-     - fire up a VM
-     - create a volume
-     - attach that volume to the VM
-     - allocate a floating IP address to a VM instance.
-     - verify that voluem is actually attached to the VM and that
-       it is reachable by its floating ip address (which will require
-       some security groups)
+         - fire up a VM
+         - create a volume
+         - attach that volume to the VM
+         - allocate a floating IP address to a VM instance.
+         - verify that voluem is actually attached to the VM and that
+           it is reachable by its floating ip address (which will require
+           some security groups)
 
 ### Building your own custom deployment scenario for Openstack
 
@@ -395,7 +411,7 @@ These files contain examples of how to deploy the following services:
 
 Once you have selected which services need to be combined on which nodes, you should review the modules for all of these services and figure out how you can configure things like the pipelines and back-ends for these individual services.
 
-This information should then be used to compose your own custom site.pp
+This information should then be used to compose your own custom `site.pp`
 
 ## Deploying swift
 
@@ -435,7 +451,7 @@ Limitations
 The current version of the code is intended for the 2.x series of the openstack modules and has the following known backwards incompatible breaking changes from 1.x.
 
 * The cinder parameter has been removed (b/c support for nova-volumes has been removed).  The manage_volumes parameter indicates if cinder volumes should be managed.
-* The names of the sql connection parameters of the openstack::compute class have changed from sql_connetion to individual parameters for the db user,name,password,host.
+* The names of the sql connection parameters of the `openstack::compute` class have changed from sql_connetion to individual parameters for the db user,name,password,host.
 
 Getting Involved
 ----------------
