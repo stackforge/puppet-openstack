@@ -25,6 +25,10 @@
 #   Whether unmanaged nova.conf entries should be purged.
 #   (optional) Defaults to false.
 #
+# [nova_bind_address]
+#   IP address to use for binding Nova API's.
+#   (optional) Defualts to '0.0.0.0'.
+#
 # [rabbit_password] Rabbit password.
 # [rabbit_user] Rabbit User. Optional. Defaults to openstack.
 # [rabbit_virtual_host] Rabbit virtual host path for Nova. Defaults to '/'.
@@ -146,6 +150,7 @@ class openstack::controller (
   $nova_db_dbname          = 'nova',
   $purge_nova_config       = false,
   $enabled_apis            = 'ec2,osapi_compute,metadata',
+  $nova_bind_address       = '0.0.0.0',
   # Nova Networking
   $public_interface        = false,
   $private_interface       = false,
@@ -353,6 +358,7 @@ class openstack::controller (
     nova_db_user            => $nova_db_user,
     nova_db_dbname          => $nova_db_dbname,
     enabled_apis            => $enabled_apis,
+    api_bind_address        => $nova_bind_address,
     # Rabbit
     rabbit_user             => $rabbit_user,
     rabbit_password         => $rabbit_password,

@@ -11,6 +11,10 @@
 #   Supply a list of memcached server IP's:Memcached Port.
 #   (optional) Defaults to false.
 #
+# [api_bind_address]
+#   IP address to use for binding Nova API's.
+#   (optional) Defaults to '0.0.0.0'.
+#
 # [quantum]
 #   Specifies if nova should be configured to use quantum.
 #   (optional) Defaults to false (indicating nova-networks should be used)
@@ -71,6 +75,7 @@ class openstack::nova::controller (
   $nova_db_dbname            = 'nova',
   $enabled_apis              = 'ec2,osapi_compute,metadata',
   $memcached_servers         = false,
+  $api_bind_address          = '0.0.0.0',
   # Rabbit
   $rabbit_user               = 'openstack',
   $rabbit_virtual_host       = '/',
@@ -144,6 +149,7 @@ class openstack::nova::controller (
     admin_user                           => $nova_admin_user,
     admin_password                       => $nova_user_password,
     enabled_apis                         => $enabled_apis,
+    api_bind_address                     => $api_bind_address,
     auth_host                            => $keystone_host,
     quantum_metadata_proxy_shared_secret => $metadata_shared_secret,
   }

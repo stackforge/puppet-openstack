@@ -6,6 +6,7 @@ describe 'openstack::nova::controller' do
     {
       :public_address         => '127.0.0.1',
       :db_host                => '127.0.0.1',
+      :api_bind_address       => '0.0.0.0',
       :rabbit_password        => 'rabbit_pass',
       :nova_user_password     => 'nova_user_pass',
       :quantum_user_password  => 'quantum_user_pass',
@@ -54,6 +55,7 @@ describe 'openstack::nova::controller' do
         :admin_user                           => 'nova',
         :admin_password                       => 'nova_user_pass',
         :enabled_apis                         => 'ec2,osapi_compute,metadata',
+        :api_bind_address                     => '0.0.0.0',
         :auth_host                            => '127.0.0.1',
         :quantum_metadata_proxy_shared_secret => 'secret'
       )
