@@ -20,6 +20,7 @@ class openstack::cinder::all(
   $db_user                  = 'cinder',
   $db_host                  = '127.0.0.1',
   $db_dbname                = 'cinder',
+  $sql_idle_timeout         = '3600',
   $package_ensure           = present,
   $bind_host                = '0.0.0.0',
   $api_paste_config         = '/etc/cinder/api-paste.ini',
@@ -30,6 +31,7 @@ class openstack::cinder::all(
   $iscsi_ip_address         = '127.0.0.1',
   $setup_test_volume        = false,
   $manage_volumes           = true,
+  $debug                    = false,
   $verbose                  = false
 ) {
 
@@ -43,6 +45,7 @@ class openstack::cinder::all(
 
   class {'::cinder':
     sql_connection      => $sql_connection,
+    sql_idle_timeout    => $sql_idle_timeout,
     rpc_backend         => $rpc_backend,
     rabbit_userid       => $rabbit_userid,
     rabbit_password     => $rabbit_password,
@@ -52,6 +55,7 @@ class openstack::cinder::all(
     rabbit_virtual_host => $rabbit_virtual_host,
     package_ensure      => $package_ensure,
     api_paste_config    => $api_paste_config,
+    debug               => $debug,
     verbose             => $verbose,
   }
 
