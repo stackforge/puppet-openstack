@@ -10,6 +10,10 @@
 #   Specifies if nova should be configured to use quantum.
 #   (optional) Defaults to false (indicating nova-networks should be used)
 #
+# [quantum_host]
+#   Specifies the IP address of the host running the Quantum API service
+#   (optional). Defaults to '127.0.0.1'.
+#
 # [quantum_user_password]
 #   password that nova uses to authenticate with quantum.
 #
@@ -53,6 +57,7 @@ class openstack::nova::controller (
   $private_interface         = undef,
   # quantum
   $quantum                   = true,
+  $quantum_host              = '127.0.0.1',
   $quantum_user_password     = false,
   $metadata_shared_secret    = undef,
   # Nova
@@ -184,7 +189,7 @@ class openstack::nova::controller (
     class { 'nova::network::quantum':
       quantum_admin_password    => $quantum_user_password,
       quantum_auth_strategy     => 'keystone',
-      quantum_url               => "http://${keystone_host}:9696",
+      quantum_url               => "http://${quantum_host}:9696",
       quantum_admin_tenant_name => 'services',
       quantum_admin_username    => 'quantum',
       quantum_admin_auth_url    => "http://${keystone_host}:35357/v2.0",

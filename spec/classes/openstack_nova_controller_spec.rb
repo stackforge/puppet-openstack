@@ -6,6 +6,8 @@ describe 'openstack::nova::controller' do
     {
       :public_address         => '127.0.0.1',
       :db_host                => '127.0.0.1',
+      :keystone_host          => '127.0.0.1',
+      :quantum_host           => '127.0.0.1',
       :rabbit_password        => 'rabbit_pass',
       :nova_user_password     => 'nova_user_pass',
       :quantum_user_password  => 'quantum_user_pass',

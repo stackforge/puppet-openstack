@@ -49,6 +49,9 @@
 #   The next is an array of arrays, that can be used to add call-out links to the dashboard for other apps.
 #   There is no specific requirement for these apps to be for monitoring, that's just the defacto purpose.
 #   Each app is defined in two parts, the display name, and the URI
+# [quantum_host]
+#   Specifies the IP address of the host running the Quantum API service
+#   (optional). Defaults to '127.0.0.1'.
 # [metadata_shared_secret]
 #   Shared secret used by nova and quantum to authenticate metadata.
 #   (optional) Defaults to false.
@@ -179,6 +182,7 @@ class openstack::controller (
   $cinder_bind_address     = '0.0.0.0',
   # Quantum
   $quantum                 = true,
+  $quantum_host            = '127.0.0.1',
   $bridge_interface        = undef,
   $external_bridge_name    = 'br-ex',
   $enable_ovs_agent        = true,
@@ -337,6 +341,7 @@ class openstack::controller (
     private_interface       => $private_interface,
     # Quantum
     quantum                 => $quantum,
+    quantum_host            => $quantum_host,
     quantum_user_password   => $quantum_user_password,
     metadata_shared_secret  => $metadata_shared_secret,
     # Nova
