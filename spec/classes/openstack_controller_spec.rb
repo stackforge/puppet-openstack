@@ -17,6 +17,7 @@ describe 'openstack::controller' do
       :keystone_admin_token    => 'keystone_admin_token',
       :glance_db_password      => 'glance_pass',
       :glance_user_password    => 'glance_pass',
+      :nova_bind_address       => '0.0.0.0',
       :nova_db_password        => 'nova_pass',
       :nova_user_password      => 'nova_pass',
       :cinder_db_password      => 'cinder_pass',
@@ -393,7 +394,8 @@ describe 'openstack::controller' do
           :admin_tenant_name => 'services',
           :admin_user        => 'nova',
           :admin_password    => 'nova_pass',
-          :enabled_apis      => 'ec2,osapi_compute,metadata'
+          :enabled_apis      => 'ec2,osapi_compute,metadata',
+          :api_bind_address  => '0.0.0.0'
         )
         should contain_class('nova::cert').with(:enabled => true)
         should contain_class('nova::consoleauth').with(:enabled => true)
