@@ -17,6 +17,7 @@ describe 'openstack::all' do
       :nova_db_password      => 'nova_pass',
       :nova_user_password    => 'nova_pass',
       :secret_key            => 'secret_key',
+      :mysql_root_password   => 'sql_pass',
     }
   end
 
