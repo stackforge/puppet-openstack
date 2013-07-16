@@ -6,6 +6,11 @@
 #
 # === Parameters
 #
+# [memcached_servers]
+#   Use memcached instead of in-process cache.
+#   Supply a list of memcached server IP's:Memcached Port.
+#   (optional) Defaults to false.
+#
 # [quantum]
 #   Specifies if nova should be configured to use quantum.
 #   (optional) Defaults to false (indicating nova-networks should be used)
@@ -65,6 +70,7 @@ class openstack::nova::controller (
   $nova_db_user              = 'nova',
   $nova_db_dbname            = 'nova',
   $enabled_apis              = 'ec2,osapi_compute,metadata',
+  $memcached_servers         = false,
   # Rabbit
   $rabbit_user               = 'openstack',
   $rabbit_virtual_host       = '/',
@@ -125,6 +131,7 @@ class openstack::nova::controller (
     rabbit_virtual_host  => $rabbit_virtual_host,
     image_service        => 'nova.image.glance.GlanceImageService',
     glance_api_servers   => $glance_connection,
+    memcached_servers    => $memcached_servers,
     debug                => $debug,
     verbose              => $verbose,
     rabbit_host          => $rabbit_connection,

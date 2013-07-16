@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe 'openstack::nova::controller' do
 
-  let :params do
+  let :default_params do
     {
       :public_address         => '127.0.0.1',
       :db_host                => '127.0.0.1',
@@ -11,12 +11,17 @@ describe 'openstack::nova::controller' do
       :quantum_user_password  => 'quantum_user_pass',
       :nova_db_password       => 'nova_db_pass',
       :quantum                => true,
+      :memcached_servers      => false,
       :metadata_shared_secret => 'secret'
     }
   end
 
   let :facts do
     {:osfamily => 'Debian' }
+  end
+
+  let :params do
+    default_params
   end
 
   it { should contain_class('openstack::nova::controller') }
@@ -70,9 +75,19 @@ describe 'openstack::nova::controller' do
         :host    => '127.0.0.1',
         :enabled => true
       )
-
-
     end
   end
 
+  context 'when configuring memcached' do
+    let :params do
+      default_params.merge(
+        :memcached_servers => ['memcached01:11211', 'memcached02:11211']
+      )
+    end
+    it 'should configure nova with memcached' do
+      should contain_class('nova').with(
+        :memcached_servers => ['memcached01:11211', 'memcached02:11211']
+      )
+    end
+  end
 end
