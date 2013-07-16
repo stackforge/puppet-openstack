@@ -1,0 +1,12 @@
+Verified+2: Jenkins
+Code-Review+1: ijw-ubuntu <iawells@cisco.com>
+Code-Review+1: Donald Talton <dotalton@cisco.com>
+Code-Review+1: Chris Ricker <chricker@cisco.com>
+Approved+1: Mathieu Gagné <mgagne@iweb.com>
+Code-Review+2: Mathieu Gagné <mgagne@iweb.com>
+Verified+1: Puppet OpenStack CI <puppet.openstack.ci@gmail.com>
+Submitted-by: Jenkins
+Submitted-at: Tue, 16 Jul 2013 23:18:25 +0000
+Reviewed-on: https://review.openstack.org/37143
+Project: stackforge/puppet-openstack
+Branch: refs/heads/master
