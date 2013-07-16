@@ -13,6 +13,8 @@ describe 'openstack::glance' do
     {
       :user_password => 'glance_user_pass',
       :db_password   => 'glance_db_pass',
+      :bind_host     => '0.0.0.0',
+      :registry_host => '127.0.0.1',
       :keystone_host => '127.0.1.1'
     }
   end
@@ -22,6 +24,8 @@ describe 'openstack::glance' do
       should contain_class('glance::api').with(
         :verbose           => false,
         :debug             => false,
+        :bind_host         => '0.0.0.0',
+        :registry_host     => '127.0.0.1',
         :auth_type         => 'keystone',
         :auth_port         => '35357',
         :auth_host         => '127.0.1.1',
@@ -35,6 +39,7 @@ describe 'openstack::glance' do
       should contain_class('glance::registry').with(
         :verbose           => false,
         :debug             => false,
+        :bind_host         => '0.0.0.0',
         :auth_host         => '127.0.1.1',
         :auth_port         => '35357',
         :auth_type         => 'keystone',
