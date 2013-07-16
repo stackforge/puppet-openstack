@@ -13,7 +13,7 @@
 #
 # === Examples
 #
-# class { 'openstack::nova::compute':
+# class { 'openstack::compute':
 #   internal_address   => '192.168.2.2',
 #   vncproxy_host      => '192.168.1.1',
 #   nova_user_password => 'changeme',
