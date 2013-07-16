@@ -22,6 +22,7 @@ describe 'openstack::glance' do
       should contain_class('glance::api').with(
         :verbose           => false,
         :debug             => false,
+        :registry_host     => '0.0.0.0',
         :auth_type         => 'keystone',
         :auth_port         => '35357',
         :auth_host         => '127.0.1.1',
