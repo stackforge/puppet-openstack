@@ -177,6 +177,10 @@ class openstack::controller (
   $cinder_db_user          = 'cinder',
   $cinder_db_dbname        = 'cinder',
   $cinder_bind_address     = '0.0.0.0',
+  $manage_volumes          = false,
+  $volume_group            = 'cinder-volumes',
+  $setup_test_volume       = false,
+  $iscsi_ip_address        = '127.0.0.1',
   # Quantum
   $quantum                 = true,
   $bridge_interface        = undef,
@@ -423,7 +427,7 @@ class openstack::controller (
       fail('Must set cinder user password when setting up a cinder controller')
     }
 
-    class { 'openstack::cinder::controller':
+    class { 'openstack::cinder::all':
       bind_host          => $cinder_bind_address,
       keystone_auth_host => $keystone_host,
       keystone_password  => $cinder_user_password,
@@ -435,8 +439,10 @@ class openstack::controller (
       db_user            => $cinder_db_user,
       db_type            => $db_type,
       db_host            => $db_host,
-      api_enabled        => $enabled,
-      scheduler_enabled  => $enabled,
+      manage_volumes     => $manage_volumes,
+      volume_group       => $volume_group,
+      setup_test_volume  => $setup_test_volume,
+      iscsi_ip_address   => $iscsi_ip_address,
       debug              => $debug,
       verbose            => $verbose
     }
