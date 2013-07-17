@@ -140,12 +140,19 @@ class { 'openstack::all':
   admin_email          => 'some_admin@some_company',
   admin_password       => 'admin_password',
   keystone_admin_token => 'keystone_admin_token',
+  keystone_db_password => 'keystone_db_password',
+  cinder_db_password   => 'cinder_db_password',
+  cinder_user_password => 'cinder_user_password',
   nova_user_password   => 'nova_user_password',
+  nova_db_password     => 'nova_db_password',
   glance_user_password => 'glance_user_password',
+  glance_db_password   => 'glance_db_password',
   rabbit_password      => 'rabbit_password',
   rabbit_user          => 'rabbit_user',
   libvirt_type         => 'kvm',
   fixed_range          => '10.0.0.0/24',
+  secret_key           => '12345',
+  quantum              => false,
 }
 ```
 
@@ -178,13 +185,20 @@ class { 'openstack::controller':
   fixed_range             => '10.0.0.0/24',
   multi_host              => false,
   network_manager         => 'nova.network.manager.FlatDHCPManager',
-  admin_email             => 'admin_email',
+  admin_email             => 'root@localhost',
   admin_password          => 'admin_password',
+  cinder_db_password      => 'cinder_db_password',
+  cinder_user_password    => 'cinder_user_password',
   keystone_admin_token    => 'keystone_admin_token',
+  keystone_db_password    => 'keystone_db_password',
   glance_user_password    => 'glance_user_password',
+  glance_db_password      => 'glance_db_password',
+  nova_db_password        => 'nova_db_password',
   nova_user_password      => 'nova_user_password',
   rabbit_password         => 'rabbit_password',
   rabbit_user             => 'rabbit_user',
+  secret_key              => '12345',
+  quantum                 => false,
 }
 ```
 
@@ -204,17 +218,21 @@ The `openstack::compute` class deploys the following services:
 ```puppet
 class { 'openstack::compute':
   private_interface  => 'eth1',
-  internal_address   => $ipaddress_eth0,
+  internal_address   => $::ipaddress_eth0,
   libvirt_type       => 'kvm',
   fixed_range        => '10.0.0.0/24',
   network_manager    => 'nova.network.manager.FlatDHCPManager',
   multi_host         => false,
-  sql_connection     => 'mysql://nova:nova_db_passwd@192.168.101.10/nova',
   rabbit_host        => '192.168.101.10',
+  rabbit_password    => 'rabbit_password',
+  cinder_db_password => 'cinder_db_password',
   glance_api_servers => '192.168.101.10:9292',
+  nova_db_password   => 'nova_db_password',
+  nova_user_password => 'nova_user_password',
   vncproxy_host      => '192.168.101.10',
   vnc_enabled        => true,
   manage_volumes     => true,
+  quantum            => false,
 }
 ```
 
@@ -357,9 +375,7 @@ class { 'openstack::auth_file':
   4. Ensure that the test script has been deployed to the node.
 
     ```puppet
-    file { '/tmp/test_nova.sh':
-      source => 'puppet:///modules/openstack/nova_test.sh',
-    }
+    include openstack::test_file
     ```
   5. Run the test script.
 
