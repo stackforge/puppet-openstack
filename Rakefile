@@ -14,48 +14,6 @@ rescue LoadError
   puts "!!!!!"
 end
 
-repo_file = 'other_repos.yaml'
-default_modulepath = '/etc/puppet/modules'
-
-namespace :modules do
-  desc 'clone all required modules'
-  task :clone do
-    repo_hash = YAML.load_file(File.join(File.dirname(__FILE__), repo_file))
-    repos = (repo_hash['repos'] || {})
-    modulepath = (repo_hash['modulepath'] || default_modulepath)
-    repos_to_clone = (repos['repo_paths'] || {})
-    branches_to_checkout = (repos['checkout_branches'] || {})
-    repos_to_clone.each do |remote, local|
-      # I should check to see if the file is there?
-      outpath = File.join(modulepath, local)
-      output = `git clone #{remote} #{outpath}`
-      puts output
-    end
-    branches_to_checkout.each do |local, branch|
-      Dir.chdir(File.join(modulepath, local)) do
-        output = `git checkout #{branch}`
-      end
-      # Puppet.debug(output)
-    end
-  end
-
-  desc 'see if any of the modules are not up-to-date'
-  task 'status' do
-    repo_hash = YAML.load_file(File.join(File.dirname(__FILE__), repo_file))
-    repos = (repo_hash['repos'] || {})
-    modulepath = (repo_hash['modulepath'] || default_modulepath)
-    repos_to_clone = (repos['repo_paths'] || {})
-    branches_to_checkout = (repos['checkout_branches'] || {})
-    repos_to_clone.each do |remote, local|
-      # I should check to see if the file is there?
-      Dir.chdir(File.join(modulepath, local)) do
-        puts "Checking status of #{local}"
-        puts `git status`
-      end
-    end
-  end
-end
-
 namespace :github do
   desc 'check all dependeny projects and generate a report about open pull requests'
   task 'pull_request_stats' do

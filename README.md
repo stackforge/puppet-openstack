@@ -397,9 +397,7 @@ class { 'openstack::auth_file':
 
 The classes included in the Openstack module are implemented using a number of other modules. These modules can be used directly to create a customized openstack deployment.
 
-A list of the modules used by puppetlabs-openstack and the source locations for those modules can be found in `other_repos.yaml` in the openstack module folder.
-
-    other_repos.yaml
+The full list of modules, their source locations, as well as the revisions that have been tested are available in the file .fixtures.yaml.
 
 These building block modules have been written to support a wide variety of specific configuration and deployment use cases. They also provide a lot of configuration options not available with the more constrained puppetlabs-openstack modules.
 
