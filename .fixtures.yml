@@ -19,5 +19,7 @@ fixtures:
     "sysctl": "git://github.com/duritong/puppet-sysctl.git"
     'inifile':  'git://github.com/cprice-puppet/puppetlabs-inifile'
     'vswitch': 'git://github.com/bodepd/puppet-vswitch'
+    'tempest': 'git://github.com/stackforge/puppet-tempest'
+    'vcsrepo': 'git://github.com/puppetlabs/puppetlabs-vcsrepo'
   symlinks:
     "openstack": "#{source_dir}"

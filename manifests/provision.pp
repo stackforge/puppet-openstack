@@ -69,7 +69,9 @@ class openstack::provision(
   $identity_uri         = undef,
   $tempest_clone_path   = '/var/lib/tempest',
   $tempest_clone_owner  = 'root',
-  $setup_venv           = false
+  $setup_venv           = false,
+  $version_to_test      = 'master',
+  $resize_available     = undef
 ) {
   ## Users
 
@@ -158,6 +160,7 @@ class openstack::provision(
       tempest_clone_path  => $tempest_clone_path,
       tempest_clone_owner => $tempest_clone_owner,
       setup_venv          => $setup_venv,
+      version_to_test     => $version_to_test,
       image_name          => $image_name,
       image_name_alt      => $image_name,
       image_ssh_user      => $image_ssh_user,
@@ -174,6 +177,7 @@ class openstack::provision(
       admin_tenant_name   => $admin_tenant_name,
       quantum_available   => true,
       public_network_name => $public_network_name,
+      resize_available    => $resize_available,
       require             => [
                               Keystone_user[$username],
                               Keystone_user[$alt_username],
