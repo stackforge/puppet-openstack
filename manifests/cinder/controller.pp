@@ -12,7 +12,7 @@ class openstack::cinder::controller(
   $keystone_service_port    = '5000',
   $rabbit_userid            = 'guest',
   $rabbit_host              = '127.0.0.1',
-  $rabbit_hosts             =  undef,
+  $rabbit_hosts             =  false,
   $rabbit_port              = '5672',
   $rabbit_virtual_host      = '/',
   # Database. Currently mysql is the only option.

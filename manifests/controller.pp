@@ -31,6 +31,11 @@
 #
 # [rabbit_password] Rabbit password.
 # [rabbit_user] Rabbit User. Optional. Defaults to openstack.
+# [rabbit_host] IP address to connect to the RabbitMQ Broker. Optional. Defaults to '127.0.0.1'.
+# [rabbit_hosts] An array of IP addresses or Virttual IP address for connecting to a RabbitMQ Cluster.
+#   Optional. Defaults to false.
+# [rabbit_cluster_nodes] An array of Rabbit Broker IP addresses within the Cluster.
+#   Optional. Defaults to false.
 # [rabbit_virtual_host] Rabbit virtual host path for Nova. Defaults to '/'.
 # [network_manager] Nova network manager to use.
 # [fixed_range] Range of ipv4 network for vms.
@@ -187,6 +192,8 @@ class openstack::controller (
   $network_config          = {},
   # Rabbit
   $rabbit_host             = '127.0.0.1',
+  $rabbit_hosts            = false,
+  $rabbit_cluster_nodes    = false,
   $rabbit_user             = 'openstack',
   $rabbit_virtual_host     = '/',
   # Horizon
@@ -387,6 +394,8 @@ class openstack::controller (
     # Rabbit
     rabbit_user             => $rabbit_user,
     rabbit_password         => $rabbit_password,
+    rabbit_hosts            => $rabbit_hosts,
+    rabbit_cluster_nodes    => $rabbit_cluster_nodes,
     rabbit_virtual_host     => $rabbit_virtual_host,
     # Glance
     glance_api_servers      => $glance_api_servers,
@@ -422,6 +431,7 @@ class openstack::controller (
       rabbit_host           => $rabbit_host,
       rabbit_user           => $rabbit_user,
       rabbit_password       => $rabbit_password,
+      rabbit_hosts          => $rabbit_hosts,
       rabbit_virtual_host   => $rabbit_virtual_host,
       # Quantum OVS
       tenant_network_type   => $tenant_network_type,
@@ -472,6 +482,7 @@ class openstack::controller (
       rabbit_userid      => $rabbit_user,
       rabbit_password    => $rabbit_password,
       rabbit_host        => $rabbit_host,
+      rabbit_hosts       => $rabbit_hosts,
       db_password        => $cinder_db_password,
       db_dbname          => $cinder_db_dbname,
       db_user            => $cinder_db_user,
