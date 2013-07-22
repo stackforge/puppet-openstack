@@ -20,7 +20,8 @@ class openstack::swift::proxy (
   $package_ensure                   = 'present',
   $controller_node_address          = '10.0.0.1',
   $keystone_host                    = '10.0.0.1',
-  $memcached                        = true
+  $memcached                        = true,
+  $memcached_listen_ip              = '127.0.0.1'
 ) {
 
   if $controller_node_address !='10.0.0.1' {
@@ -36,7 +37,7 @@ class openstack::swift::proxy (
 
   if $memcached {
     class { 'memcached':
-      listen_ip => '127.0.0.1',
+      listen_ip => $memcached_listen_ip,
     }
   }
 
