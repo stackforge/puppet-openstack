@@ -4,6 +4,7 @@ class openstack::swift::proxy (
   $swift_user_password              = 'swift_pass',
   $swift_hash_suffix                = 'swift_secret',
   $swift_local_net_ip               = $::ipaddress_eth0,
+  $swift_proxy_net_ip               = $::ipaddress_eth0,
   $ring_part_power                  = 18,
   $ring_replicas                    = 3,
   $ring_min_part_hours              = 1,
@@ -43,7 +44,7 @@ class openstack::swift::proxy (
   }
 
   class { '::swift::proxy':
-    proxy_local_net_ip       => $swift_local_net_ip,
+    proxy_local_net_ip       => $swift_proxy_net_ip,
     pipeline                 => $proxy_pipeline,
     port                     => $proxy_port,
     workers                  => $proxy_workers,
