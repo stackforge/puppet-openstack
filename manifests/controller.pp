@@ -16,6 +16,8 @@
 # [keystone_admin_token] Admin token for keystone.
 # [keystone_bind_address] Address that keystone api service should bind to.
 #   Optional. Defaults to '0.0.0.0'.
+# [glance_registry_host] Address used by Glance API to find the Glance Registry service.
+#   Optional. Defaults to '0.0.0.0'.
 # [glance_db_password] Glance DB password.
 # [glance_user_password] Glance service user password.
 # [nova_db_password] Nova DB password.
@@ -162,6 +164,7 @@ class openstack::controller (
   $keystone_bind_address   = '0.0.0.0',
   $region                  = 'RegionOne',
   # Glance
+  $glance_registry_host    = '0.0.0.0',
   $glance_db_user          = 'glance',
   $glance_db_dbname        = 'glance',
   $glance_api_servers      = undef,
@@ -339,6 +342,7 @@ class openstack::controller (
     db_host          => $db_host,
     sql_idle_timeout => $sql_idle_timeout,
     keystone_host    => $keystone_host,
+    registry_host    => $glance_registry_host,
     db_user          => $glance_db_user,
     db_name          => $glance_db_dbname,
     db_password      => $glance_db_password,

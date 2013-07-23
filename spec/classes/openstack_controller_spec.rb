@@ -16,6 +16,7 @@ describe 'openstack::controller' do
       :rabbit_virtual_host     => '/',
       :keystone_db_password    => 'keystone_pass',
       :keystone_admin_token    => 'keystone_admin_token',
+      :glance_registry_host    => '0.0.0.0',
       :glance_db_password      => 'glance_pass',
       :glance_user_password    => 'glance_pass',
       :nova_bind_address       => '0.0.0.0',
@@ -276,6 +277,7 @@ describe 'openstack::controller' do
           :keystone_tenant   => 'services',
           :keystone_user     => 'glance',
           :keystone_password => 'glance_pass',
+          :registry_host     => '0.0.0.0',
           :sql_connection    => 'mysql://glance:glance_pass@127.0.0.1/glance',
           :enabled           => true
         )
@@ -318,6 +320,7 @@ describe 'openstack::controller' do
         default_params.merge(
           :verbose               => false,
           :debug                 => false,
+          :glance_registry_host  => '127.0.0.2',
           :glance_user_password  => 'glance_pass2',
           :glance_db_password    => 'glance_pass3',
           :db_host               => '127.0.0.2',
@@ -332,6 +335,7 @@ describe 'openstack::controller' do
         should contain_class('glance::api').with(
           :verbose           => false,
           :debug             => false,
+          :registry_host     => '127.0.0.2',
           :auth_type         => 'keystone',
           :auth_host         => '127.0.0.1',
           :auth_port         => '35357',
