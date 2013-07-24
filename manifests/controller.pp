@@ -222,9 +222,11 @@ class openstack::controller (
   $tenant_network_type     = 'gre',
   $ovs_enable_tunneling    = true,
   $ovs_local_ip            = false,
-  $network_vlan_ranges     = 'physnet1:1000:2000',
+  $network_vlan_ranges     = undef,
   $bridge_interface        = undef,
   $external_bridge_name    = 'br-ex',
+  $bridge_uplinks          = undef,
+  $bridge_mappings         = undef,
   $enable_ovs_agent        = true,
   $enable_dhcp_agent       = true,
   $enable_l3_agent         = true,
@@ -427,6 +429,13 @@ class openstack::controller (
       fail('bridge_interface must be set when configuring quantum')
     }
 
+    if ! $bridge_uplinks {
+      $bridge_uplinks          = ["${external_bridge_name}:${bridge_interface}"]
+    }
+    if ! $bridge_mappings {
+      $bridge_mappings         = ["${physical_network}:${external_bridge_name}"]
+    }
+
     class { 'openstack::quantum':
       # Database
       db_host               => $db_host,
@@ -442,8 +451,8 @@ class openstack::controller (
       network_vlan_ranges   => $network_vlan_ranges,
       ovs_enable_tunneling  => $ovs_enable_tunneling,
       ovs_local_ip          => $ovs_local_ip_real,
-      bridge_uplinks        => ["${external_bridge_name}:${bridge_interface}"],
-      bridge_mappings       => ["${physical_network}:${external_bridge_name}"],
+      bridge_uplinks        => $bridge_uplinks,
+      bridge_mappings       => $bridge_mappings,
       enable_ovs_agent      => $enable_ovs_agent,
       firewall_driver       => $firewall_driver,
       # Database

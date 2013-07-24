@@ -56,6 +56,8 @@ class openstack::compute (
   $quantum_host                  = '127.0.0.1',
   $ovs_local_ip                  = false,
   $quantum_firewall_driver       = false,
+  $bridge_mappings               = undef,
+  $bridge_uplinks                = undef,
   # Nova
   $nova_admin_tenant_name        = 'services',
   $nova_admin_user               = 'nova',
@@ -222,6 +224,8 @@ class openstack::compute (
       enabled           => $enabled,
       enable_server     => false,
       verbose           => $verbose,
+      bridge_mappings   => $bridge_mappings,
+      bridge_uplinks    => $bridge_uplinks
     }
 
     class { 'nova::compute::quantum':
