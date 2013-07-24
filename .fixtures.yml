@@ -9,13 +9,17 @@ fixtures:
     'quantum': 'git://github.com/stackforge/puppet-quantum'
     'ceilometer' : 'git://github.com/stackforge/puppet-ceilometer'
     "apt": "git://github.com/puppetlabs/puppetlabs-apt.git"
-    "apache": "git://github.com/puppetlabs/puppetlabs-apache.git"
+    "apache":
+      repo: "git://github.com/puppetlabs/puppetlabs-apache.git"
+      ref: 'origin/0.x'
     "concat": "git://github.com/ripienaar/puppet-concat.git"
     "firewall": "git://github.com/puppetlabs/puppetlabs-firewall.git"
-    "mysql": "git://github.com/puppetlabs/puppetlabs-mysql.git"
+    "mysql":
+      repo: "git://github.com/puppetlabs/puppetlabs-mysql.git"
+      ref: "origin/0.x"
     "rabbitmq":
       repo: "git://github.com/puppetlabs/puppetlabs-rabbitmq"
-      ref: 43a000b95b13c62e4fbea14e31bc61929bda1b23
+      ref: "origin/2.x"
     'memcached': 'git://github.com/saz/puppet-memcached'
     "stdlib": "git://github.com/puppetlabs/puppetlabs-stdlib.git"
     "sysctl": "git://github.com/duritong/puppet-sysctl.git"
