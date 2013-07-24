@@ -31,6 +31,7 @@ describe 'openstack::controller' do
       :nova_admin_tenant_name  => 'services',
       :nova_admin_user         => 'nova',
       :enabled_apis            => 'ec2,osapi_compute,metadata',
+      :physical_network        => 'default'
     }
   end
 
@@ -547,7 +548,8 @@ describe 'openstack::controller' do
           :bridge_interface       => 'eth_27',
           :internal_address       => '10.0.0.3',
           :quantum_db_password    => 'q_db_pass',
-          :metadata_shared_secret => 'secret'
+          :metadata_shared_secret => 'secret',
+          :external_bridge_name   => 'br-ex'
         })
       end
 
