@@ -164,7 +164,7 @@ class openstack::quantum (
   $enable_ovs_agent       = false,
   # OVS settings
   $tenant_network_type    = 'gre',
-  $network_vlan_ranges    = 'physnet1:1000:2000',
+  $network_vlan_ranges    = undef,
   $ovs_local_ip           = false,
   $ovs_enable_tunneling   = true,
   $bridge_uplinks         = [],
