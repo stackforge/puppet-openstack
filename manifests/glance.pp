@@ -21,6 +21,8 @@
 # [db_user] Name of glance DB user. Optional. Defaults to 'glance'
 # [db_name] Name of glance DB. Optional. Defaults to 'glance'
 # [backend] Backends used to store images.  Defaults to file.
+# [rbd_store_user] The RBD store user name.
+# [rbd_store_pool] The RBD pool name to store images.
 # [swift_store_user] The Swift service user account. Defaults to false.
 # [swift_store_key]  The Swift service user password Defaults to false.
 # [swift_store_auth_addres] The URL where the Swift auth service lives. Defaults to "http://${keystone_host}:5000/v2.0/"
@@ -52,6 +54,8 @@ class openstack::glance (
   $swift_store_user         = false,
   $swift_store_key          = false,
   $swift_store_auth_address = 'http://127.0.0.1:5000/v2.0/',
+  $rbd_store_user           = undef,
+  $rbd_store_pool           = 'images',
   $verbose                  = false,
   $debug                    = false,
   $enabled                  = true
@@ -115,6 +119,11 @@ class openstack::glance (
   } elsif($backend == 'file') {
   # Configure file storage backend
     class { 'glance::backend::file': }
+  } elsif($backend == 'rbd') {
+    class { 'glance::backend::rbd':
+      rbd_store_user => $rbd_store_user,
+      rbd_store_pool => $rbd_store_pool,
+    }
   } else {
     fail("Unsupported backend ${backend}")
   }
