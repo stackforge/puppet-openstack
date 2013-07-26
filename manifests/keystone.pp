@@ -7,17 +7,17 @@
 #
 # [db_host] Host where DB resides. Optional. Defaults to 127.0.0.1..
 # [idle_timeout] Timeout to reap SQL connections. Optional. Defaults to '200'.
-# [keystone_db_password] Password for keystone DB. Required.
-# [keystone_admin_token]. Auth token for keystone admin. Required.
+# [db_password] Password for keystone DB. Required.
+# [admin_token]. Auth token for keystone admin. Required.
 # [admin_email] Email address of system admin. Required.
-# [admin_password]
+# [admin_password] Auth password for admin user. Required.
 # [glance_user_password] Auth password for glance user. Required.
 # [nova_user_password] Auth password for nova user. Required.
 # [public_address] Public address where keystone can be accessed. Required.
 # [db_type] Type of DB used. Currently only supports mysql. Optional. Defaults to  'mysql'
-# [keystone_db_user] Name of keystone db user. Optional. Defaults to  'keystone'
-# [keystone_db_dbname] Name of keystone DB. Optional. Defaults to  'keystone'
-# [keystone_admin_tenant] Name of keystone admin tenant. Optional. Defaults to  'admin'
+# [db_user] Name of keystone db user. Optional. Defaults to  'keystone'
+# [db_name] Name of keystone DB. Optional. Defaults to  'keystone'
+# [admin_tenant] Name of keystone admin tenant. Optional. Defaults to  'admin'
 # [verbose] Log verbosely. Optional. Defaults to false.
 # [debug] Log at a debug-level. Optional. Defaults to false.
 # [bind_host] Address that keystone binds to. Optional. Defaults to  '0.0.0.0'
@@ -36,10 +36,14 @@
 #
 # class { 'openstack::keystone':
 #   db_host               => '127.0.0.1',
-#   keystone_db_password  => 'changeme',
-#   keystone_admin_token  => '12345',
+#   db_password           => 'changeme',
+#   admin_token           => '12345',
 #   admin_email           => 'root@localhost',
 #   admin_password        => 'changeme',
+#   glance_user_password  => 'glance',
+#   nova_user_password    => 'nova',
+#   cinder_user_password  => 'cinder',
+#   quantum_user_password => 'quantum',
 #   public_address        => '192.168.1.1',
 #  }
 
