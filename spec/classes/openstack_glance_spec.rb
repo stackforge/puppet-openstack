@@ -111,4 +111,27 @@ describe 'openstack::glance' do
       end
     end
   end
+
+  describe 'when configuring rbd as the backend' do
+
+    before do
+      params.merge!({
+        :backend         => 'rbd',
+        :rbd_store_user  => 'don',
+        :rbd_store_pool  => 'images'
+      })
+    end
+
+    it 'should configure rbd as the backend' do
+      should_not contain_class('glance::backend::file')
+
+      should_not contain_class('glance::backend::swift')
+
+      should contain_class('glance::backend::rbd').with(
+        :rbd_store_user => 'don',
+        :rbd_store_pool => 'images'
+      )
+    end
+  end
+
 end
