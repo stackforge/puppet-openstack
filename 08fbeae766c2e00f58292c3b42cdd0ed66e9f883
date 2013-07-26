@@ -1,0 +1,11 @@
+Verified+2: Jenkins
+Approved+1: Dan Bode <bodepd@gmail.com>
+Code-Review+2: Dan Bode <bodepd@gmail.com>
+Code-Review+1: ijw-ubuntu <iawells@cisco.com>
+Code-Review+2: Mathieu Gagné <mgagne@iweb.com>
+Code-Review+1: Robert Starmer <starmer@cisco.com>
+Submitted-by: Jenkins
+Submitted-at: Fri, 26 Jul 2013 05:05:41 +0000
+Reviewed-on: https://review.openstack.org/38689
+Project: stackforge/puppet-openstack
+Branch: refs/heads/master
