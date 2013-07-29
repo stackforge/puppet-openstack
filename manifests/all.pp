@@ -149,6 +149,7 @@ class openstack::all (
   $nova_db_user            = 'nova',
   $nova_db_dbname          = 'nova',
   $purge_nova_config       = false,
+  $libvirt_vif_driver      = 'nova.virt.libvirt.vif.LibvirtGenericVIFDriver',
   $enabled_apis            = 'ec2,osapi_compute,metadata',
   # Virtualization
   $libvirt_type            = 'kvm',
