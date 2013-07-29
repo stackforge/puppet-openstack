@@ -204,6 +204,7 @@ describe 'openstack::controller' do
         )
         should contain_class('keystone::endpoint').with(
           :public_address   => '10.0.0.1',
+          :public_protocol  => 'http',
           :internal_address => '127.0.0.1',
           :admin_address    => '127.0.0.1',
           :region           => 'RegionOne'
@@ -217,6 +218,7 @@ describe 'openstack::controller' do
           should contain_class("#{type}::keystone::auth").with(
             :password         => pw,
             :public_address   => '10.0.0.1',
+            :public_protocol  => 'http',
             :internal_address => '10.0.0.1',
             :admin_address    => '10.0.0.1',
             :region           => 'RegionOne'
@@ -254,6 +256,21 @@ describe 'openstack::controller' do
         should_not contain_class('nova::keystone::auth')
       end
     end
+
+    context 'when public_protocol is set to https' do
+
+      let :params do
+        default_params.merge(:public_protocol => 'https')
+      end
+
+      it 'should propagate it to the endpoints' do
+        should contain_class('keystone::endpoint').with(:public_protocol => 'https')
+        should contain_class('glance::keystone::auth').with(:public_protocol => 'https')
+        should contain_class('nova::keystone::auth').with(:public_protocol => 'https')
+        should contain_class('cinder::keystone::auth').with(:public_protocol => 'https')
+      end
+    end
+
   end
 
   it do
