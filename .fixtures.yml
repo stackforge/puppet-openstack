@@ -23,7 +23,7 @@ fixtures:
     'memcached': 'git://github.com/saz/puppet-memcached'
     "stdlib": "git://github.com/puppetlabs/puppetlabs-stdlib.git"
     "sysctl": "git://github.com/duritong/puppet-sysctl.git"
-    'inifile':  'git://github.com/cprice-puppet/puppetlabs-inifile'
+    'inifile':  'git://github.com/puppetlabs/puppetlabs-inifile'
     'vswitch': 'git://github.com/bodepd/puppet-vswitch'
     'tempest': 'git://github.com/stackforge/puppet-tempest'
     'vcsrepo': 'git://github.com/puppetlabs/puppetlabs-vcsrepo'
