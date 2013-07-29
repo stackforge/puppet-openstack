@@ -265,7 +265,7 @@ class openstack::compute (
       setup_test_volume   => $setup_test_volume,
       rbd_user            => $cinder_rbd_user,
       rbd_pool            => $cinder_rbd_pool,
-      rbd_secret_uuid     => $cinter_rbd_secret_uuid,
+      rbd_secret_uuid     => $cinder_rbd_secret_uuid,
       volume_driver       => $cinder_volume_driver,
     }
 
