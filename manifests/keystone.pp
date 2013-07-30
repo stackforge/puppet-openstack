@@ -14,6 +14,7 @@
 # [glance_user_password] Auth password for glance user. Required.
 # [nova_user_password] Auth password for nova user. Required.
 # [public_address] Public address where keystone can be accessed. Required.
+# [public_protocol] Public protocol over which keystone can be accessed. Defaults to 'http'
 # [db_type] Type of DB used. Currently only supports mysql. Optional. Defaults to  'mysql'
 # [db_user] Name of keystone db user. Optional. Defaults to  'keystone'
 # [db_name] Name of keystone DB. Optional. Defaults to  'keystone'
@@ -57,6 +58,7 @@ class openstack::keystone (
   $cinder_user_password,
   $quantum_user_password,
   $public_address,
+  $public_protocol          = 'http',
   $db_host                  = '127.0.0.1',
   $idle_timeout             = '200',
   $swift_user_password      = false,
@@ -210,6 +212,7 @@ class openstack::keystone (
     # Setup the Keystone Identity Endpoint
     class { 'keystone::endpoint':
       public_address   => $public_address,
+      public_protocol  => $public_protocol,
       admin_address    => $admin_real,
       internal_address => $internal_real,
       region           => $region,
@@ -220,6 +223,7 @@ class openstack::keystone (
       class { 'glance::keystone::auth':
         password         => $glance_user_password,
         public_address   => $glance_public_real,
+        public_protocol  => $public_protocol,
         admin_address    => $glance_admin_real,
         internal_address => $glance_internal_real,
         region           => $region,
@@ -231,6 +235,7 @@ class openstack::keystone (
       class { 'nova::keystone::auth':
         password         => $nova_user_password,
         public_address   => $nova_public_real,
+        public_protocol  => $public_protocol,
         admin_address    => $nova_admin_real,
         internal_address => $nova_internal_real,
         region           => $region,
@@ -244,6 +249,7 @@ class openstack::keystone (
       class { 'cinder::keystone::auth':
         password         => $cinder_user_password,
         public_address   => $cinder_public_real,
+        public_protocol  => $public_protocol,
         admin_address    => $cinder_admin_real,
         internal_address => $cinder_internal_real,
         region           => $region,
@@ -253,6 +259,7 @@ class openstack::keystone (
       class { 'quantum::keystone::auth':
         password         => $quantum_user_password,
         public_address   => $quantum_public_real,
+        public_protocol  => $public_protocol,
         admin_address    => $quantum_admin_real,
         internal_address => $quantum_internal_real,
         region           => $region,
@@ -268,6 +275,7 @@ class openstack::keystone (
       class { 'swift::keystone::auth':
         password         => $swift_user_password,
         public_address   => $swift_public_real,
+        public_protocol  => $public_protocol,
         admin_address    => $swift_admin_real,
         internal_address => $swift_internal_real,
         address          => $swift_public_real,
