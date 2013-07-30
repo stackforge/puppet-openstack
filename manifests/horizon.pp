@@ -100,4 +100,11 @@ class openstack::horizon (
     django_debug          => $django_debug,
     api_result_limit      => $api_result_limit,
   }
+
+  if $::selinux {
+    selboolean{'httpd_can_network_connect':
+      value      => on,
+      persistent => true,
+    }
+  }
 }
