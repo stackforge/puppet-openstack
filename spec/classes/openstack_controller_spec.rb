@@ -219,8 +219,8 @@ describe 'openstack::controller' do
             :password         => pw,
             :public_address   => '10.0.0.1',
             :public_protocol  => 'http',
-            :internal_address => '10.0.0.1',
-            :admin_address    => '10.0.0.1',
+            :internal_address => '127.0.0.1',
+            :admin_address    => '127.0.0.1',
             :region           => 'RegionOne'
           )
         end
@@ -271,6 +271,31 @@ describe 'openstack::controller' do
       end
     end
 
+    context 'with different public, internal and admin addresses' do
+      let :params do
+        default_params.merge(
+          :public_address   => '1.1.1.1',
+          :internal_address => '2.2.2.2',
+          :admin_address    => '3.3.3.3'
+        )
+      end
+
+      it 'should set addresses in subclasses' do
+        should contain_class('keystone::endpoint').with(
+          :public_address   => '1.1.1.1',
+          :internal_address => '2.2.2.2',
+          :admin_address    => '3.3.3.3'
+        )
+
+        ['nova', 'cinder', 'glance'].each do |type|
+          should contain_class("#{type}::keystone::auth").with(
+            :public_address   => '1.1.1.1',
+            :internal_address => '2.2.2.2',
+            :admin_address    => '3.3.3.3'
+          )
+        end
+      end
+    end
   end
 
   it do
