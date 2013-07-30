@@ -117,6 +117,7 @@ class openstack::provision(
     ensure          => present,
     router_external => true,
     tenant_name     => $admin_tenant_name,
+    shared          => true,
   }
   quantum_subnet { $public_subnet_name:
     ensure          => 'present',
@@ -127,6 +128,7 @@ class openstack::provision(
   quantum_network { $private_network_name:
     ensure      => present,
     tenant_name => $tenant_name,
+    shared      => true,
   }
   quantum_subnet { $private_subnet_name:
     ensure       => present,
