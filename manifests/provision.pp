@@ -68,10 +68,10 @@ class openstack::provision(
   $configure_tempest         = false,
   $identity_uri              = undef,
   $tempest_repo_uri          = 'git://github.com/openstack/tempest.git',
+  $tempest_repo_revision     = undef,
   $tempest_clone_path        = '/var/lib/tempest',
   $tempest_clone_owner       = 'root',
   $setup_venv                = false,
-  $version_to_test           = 'master',
   $resize_available          = undef,
   $change_password_available = undef
 ) {
