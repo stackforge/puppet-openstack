@@ -45,6 +45,7 @@ describe 'openstack::glance' do
         :keystone_user     => 'glance',
         :keystone_password => 'glance_user_pass',
         :sql_connection    => 'mysql://glance:glance_db_pass@127.0.0.1/glance',
+        :sql_idle_timeout  => '3600',
         :enabled           => true
       )
       should contain_class('glance::backend::file')
