@@ -14,14 +14,14 @@ describe 'openstack::provision' do
         :configure_tempest         => true,
         :resize_available          => true,
         :change_password_available => true,
-        :version_to_test           => 'stable/grizzly'
+        :tempest_repo_revision     => 'stable/grizzly'
       }
     end
 
     it { should contain_class('tempest').with(
       :resize_available          => true,
       :change_password_available => true,
-      :version_to_test           => 'stable/grizzly'
+      :tempest_repo_revision     => 'stable/grizzly'
     ) }
 
   end
