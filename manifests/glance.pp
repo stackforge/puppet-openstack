@@ -97,6 +97,7 @@ class openstack::glance (
     keystone_user     => 'glance',
     keystone_password => $user_password,
     sql_connection    => $sql_connection,
+    sql_idle_timeout  => $sql_idle_timeout,
     enabled           => $enabled,
   }
 
