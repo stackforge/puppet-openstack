@@ -34,7 +34,6 @@ describe 'openstack::quantum' do
         :rabbit_virtual_host => '/',
         :rabbit_user         => 'rabbit_user',
         :rabbit_password     => 'rabbit_pass',
-        :debug               => false,
         :verbose             => false,
         :debug               => false
       )
@@ -94,7 +93,8 @@ describe 'openstack::quantum' do
       params.merge!(:enable_dhcp_agent => true)
     end
     it { should contain_class('quantum::agents::dhcp').with(
-      :use_namespaces => true
+      :use_namespaces => true,
+      :debug          => false
     ) }
   end
 
@@ -103,7 +103,8 @@ describe 'openstack::quantum' do
       params.merge!(:enable_l3_agent => true)
     end
     it { should contain_class('quantum::agents::l3').with(
-      :use_namespaces => true
+      :use_namespaces => true,
+      :debug          => false
     ) }
   end
 
@@ -128,7 +129,8 @@ describe 'openstack::quantum' do
         :auth_password  => 'q_user_pass',
         :shared_secret  => 'foo',
         :auth_url       => 'http://localhost:35357/v2.0',
-        :metadata_ip    => '127.0.0.1'
+        :metadata_ip    => '127.0.0.1',
+        :debug          => false
       ) }
     end
   end

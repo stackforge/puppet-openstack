@@ -248,11 +248,13 @@ class openstack::quantum (
   if $enable_dhcp_agent {
     class { 'quantum::agents::dhcp':
       use_namespaces => true,
+      debug          => $debug,
     }
   }
   if $enable_l3_agent {
     class { 'quantum::agents::l3':
       use_namespaces => true,
+      debug          => $debug,
     }
   }
 
@@ -265,6 +267,7 @@ class openstack::quantum (
       shared_secret  => $shared_secret,
       auth_url       => $auth_url,
       metadata_ip    => $metadata_ip,
+      debug          => $debug,
     }
   }
 
