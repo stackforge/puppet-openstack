@@ -14,6 +14,10 @@
 # [keystone_admin_token] Admin token for keystone.
 # [keystone_bind_address] Address that keystone api service should bind to.
 #   Optional. Defaults to '0.0.0.0'.
+# [keystone_token_format] Format keystone uses for tokens.
+#   Optional. Supports 'PKI' and 'UUID'. Defaults to 'PKI'.
+# [keystone_enable_ssl] Configure Keystone to support SSL certificate-based authentication.
+#   Optional. Defaults to true.
 # [glance_db_password] Glance DB password.
 # [glance_user_password] Glance service user password.
 # [nova_db_password] Nova DB password.
@@ -135,6 +139,8 @@ class openstack::all (
   $keystone_admin_tenant   = 'admin',
   $keystone_bind_address   = '0.0.0.0',
   $region                  = 'RegionOne',
+  $keystone_token_format   = 'PKI',
+  $keystone_enable_ssl     = true,
   # Glance
   $glance_db_user          = 'glance',
   $glance_db_dbname        = 'glance',
@@ -305,6 +311,8 @@ class openstack::all (
     quantum_user_password => $quantum_user_password,
     enabled               => $enabled,
     bind_host             => $keystone_bind_address,
+    token_format          => $keystone_token_format,
+    enable_ssl            => $keystone_enable_ssl,
   }
 
 

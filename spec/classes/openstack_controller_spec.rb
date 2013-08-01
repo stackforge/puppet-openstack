@@ -194,7 +194,9 @@ describe 'openstack::controller' do
           :catalog_type   => 'sql',
           :enabled        => true,
           :admin_token    => 'keystone_admin_token',
-          :sql_connection => "mysql://keystone:keystone_pass@127.0.0.1/keystone"
+          :sql_connection => "mysql://keystone:keystone_pass@127.0.0.1/keystone",
+          :token_format   => 'PKI',
+          :enable_ssl     => true
         )
 
         should contain_class('keystone::roles::admin').with(

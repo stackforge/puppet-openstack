@@ -19,6 +19,10 @@
 # [db_user] Name of keystone db user. Optional. Defaults to  'keystone'
 # [db_name] Name of keystone DB. Optional. Defaults to  'keystone'
 # [admin_tenant] Name of keystone admin tenant. Optional. Defaults to  'admin'
+# [token_format] Format keystone uses for tokens.
+#   Optional. Supports 'PKI' and 'UUID'. Defaults to 'PKI'.
+# [enable_ssl] Configure Keystone to support SSL certificate-based authentication.
+#   Optional. Defaults to true.
 # [verbose] Log verbosely. Optional. Defaults to false.
 # [debug] Log at a debug-level. Optional. Defaults to false.
 # [bind_host] Address that keystone binds to. Optional. Defaults to  '0.0.0.0'
@@ -70,6 +74,8 @@ class openstack::keystone (
   $debug                    = false,
   $bind_host                = '0.0.0.0',
   $region                   = 'RegionOne',
+  $token_format             = 'PKI',
+  $enable_ssl               = true,
   $internal_address         = false,
   $admin_address            = false,
   $glance_public_address    = false,
@@ -199,6 +205,8 @@ class openstack::keystone (
     admin_token    => $admin_token,
     enabled        => $enabled,
     sql_connection => $sql_conn,
+    token_format   => $token_format,
+    enable_ssl     => $enable_ssl,
   }
 
   if ($enabled) {
