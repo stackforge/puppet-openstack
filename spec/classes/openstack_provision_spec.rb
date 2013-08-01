@@ -24,6 +24,20 @@ describe 'openstack::provision' do
       :tempest_repo_revision     => 'stable/grizzly'
     ) }
 
+    it 'should configure quantum networks' do
+      should contain_quantum_network('public').with(
+        'ensure'          => 'present',
+        'router_external' => true,
+        'tenant_name'     => 'admin',
+        'shared'          => true
+      )
+      should contain_quantum_network('private').with(
+        'ensure'          => 'present',
+        'tenant_name'     => 'demo',
+        'shared'          => true
+      )
+    end
+
   end
 
 end
