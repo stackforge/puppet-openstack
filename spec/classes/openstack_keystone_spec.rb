@@ -38,7 +38,9 @@ describe 'openstack::keystone' do
         :catalog_type   => 'sql',
         :admin_token    => 'token',
         :enabled        => true,
-        :sql_connection => 'mysql://keystone:pass@127.0.0.1/keystone'
+        :sql_connection => 'mysql://keystone:pass@127.0.0.1/keystone',
+        :token_format   => 'PKI',
+        :enable_ssl     => true
       )
       [ 'glance', 'cinder', 'quantum' ].each do |type|
         should contain_class("#{type}::keystone::auth").with(

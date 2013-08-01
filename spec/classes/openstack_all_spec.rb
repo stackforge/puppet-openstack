@@ -246,7 +246,9 @@ describe 'openstack::all' do
         :quantum               => true,
         :quantum_user_password => 'quantum_user_password',
         :enabled               => true,
-        :bind_host             => '0.0.0.0'
+        :bind_host             => '0.0.0.0',
+        :enable_ssl            => true,
+        :token_format          => 'PKI'
       )
     end
 
