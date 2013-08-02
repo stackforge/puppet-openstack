@@ -74,18 +74,6 @@ describe 'openstack::quantum' do
       :local_ip         => '10.0.0.2',
       :firewall_driver  => 'quantum.agent.linux.iptables_firewall.OVSHybridIptablesFirewallDriver'
     )}
-
-    context 'without ovs_local_ip' do
-      before do
-        params.delete(:ovs_local_ip)
-      end
-      it 'should fail' do
-        expect do
-          subject
-        end.to raise_error(Puppet::Error, /ovs_local_ip parameter must be set/)
-      end
-    end
-
   end
 
   context 'when dhcp agent is enabled' do

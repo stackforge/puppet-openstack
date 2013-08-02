@@ -71,9 +71,6 @@ describe 'openstack::all' do
           :bridge_interface      => 'eth0'
         )
       end
-      it 'raises an error if no ovs_local_ip is set' do
-        expect { subject }.to raise_error(Puppet::Error, /ovs_local_ip parameter must be set when using ovs agent/)
-      end
     end
 
     context 'with quantum_user_password, quantum_db_password, bridge_interface, and ovs_local_ip set' do
