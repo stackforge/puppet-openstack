@@ -101,7 +101,7 @@ class openstack::horizon (
     api_result_limit      => $api_result_limit,
   }
 
-  if $::selinux {
+  if $::selinux and $::selinux != 'false' {
     selboolean{'httpd_can_network_connect':
       value      => on,
       persistent => true,
