@@ -68,7 +68,7 @@
 #
 # [ovs_local_ip]
 #   Ip address to use for tunnel endpoint.
-#   Only required when ovs is enabled. No default.
+#   Only required when tenant_network_type is 'gre'. No default.
 #
 # [ovs_enable_tunneling]
 #    Whether ovs tunnels should be enabled.
@@ -233,9 +233,6 @@ class openstack::quantum (
   }
 
   if $enable_ovs_agent {
-    if ! $ovs_local_ip {
-      fail('ovs_local_ip parameter must be set when using ovs agent')
-    }
     class { 'quantum::agents::ovs':
       bridge_uplinks   => $bridge_uplinks,
       bridge_mappings  => $bridge_mappings,
