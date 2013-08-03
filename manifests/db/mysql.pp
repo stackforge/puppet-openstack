@@ -10,6 +10,8 @@
 # [keystone_db_password] Password for keystone database. Required.
 # [glance_db_password] Password for glance database. Required.
 # [nova_db_password] Password for nova database. Required.
+# [cinder_db_password] Password for cinder database. Required.
+# [quantum_db_password] Password for quantum database. Required.
 # [mysql_bind_address] Address that mysql will bind to. Optional .Defaults to '0.0.0.0'.
 # [mysql_account_security] If a secure mysql db should be setup. Optional .Defaults to true.
 # [keystone_db_user] DB user for keystone. Optional. Defaults to 'keystone'.
@@ -18,6 +20,12 @@
 # [glance_db_dbname]. Name of glance DB. Optional. Defaults to 'glance'.
 # [nova_db_user]. Name of nova DB user. Optional. Defaults to 'nova'.
 # [nova_db_dbname]. Name of nova DB. Optional. Defaults to 'nova'.
+# [cinder]. Whether create cinder db. Optional. Defaults to 'true'.
+# [cinder_db_user]. Name of cinder DB user. Optional. Defaults to 'cinder'.
+# [cinder_db_dbname]. Name of cinder DB. Optional. Defaults to 'cinder'.
+# [quantum]. Whether create quantum db. Optional. Defaults to 'true'.
+# [quantum_db_user]. Name of quantum DB user. Optional. Defaults to 'quantum'.
+# [quantum_db_dbname]. Name of quantum DB. Optional. Defaults to 'quantum'.
 # [allowed_hosts] List of hosts that are allowed access. Optional. Defaults to false.
 # [enabled] If the db service should be started. Optional. Defaults to true.
 #
@@ -28,6 +36,8 @@
 #    keystone_db_password => 'changeme',
 #    glance_db_password   => 'changeme',
 #    nova_db_password     => 'changeme',
+#    cinder_db_password   => 'changeme',
+#    quantum_db_password  => 'changeme',
 #    allowed_hosts        => ['127.0.0.1', '10.0.0.%'],
 #  }
 class openstack::db::mysql (
