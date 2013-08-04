@@ -172,6 +172,8 @@ class openstack::controller (
   $glance_db_dbname        = 'glance',
   $glance_api_servers      = undef,
   $glance_backend          = 'file',
+  $rbd_store_user          = undef,
+  $rbd_store_pool          = 'images',
   # Glance Swift Backend
   $swift_store_user        = 'swift_store_user',
   $swift_store_key         = 'swift_store_key',
@@ -367,6 +369,8 @@ class openstack::controller (
     swift_store_user => $swift_store_user,
     swift_store_key  => $swift_store_key,
     enabled          => $enabled,
+    rbd_store_user   => $rbd_store_user,
+    rbd_store_pool   => $rbd_store_pool,
   }
 
   ######## BEGIN NOVA ###########
