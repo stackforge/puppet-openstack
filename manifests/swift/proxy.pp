@@ -114,7 +114,7 @@ class openstack::swift::proxy (
 
   # deploy a script that can be used for testing
   class {'swift::test_file':
-    auth_server  => $controller_node_address,
+    auth_server  => $real_keystone_host,
     tenant       => $swift_admin_tenant,
     user         => $swift_admin_user,
     password     => $swift_user_password,
