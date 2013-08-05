@@ -28,13 +28,11 @@ describe 'openstack::provision' do
       should contain_quantum_network('public').with(
         'ensure'          => 'present',
         'router_external' => true,
-        'tenant_name'     => 'admin',
-        'shared'          => true
+        'tenant_name'     => 'admin'
       )
       should contain_quantum_network('private').with(
         'ensure'          => 'present',
         'tenant_name'     => 'demo',
-        'shared'          => true
       )
     end
 
