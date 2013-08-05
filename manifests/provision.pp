@@ -121,6 +121,7 @@ class openstack::provision(
   quantum_subnet { $public_subnet_name:
     ensure          => 'present',
     cidr            => $floating_range,
+    enable_dhcp     => false,
     network_name    => $public_network_name,
     tenant_name     => $admin_tenant_name,
   }
