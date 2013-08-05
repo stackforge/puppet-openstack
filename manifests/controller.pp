@@ -472,6 +472,7 @@ class openstack::controller (
       ovs_local_ip          => $ovs_local_ip_real,
       bridge_uplinks        => $bridge_uplinks_real,
       bridge_mappings       => $bridge_mappings_real,
+      external_bridge_name => $external_bridge_name,
       enable_ovs_agent      => $enable_ovs_agent,
       firewall_driver       => $firewall_driver,
       # Database

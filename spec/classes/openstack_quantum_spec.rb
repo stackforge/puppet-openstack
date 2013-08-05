@@ -100,11 +100,14 @@ describe 'openstack::quantum' do
 
   context 'when l3 agent is enabled' do
     before do
-      params.merge!(:enable_l3_agent => true)
+      params.merge!(:enable_l3_agent => true,
+                    :external_network_bridge => 'br-ex'
+                   )
     end
     it { should contain_class('quantum::agents::l3').with(
-      :use_namespaces => true,
-      :debug          => false
+      :use_namespaces          => true,
+      :external_network_bridge => 'br-ex'
+      :debug                   => false
     ) }
   end
 

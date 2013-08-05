@@ -169,6 +169,7 @@ class openstack::quantum (
   $ovs_enable_tunneling   = true,
   $bridge_uplinks         = [],
   $bridge_mappings        = [],
+  $external_bridge_name   = br-ex,
   # rely on the default set in ovs
   $firewall_driver       = undef,
   # networking and Interface Information
@@ -253,8 +254,9 @@ class openstack::quantum (
   }
   if $enable_l3_agent {
     class { 'quantum::agents::l3':
-      use_namespaces => true,
-      debug          => $debug,
+      use_namespaces       => true,
+      external_bridge_name => $external_bridge_name,
+      debug                => $debug,
     }
   }
 
