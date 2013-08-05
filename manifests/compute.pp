@@ -11,6 +11,10 @@
 #   Driver used to implement Quantum firewalling.
 #   (optional) Defaults to false.
 #
+# [ovs_enable_tunneling]
+#   Enable/disable the Quantum OVS GRE tunneling networking mode.
+#   Optional.  Defaults to true.
+#
 # [rabbit_hosts] An array of IP addresses or Virttual IP address for connecting to a RabbitMQ Cluster.
 #   Optional. Defaults to false.
 #
@@ -54,6 +58,7 @@ class openstack::compute (
   $quantum_auth_url              = 'http://127.0.0.1:35357/v2.0',
   $keystone_host                 = '127.0.0.1',
   $quantum_host                  = '127.0.0.1',
+  $ovs_enable_tunneling          = true,
   $ovs_local_ip                  = false,
   $quantum_firewall_driver       = false,
   $bridge_mappings               = undef,
@@ -203,29 +208,30 @@ class openstack::compute (
 
     class { 'openstack::quantum':
       # Database
-      db_host           => $db_host,
+      db_host              => $db_host,
       # Networking
-      ovs_local_ip      => $ovs_local_ip_real,
+      ovs_local_ip         => $ovs_local_ip_real,
       # Rabbit
-      rabbit_host       => $rabbit_host,
-      rabbit_user       => $rabbit_user,
-      rabbit_password   => $rabbit_password,
+      rabbit_host          => $rabbit_host,
+      rabbit_user          => $rabbit_user,
+      rabbit_password      => $rabbit_password,
       # Quantum OVS
-      enable_ovs_agent  => $enable_ovs_agent,
-      firewall_driver   => $quantum_firewall_driver,
+      enable_ovs_agent     => $enable_ovs_agent,
+      ovs_enable_tunneling => $ovs_enable_tunneling,
+      firewall_driver      => $quantum_firewall_driver,
       # Quantum L3 Agent
-      enable_l3_agent   => $enable_l3_agent,
-      enable_dhcp_agent => $enable_dhcp_agent,
-      auth_url          => $quantum_auth_url,
-      user_password     => $quantum_user_password,
+      enable_l3_agent      => $enable_l3_agent,
+      enable_dhcp_agent    => $enable_dhcp_agent,
+      auth_url             => $quantum_auth_url,
+      user_password        => $quantum_user_password,
       # Keystone
-      keystone_host     => $keystone_host,
+      keystone_host        => $keystone_host,
       # General
-      enabled           => $enabled,
-      enable_server     => false,
-      verbose           => $verbose,
-      bridge_mappings   => $bridge_mappings,
-      bridge_uplinks    => $bridge_uplinks
+      enabled              => $enabled,
+      enable_server        => false,
+      verbose              => $verbose,
+      bridge_mappings      => $bridge_mappings,
+      bridge_uplinks       => $bridge_uplinks
     }
 
     class { 'nova::compute::quantum':
