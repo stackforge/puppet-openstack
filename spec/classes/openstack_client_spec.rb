@@ -12,7 +12,7 @@ describe 'openstack::client' do
     it { should include_class('glance::client') }
     it { should include_class('keystone::client') }
     it { should include_class('nova::client') }
-    it { should include_class('quantum::client') }
+    it { should include_class('neutron::client') }
   end
 
   describe 'without ceilometer' do
@@ -40,8 +40,8 @@ describe 'openstack::client' do
     it { should_not include_class('nova::client') }
   end
 
-  describe 'without quantum' do
-    let (:params) { {:quantum => false }}
-    it { should_not include_class('quantum::client') }
+  describe 'without neutron' do
+    let (:params) { {:neutron => false }}
+    it { should_not include_class('neutron::client') }
   end
 end

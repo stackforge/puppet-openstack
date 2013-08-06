@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe 'openstack::quantum' do
+describe 'openstack::neutron' do
 
   let :facts do
     {:osfamily => 'Redhat'}
@@ -14,7 +14,7 @@ describe 'openstack::quantum' do
     }
   end
 
-  context 'install quantum with default settings' do
+  context 'install neutron with default settings' do
     before do
       params.delete(:db_password)
     end
@@ -24,9 +24,9 @@ describe 'openstack::quantum' do
       end.to raise_error(Puppet::Error, /db password must be set/)
     end
   end
-  context 'install quantum with default and database password' do
+  context 'install neutron with default and database password' do
     it 'should perform default configuration' do
-      should contain_class('quantum').with(
+      should contain_class('neutron').with(
         :enabled             => true,
         :bind_host           => '0.0.0.0',
         :rabbit_host         => '127.0.0.1',
@@ -37,12 +37,12 @@ describe 'openstack::quantum' do
         :verbose             => false,
         :debug               => false
       )
-      should contain_class('quantum::server').with(
+      should contain_class('neutron::server').with(
         :auth_host     => '127.0.0.1',
         :auth_password => 'q_user_pass'
       )
-      should contain_class('quantum::plugins::ovs').with(
-        :sql_connection      => "mysql://quantum:bar@127.0.0.1/quantum?charset=utf8",
+      should contain_class('neutron::plugins::ovs').with(
+        :sql_connection      => "mysql://neutron:bar@127.0.0.1/neutron?charset=utf8",
         :tenant_network_type => 'gre'
       )
     end
@@ -53,8 +53,8 @@ describe 'openstack::quantum' do
       params.merge!(:enable_server => false)
     end
     it 'should not configure server' do
-      should_not contain_class('quantum::server')
-      should_not contain_class('quantum::plugins::ovs')
+      should_not contain_class('neutron::server')
+      should_not contain_class('neutron::plugins::ovs')
     end
   end
 
@@ -67,12 +67,12 @@ describe 'openstack::quantum' do
         :ovs_local_ip     => '10.0.0.2'
       )
     end
-    it { should contain_class('quantum::agents::ovs').with(
+    it { should contain_class('neutron::agents::ovs').with(
       :bridge_uplinks   => ['br-ex:eth0'],
       :bridge_mappings  => ['default:br-ex'],
       :enable_tunneling => true,
       :local_ip         => '10.0.0.2',
-      :firewall_driver  => 'quantum.agent.linux.iptables_firewall.OVSHybridIptablesFirewallDriver'
+      :firewall_driver  => 'neutron.agent.linux.iptables_firewall.OVSHybridIptablesFirewallDriver'
     )}
   end
 
@@ -80,7 +80,7 @@ describe 'openstack::quantum' do
     before do
       params.merge!(:enable_dhcp_agent => true)
     end
-    it { should contain_class('quantum::agents::dhcp').with(
+    it { should contain_class('neutron::agents::dhcp').with(
       :use_namespaces => true,
       :debug          => false
     ) }
@@ -90,7 +90,7 @@ describe 'openstack::quantum' do
     before do
       params.merge!(:enable_l3_agent => true)
     end
-    it { should contain_class('quantum::agents::l3').with(
+    it { should contain_class('neutron::agents::l3').with(
       :use_namespaces => true,
       :debug          => false
     ) }
@@ -113,7 +113,7 @@ describe 'openstack::quantum' do
           :shared_secret => 'foo'
         )
       end
-      it { should contain_class('quantum::agents::metadata').with(
+      it { should contain_class('neutron::agents::metadata').with(
         :auth_password  => 'q_user_pass',
         :shared_secret  => 'foo',
         :auth_url       => 'http://localhost:35357/v2.0',

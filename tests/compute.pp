@@ -6,7 +6,7 @@ class { 'openstack::compute':
   libvirt_type         => 'qemu',
   nova_db_password     => 'password',
   nova_user_password   => 'password',
-  quantum              => false,
+  neutron              => false,
   rabbit_password      => 'password',
   vncproxy_host        => '192.168.1.1',
 }

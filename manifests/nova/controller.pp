@@ -21,15 +21,15 @@
 # [rabbit_cluster_nodes] An array of Rabbit Broker IP addresses within the Cluster.
 #   Optional. Defaults to false.
 #
-# [quantum]
-#   Specifies if nova should be configured to use quantum.
+# [neutron]
+#   Specifies if nova should be configured to use neutron.
 #   (optional) Defaults to false (indicating nova-networks should be used)
 #
-# [quantum_user_password]
-#   password that nova uses to authenticate with quantum.
+# [neutron_user_password]
+#   password that nova uses to authenticate with neutron.
 #
 # [metadata_shared_secret] Secret used to authenticate between nova and the
-#   quantum metadata services.
+#   neutron metadata services.
 #   (Optional). Defaults to undef.
 #
 # [sql_idle_timeout]
@@ -70,9 +70,9 @@ class openstack::nova::controller (
   $multi_host                = false,
   $public_interface          = undef,
   $private_interface         = undef,
-  # quantum
-  $quantum                   = true,
-  $quantum_user_password     = false,
+  # neutron
+  $neutron                   = true,
+  $neutron_user_password     = false,
   $metadata_shared_secret    = undef,
   # Nova
   $nova_admin_tenant_name    = 'services',
@@ -161,7 +161,7 @@ class openstack::nova::controller (
     enabled_apis                         => $enabled_apis,
     api_bind_address                     => $api_bind_address,
     auth_host                            => $keystone_host,
-    quantum_metadata_proxy_shared_secret => $metadata_shared_secret,
+    neutron_metadata_proxy_shared_secret => $metadata_shared_secret,
   }
 
 
@@ -171,7 +171,7 @@ class openstack::nova::controller (
     $really_create_networks = false
   }
 
-  if $quantum == false {
+  if $neutron == false {
     # Configure nova-network
     if $multi_host {
       nova_config { 'DEFAULT/multi_host': value => true }
@@ -204,19 +204,19 @@ class openstack::nova::controller (
       install_service   => $enable_network_service,
     }
   } else {
-    # Configure Nova for Quantum networking
+    # Configure Nova for Neutron networking
 
-    if ! $quantum_user_password {
-      fail('quantum_user_password must be specified when quantum is configured')
+    if ! $neutron_user_password {
+      fail('neutron_user_password must be specified when neutron is configured')
     }
 
-    class { 'nova::network::quantum':
-      quantum_admin_password    => $quantum_user_password,
-      quantum_auth_strategy     => 'keystone',
-      quantum_url               => "http://${keystone_host}:9696",
-      quantum_admin_tenant_name => 'services',
-      quantum_admin_username    => 'quantum',
-      quantum_admin_auth_url    => "http://${keystone_host}:35357/v2.0",
+    class { 'nova::network::neutron':
+      neutron_admin_password    => $neutron_user_password,
+      neutron_auth_strategy     => 'keystone',
+      neutron_url               => "http://${keystone_host}:9696",
+      neutron_admin_tenant_name => 'services',
+      neutron_admin_username    => 'neutron',
+      neutron_admin_auth_url    => "http://${keystone_host}:35357/v2.0",
     }
   }
 

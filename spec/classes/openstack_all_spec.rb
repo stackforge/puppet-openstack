@@ -33,51 +33,51 @@ describe 'openstack::all' do
     }
   end
 
-  context 'quantum enabled (which is the default)' do
+  context 'neutron enabled (which is the default)' do
     before do
       params.merge!(:cinder => false)
     end
 
-    it 'raises an error if no quantum_user_password is set' do
-      expect { subject }.to raise_error(Puppet::Error, /quantum_user_password must be specified when quantum is configured/)
+    it 'raises an error if no neutron_user_password is set' do
+      expect { subject }.to raise_error(Puppet::Error, /neutron_user_password must be specified when neutron is configured/)
     end
 
-    context 'with quantum_user_password set' do
+    context 'with neutron_user_password set' do
       before do
-        params.merge!(:quantum_user_password => 'quantum_user_password')
+        params.merge!(:neutron_user_password => 'neutron_user_password')
       end
-      it 'raises an error if no quantum_db_password is set' do
-        expect { subject }.to raise_error(Puppet::Error, /quantum_db_password must be set when configuring quantum/)
+      it 'raises an error if no neutron_db_password is set' do
+        expect { subject }.to raise_error(Puppet::Error, /neutron_db_password must be set when configuring neutron/)
       end
     end
 
-    context 'with quantum_user_password and quantum_db_password set' do
+    context 'with neutron_user_password and neutron_db_password set' do
       before do
         params.merge!(
-          :quantum_user_password => 'quantum_user_password',
-          :quantum_db_password => 'quantum_db_password'
+          :neutron_user_password => 'neutron_user_password',
+          :neutron_db_password => 'neutron_db_password'
         )
       end
       it 'raises an error if no bridge_interface is set' do
-        expect { subject }.to raise_error(Puppet::Error, /bridge_interface must be set when configuring quantum/)
+        expect { subject }.to raise_error(Puppet::Error, /bridge_interface must be set when configuring neutron/)
       end
     end
 
-    context 'with quantum_user_password, quantum_db_password, and bridge_interface set' do
+    context 'with neutron_user_password, neutron_db_password, and bridge_interface set' do
       before do
         params.merge!(
-          :quantum_user_password => 'quantum_user_password',
-          :quantum_db_password   => 'quantum_db_password',
+          :neutron_user_password => 'neutron_user_password',
+          :neutron_db_password   => 'neutron_db_password',
           :bridge_interface      => 'eth0'
         )
       end
     end
 
-    context 'with quantum_user_password, quantum_db_password, bridge_interface, and ovs_local_ip set' do
+    context 'with neutron_user_password, neutron_db_password, bridge_interface, and ovs_local_ip set' do
       before do
         params.merge!(
-          :quantum_user_password => 'quantum_user_password',
-          :quantum_db_password   => 'quantum_db_password',
+          :neutron_user_password => 'neutron_user_password',
+          :neutron_db_password   => 'neutron_db_password',
           :bridge_interface      => 'eth0',
           :ovs_local_ip          => '10.0.1.1'
         )
@@ -87,18 +87,18 @@ describe 'openstack::all' do
       end
     end
 
-    context 'with quantum_user_password, quantum_db_password, bridge_interface, ovs_local_ip, and shared_secret set' do
+    context 'with neutron_user_password, neutron_db_password, bridge_interface, ovs_local_ip, and shared_secret set' do
       before do
         params.merge!(
-          :quantum_user_password => 'quantum_user_password',
-          :quantum_db_password   => 'quantum_db_password',
+          :neutron_user_password => 'neutron_user_password',
+          :neutron_db_password   => 'neutron_db_password',
           :bridge_interface      => 'eth0',
           :ovs_local_ip          => '10.0.1.1',
           :metadata_shared_secret => 'shared_md_secret'
         )
       end
-      it 'contains an openstack::quantum class' do
-        should contain_class('openstack::quantum').with(
+      it 'contains an openstack::neutron class' do
+        should contain_class('openstack::neutron').with(
           :db_host             => '127.0.0.1',
           :rabbit_host         => '127.0.0.1',
           :rabbit_user         => 'openstack',
@@ -108,15 +108,15 @@ describe 'openstack::all' do
           :bridge_uplinks      => 'br-ex:eth0',
           :bridge_mappings     => 'default:br-ex',
           :enable_ovs_agent    => true,
-          :firewall_driver     => 'quantum.agent.linux.iptables_firewall.OVSHybridIptablesFirewallDriver',
-          :db_name             => 'quantum',
-          :db_user             => 'quantum',
-          :db_password         => 'quantum_db_password',
+          :firewall_driver     => 'neutron.agent.linux.iptables_firewall.OVSHybridIptablesFirewallDriver',
+          :db_name             => 'neutron',
+          :db_user             => 'neutron',
+          :db_password         => 'neutron_db_password',
           :enable_dhcp_agent   => true,
           :enable_l3_agent     => true,
           :enable_metadata_agent => true,
           :auth_url            => 'http://127.0.0.1:35357/v2.0',
-          :user_password       => 'quantum_user_password',
+          :user_password       => 'neutron_user_password',
           :shared_secret       => 'shared_md_secret',
           :keystone_host       => '127.0.0.1',
           :enabled             => true,
@@ -130,8 +130,8 @@ describe 'openstack::all' do
   context 'cinder enabled (which is the default)' do
     before do
       params.merge!(
-        :quantum_user_password => 'quantum_user_password',
-        :quantum_db_password   => 'quantum_db_password',
+        :neutron_user_password => 'neutron_user_password',
+        :neutron_db_password   => 'neutron_db_password',
         :bridge_interface      => 'eth0',
         :ovs_local_ip          => '10.0.1.1',
         :metadata_shared_secret => 'shared_md_secret'
@@ -180,11 +180,11 @@ describe 'openstack::all' do
     end
   end
 
-  context 'cinder and quantum enabled (which is the default)' do
+  context 'cinder and neutron enabled (which is the default)' do
     before do
       params.merge!(
-        :quantum_user_password  => 'quantum_user_password',
-        :quantum_db_password    => 'quantum_db_password',
+        :neutron_user_password  => 'neutron_user_password',
+        :neutron_db_password    => 'neutron_db_password',
         :bridge_interface       => 'eth0',
         :ovs_local_ip           => '10.0.1.1',
         :metadata_shared_secret => 'shared_md_secret',
@@ -211,10 +211,10 @@ describe 'openstack::all' do
         :cinder_db_user         => 'cinder',
         :cinder_db_password     => 'cinder_db_password',
         :cinder_db_dbname       => 'cinder',
-        :quantum                => true,
-        :quantum_db_user        => 'quantum',
-        :quantum_db_password    => 'quantum_db_password',
-        :quantum_db_dbname      => 'quantum',
+        :neutron                => true,
+        :neutron_db_user        => 'neutron',
+        :neutron_db_password    => 'neutron_db_password',
+        :neutron_db_dbname      => 'neutron',
         :allowed_hosts          => '%',
         :enabled                => true
       )
@@ -240,8 +240,8 @@ describe 'openstack::all' do
         :nova_user_password    => 'nova_pass',
         :cinder                => true,
         :cinder_user_password  => 'cinder_user_password',
-        :quantum               => true,
-        :quantum_user_password => 'quantum_user_password',
+        :neutron               => true,
+        :neutron_user_password => 'neutron_user_password',
         :enabled               => true,
         :bind_host             => '0.0.0.0'
       )
@@ -295,8 +295,8 @@ describe 'openstack::all' do
         :multi_host              => false,
         :public_interface        => 'eth0',
         :private_interface       => false,
-        :quantum                 => true,
-        :quantum_user_password   => 'quantum_user_password',
+        :neutron                 => true,
+        :neutron_user_password   => 'neutron_user_password',
         :metadata_shared_secret  => 'shared_md_secret',
         :nova_admin_tenant_name  => 'services',
         :nova_admin_user         => 'nova',
@@ -326,11 +326,11 @@ describe 'openstack::all' do
     end
   end
 
-  context 'without quantum' do
+  context 'without neutron' do
     before do
       params.merge!(
         :cinder => false,
-        :quantum => false,
+        :neutron => false,
         :private_interface => 'eth1')
     end
 

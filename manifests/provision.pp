@@ -2,14 +2,14 @@
 #
 # This class provides basic provisioning of a bare openstack
 # deployment.  A non-admin user is created, an image is uploaded, and
-# quantum networking is configured.  Once complete, it should be
+# neutron networking is configured.  Once complete, it should be
 # possible for the non-admin user to create a boot a VM that can be
 # logged into via vnc (ssh may require extra configuration).
 #
 # This module is currently limited to targetting an all-in-one
 # deployment for the following reasons:
 #
-#  - puppet-{keystone,glance,quantum} rely on their configuration files being
+#  - puppet-{keystone,glance,neutron} rely on their configuration files being
 #    available on localhost which is not guaranteed for multi-host.
 #
 #  - the gateway configuration only supports a host that uses the same
@@ -52,7 +52,7 @@ class openstack::provision(
   $image_source              = 'http://download.cirros-cloud.net/0.3.1/cirros-0.3.1-x86_64-disk.img',
   $image_ssh_user            = 'cirros',
 
-  ## Quantum
+  ## Neutron
   $tenant_name               = 'demo',
   $public_network_name       = 'public',
   $public_subnet_name        = 'public_subnet',
@@ -113,43 +113,43 @@ class openstack::provision(
 
   ## Networks
 
-  quantum_network { $public_network_name:
+  neutron_network { $public_network_name:
     ensure          => present,
     router_external => true,
     tenant_name     => $admin_tenant_name,
   }
-  quantum_subnet { $public_subnet_name:
+  neutron_subnet { $public_subnet_name:
     ensure          => 'present',
     cidr            => $floating_range,
     enable_dhcp     => false,
     network_name    => $public_network_name,
     tenant_name     => $admin_tenant_name,
   }
-  quantum_network { $private_network_name:
+  neutron_network { $private_network_name:
     ensure      => present,
     tenant_name => $tenant_name,
   }
-  quantum_subnet { $private_subnet_name:
+  neutron_subnet { $private_subnet_name:
     ensure       => present,
     cidr         => $fixed_range,
     network_name => $private_network_name,
     tenant_name  => $tenant_name,
   }
   # Tenant-owned router - assumes network namespace isolation
-  quantum_router { $router_name:
+  neutron_router { $router_name:
     ensure               => present,
     tenant_name          => $tenant_name,
     gateway_network_name => $public_network_name,
-    # A quantum_router resource must explicitly declare a dependency on
+    # A neutron_router resource must explicitly declare a dependency on
     # the first subnet of the gateway network.
-    require              => Quantum_subnet[$public_subnet_name],
+    require              => Neutron_subnet[$public_subnet_name],
   }
-  quantum_router_interface { "${router_name}:${private_subnet_name}":
+  neutron_router_interface { "${router_name}:${private_subnet_name}":
     ensure => present,
   }
 
   if $setup_ovs_bridge {
-    quantum_l3_ovs_bridge { $public_bridge_name:
+    neutron_l3_ovs_bridge { $public_bridge_name:
       ensure      => present,
       subnet_name => $public_subnet_name,
     }
@@ -178,7 +178,7 @@ class openstack::provision(
       admin_username            => $admin_username,
       admin_password            => $admin_password,
       admin_tenant_name         => $admin_tenant_name,
-      quantum_available         => true,
+      neutron_available         => true,
       public_network_name       => $public_network_name,
       resize_available          => $resize_available,
       change_password_available => $change_password_available,
@@ -186,7 +186,7 @@ class openstack::provision(
                                     Keystone_user[$username],
                                     Keystone_user[$alt_username],
                                     Glance_image[$image_name],
-                                    Quantum_network[$public_network_name],
+                                    Neutron_network[$public_network_name],
                                   ],
     }
   }

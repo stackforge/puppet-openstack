@@ -16,7 +16,7 @@ describe 'openstack::compute' do
       :enabled_apis              => 'ec2,osapi_compute,metadata',
       :nova_db_password          => 'pass',
       :cinder_db_password        => 'cinder_pass',
-      :quantum                   => false,
+      :neutron                   => false,
       :fixed_range               => '10.0.0.0/16'
     }
   end
@@ -180,14 +180,14 @@ describe 'openstack::compute' do
     end
   end
 
-  describe 'when quantum is false' do
+  describe 'when neutron is false' do
 
     describe 'configuring for multi host' do
       before do
         params.merge!(
           :multi_host       => true,
           :public_interface => 'eth0',
-          :quantum          => false
+          :neutron          => false
         )
       end
 
@@ -199,7 +199,7 @@ describe 'openstack::compute' do
           'enabled' => true,
           'install_service' => true
         })
-        should_not contain_class('openstack::quantum')
+        should_not contain_class('openstack::neutron')
       end
 
       describe 'with defaults' do
@@ -270,22 +270,22 @@ describe 'openstack::compute' do
     }
   end
 
-  describe 'when configuring quantum' do
+  describe 'when configuring neutron' do
     before do
       params.merge!(
         :internal_address        => '127.0.0.1',
         :public_interface        => 'eth3',
-        :quantum                 => true,
+        :neutron                 => true,
         :keystone_host           => '127.0.0.3',
-        :quantum_host            => '127.0.0.2',
+        :neutron_host            => '127.0.0.2',
         :ovs_enable_tunneling    => true,
-        :quantum_user_password   => 'quantum_user_password',
-        :quantum_firewall_driver => false
+        :neutron_user_password   => 'neutron_user_password',
+        :neutron_firewall_driver => false
       )
     end
 
-    it 'should configure quantum' do
-      should contain_class('openstack::quantum').with(
+    it 'should configure neutron' do
+      should contain_class('openstack::neutron').with(
         :db_host              => '127.0.0.1',
         :ovs_local_ip         => params[:internal_address],
         :rabbit_host          => params[:rabbit_host],
@@ -294,34 +294,34 @@ describe 'openstack::compute' do
         :rabbit_password      => params[:rabbit_password],
         :enable_ovs_agent     => true,
         :ovs_enable_tunneling => params[:ovs_enable_tunneling],
-        :firewall_driver      => params[:quantum_firewall_driver],
+        :firewall_driver      => params[:neutron_firewall_driver],
         :enable_l3_agent      => false,
         :enable_dhcp_agent    => false,
         :auth_url             => 'http://127.0.0.1:35357/v2.0',
-        :user_password        => params[:quantum_user_password],
+        :user_password        => params[:neutron_user_password],
         :keystone_host        => params[:keystone_host],
         :enabled              => true,
         :enable_server        => false,
         :verbose              => false
       )
 
-      should contain_class('nova::compute::quantum').with(
+      should contain_class('nova::compute::neutron').with(
         :libvirt_vif_driver => 'nova.virt.libvirt.vif.LibvirtGenericVIFDriver'
       )
 
-      should contain_class('nova::network::quantum').with(
-        :quantum_admin_password    => 'quantum_user_password',
-        :quantum_auth_strategy     => 'keystone',
-        :quantum_url               => "http://127.0.0.2:9696",
-        :quantum_admin_tenant_name => 'services',
-        :quantum_admin_username    => 'quantum',
-        :quantum_admin_auth_url    => "http://127.0.0.3:35357/v2.0"
+      should contain_class('nova::network::neutron').with(
+        :neutron_admin_password    => 'neutron_user_password',
+        :neutron_auth_strategy     => 'keystone',
+        :neutron_url               => "http://127.0.0.2:9696",
+        :neutron_admin_tenant_name => 'services',
+        :neutron_admin_username    => 'neutron',
+        :neutron_admin_auth_url    => "http://127.0.0.3:35357/v2.0"
       )
 
-      should_not contain_class('quantum::server')
-      should_not contain_class('quantum::plugins::ovs')
-      should_not contain_class('quantum::agents::dhcp')
-      should_not contain_class('quantum::agents::l3')
+      should_not contain_class('neutron::server')
+      should_not contain_class('neutron::plugins::ovs')
+      should_not contain_class('neutron::agents::dhcp')
+      should_not contain_class('neutron::agents::l3')
     end
   end
 

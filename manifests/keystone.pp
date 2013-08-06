@@ -44,7 +44,7 @@
 #   glance_user_password  => 'glance',
 #   nova_user_password    => 'nova',
 #   cinder_user_password  => 'cinder',
-#   quantum_user_password => 'quantum',
+#   neutron_user_password => 'neutron',
 #   public_address        => '192.168.1.1',
 #  }
 
@@ -56,7 +56,7 @@ class openstack::keystone (
   $glance_user_password,
   $nova_user_password,
   $cinder_user_password,
-  $quantum_user_password,
+  $neutron_user_password,
   $public_address,
   $public_protocol          = 'http',
   $db_host                  = '127.0.0.1',
@@ -81,16 +81,16 @@ class openstack::keystone (
   $cinder_public_address    = false,
   $cinder_internal_address  = false,
   $cinder_admin_address     = false,
-  $quantum_public_address   = false,
-  $quantum_internal_address = false,
-  $quantum_admin_address    = false,
+  $neutron_public_address   = false,
+  $neutron_internal_address = false,
+  $neutron_admin_address    = false,
   $swift_public_address     = false,
   $swift_internal_address   = false,
   $swift_admin_address      = false,
   $glance                   = true,
   $nova                     = true,
   $cinder                   = true,
-  $quantum                  = true,
+  $neutron                  = true,
   $swift                    = false,
   $enabled                  = true
 ) {
@@ -159,20 +159,20 @@ class openstack::keystone (
   } else {
     $cinder_admin_real = $cinder_internal_real
   }
-  if($quantum_public_address) {
-    $quantum_public_real = $quantum_public_address
+  if($neutron_public_address) {
+    $neutron_public_real = $neutron_public_address
   } else {
-    $quantum_public_real = $public_address
+    $neutron_public_real = $public_address
   }
-  if($quantum_internal_address) {
-    $quantum_internal_real = $quantum_internal_address
+  if($neutron_internal_address) {
+    $neutron_internal_real = $neutron_internal_address
   } else {
-    $quantum_internal_real = $quantum_public_real
+    $neutron_internal_real = $neutron_public_real
   }
-  if($quantum_admin_address) {
-    $quantum_admin_real = $quantum_admin_address
+  if($neutron_admin_address) {
+    $neutron_admin_real = $neutron_admin_address
   } else {
-    $quantum_admin_real = $quantum_internal_real
+    $neutron_admin_real = $neutron_internal_real
   }
   if($swift_public_address) {
     $swift_public_real = $swift_public_address
@@ -255,13 +255,13 @@ class openstack::keystone (
         region           => $region,
       }
     }
-    if $quantum {
-      class { 'quantum::keystone::auth':
-        password         => $quantum_user_password,
-        public_address   => $quantum_public_real,
+    if $neutron {
+      class { 'neutron::keystone::auth':
+        password         => $neutron_user_password,
+        public_address   => $neutron_public_real,
         public_protocol  => $public_protocol,
-        admin_address    => $quantum_admin_real,
-        internal_address => $quantum_internal_real,
+        admin_address    => $neutron_admin_real,
+        internal_address => $neutron_internal_real,
         region           => $region,
       }
     }

@@ -18,8 +18,8 @@
 # [nova]
 #   (optional) Install the Nova client package
 #
-# [quantum]
-#   (optional) Install the Quantum client package
+# [neutron]
+#   (optional) Install the Neutron client package
 #
 
 class openstack::client (
@@ -28,7 +28,7 @@ class openstack::client (
   $glance = true,
   $keystone = true,
   $nova = true,
-  $quantum = true
+  $neutron = true
 ) {
 
   if $ceilometer {
@@ -51,7 +51,7 @@ class openstack::client (
     include nova::client
   }
 
-  if $quantum {
-    include quantum::client
+  if $neutron {
+    include neutron::client
   }
 }
