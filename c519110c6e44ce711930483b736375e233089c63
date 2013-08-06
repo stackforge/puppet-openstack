@@ -1,0 +1,10 @@
+Verified+2: Jenkins
+Approved+1: Xingchao Yu <xingchao@unitedstack.com>
+Code-Review+2: Xingchao Yu <xingchao@unitedstack.com>
+Code-Review+2: Mathieu Gagné <mgagne@iweb.com>
+Verified+1: Puppet OpenStack CI <puppet.openstack.ci@gmail.com>
+Submitted-by: Jenkins
+Submitted-at: Tue, 06 Aug 2013 10:09:59 +0000
+Reviewed-on: https://review.openstack.org/40146
+Project: stackforge/puppet-openstack
+Branch: refs/heads/master
