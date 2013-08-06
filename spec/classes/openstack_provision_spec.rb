@@ -24,13 +24,13 @@ describe 'openstack::provision' do
       :tempest_repo_revision     => 'stable/grizzly'
     ) }
 
-    it 'should configure quantum networks' do
-      should contain_quantum_network('public').with(
+    it 'should configure neutron networks' do
+      should contain_neutron_network('public').with(
         'ensure'          => 'present',
         'router_external' => true,
         'tenant_name'     => 'admin'
       )
-      should contain_quantum_network('private').with(
+      should contain_neutron_network('private').with(
         'ensure'          => 'present',
         'tenant_name'     => 'demo'
       )

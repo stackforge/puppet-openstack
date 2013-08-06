@@ -14,7 +14,7 @@ class { 'openstack::all':
   private_interface    => 'eth1',
   public_address       => $::ipaddress_eth0,
   public_interface     => 'eth0',
-  quantum              => false,
+  neutron              => false,
   rabbit_password      => 'password',
   secret_key           => '12345',
 }

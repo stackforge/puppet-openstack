@@ -11,7 +11,7 @@
 # [glance_db_password] Password for glance database. Required.
 # [nova_db_password] Password for nova database. Required.
 # [cinder_db_password] Password for cinder database. Required.
-# [quantum_db_password] Password for quantum database. Required.
+# [neutron_db_password] Password for neutron database. Required.
 # [mysql_bind_address] Address that mysql will bind to. Optional .Defaults to '0.0.0.0'.
 # [mysql_account_security] If a secure mysql db should be setup. Optional .Defaults to true.
 # [keystone_db_user] DB user for keystone. Optional. Defaults to 'keystone'.
@@ -23,9 +23,9 @@
 # [cinder]. Whether create cinder db. Optional. Defaults to 'true'.
 # [cinder_db_user]. Name of cinder DB user. Optional. Defaults to 'cinder'.
 # [cinder_db_dbname]. Name of cinder DB. Optional. Defaults to 'cinder'.
-# [quantum]. Whether create quantum db. Optional. Defaults to 'true'.
-# [quantum_db_user]. Name of quantum DB user. Optional. Defaults to 'quantum'.
-# [quantum_db_dbname]. Name of quantum DB. Optional. Defaults to 'quantum'.
+# [neutron]. Whether create neutron db. Optional. Defaults to 'true'.
+# [neutron_db_user]. Name of neutron DB user. Optional. Defaults to 'neutron'.
+# [neutron_db_dbname]. Name of neutron DB. Optional. Defaults to 'neutron'.
 # [allowed_hosts] List of hosts that are allowed access. Optional. Defaults to false.
 # [enabled] If the db service should be started. Optional. Defaults to true.
 #
@@ -37,7 +37,7 @@
 #    glance_db_password   => 'changeme',
 #    nova_db_password     => 'changeme',
 #    cinder_db_password   => 'changeme',
-#    quantum_db_password  => 'changeme',
+#    neutron_db_password  => 'changeme',
 #    allowed_hosts        => ['127.0.0.1', '10.0.0.%'],
 #  }
 class openstack::db::mysql (
@@ -48,7 +48,7 @@ class openstack::db::mysql (
     $glance_db_password,
     $nova_db_password,
     $cinder_db_password,
-    $quantum_db_password,
+    $neutron_db_password,
     # MySQL
     $mysql_bind_address     = '0.0.0.0',
     $mysql_account_security = true,
@@ -65,10 +65,10 @@ class openstack::db::mysql (
     $cinder                 = true,
     $cinder_db_user         = 'cinder',
     $cinder_db_dbname       = 'cinder',
-    # quantum
-    $quantum                = true,
-    $quantum_db_user        = 'quantum',
-    $quantum_db_dbname      = 'quantum',
+    # neutron
+    $neutron                = true,
+    $neutron_db_user        = 'neutron',
+    $neutron_db_dbname      = 'neutron',
     $allowed_hosts          = false,
     $enabled                = true
 ) {
@@ -122,12 +122,12 @@ class openstack::db::mysql (
       }
     }
 
-    # create quantum db
-    if ($quantum) {
-      class { 'quantum::db::mysql':
-        user          => $quantum_db_user,
-        password      => $quantum_db_password,
-        dbname        => $quantum_db_dbname,
+    # create neutron db
+    if ($neutron) {
+      class { 'neutron::db::mysql':
+        user          => $neutron_db_user,
+        password      => $neutron_db_password,
+        dbname        => $neutron_db_dbname,
         allowed_hosts => $allowed_hosts,
       }
     }

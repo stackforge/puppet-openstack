@@ -11,7 +11,7 @@ describe 'openstack::keystone' do
       :glance_user_password   => 'pass',
       :nova_user_password     => 'pass',
       :cinder_user_password   => 'pass',
-      :quantum_user_password  => 'pass',
+      :neutron_user_password  => 'pass',
       :public_address         => '127.0.0.1',
       :db_host                => '127.0.0.1',
       :admin_email            => 'root@localhost'
@@ -40,7 +40,7 @@ describe 'openstack::keystone' do
         :enabled        => true,
         :sql_connection => 'mysql://keystone:pass@127.0.0.1/keystone'
       )
-      [ 'glance', 'cinder', 'quantum' ].each do |type|
+      [ 'glance', 'cinder', 'neutron' ].each do |type|
         should contain_class("#{type}::keystone::auth").with(
           :password         => params["#{type}_user_password".intern],
           :public_address   => params[:public_address],

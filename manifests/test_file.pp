@@ -19,7 +19,7 @@ class openstack::test_file(
   $image_type   = 'cirros',
   $sleep_time   = '15',
   $floating_ip  = false,
-  $quantum      = true
+  $neutron      = true
 ) {
 
   file { $path:

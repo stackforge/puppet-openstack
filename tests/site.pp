@@ -71,7 +71,7 @@ node /openstack_all/ {
     verbose                 => $verbose,
     auto_assign_floating_ip => $auto_assign_floating_ip,
     secret_key              => $secret_key,
-    quantum                 => false,
+    neutron                 => false,
   }
 
   class { 'openstack::auth_file':
@@ -117,7 +117,7 @@ node /openstack_controller/ {
     cinder_user_password    => $cinder_user_password,
     glance_db_password      => $glance_db_password,
     glance_user_password    => $glance_user_password,
-    quantum                 => false,
+    neutron                 => false,
     nova_db_password        => $nova_db_password,
     nova_user_password      => $nova_user_password,
     rabbit_password         => $rabbit_password,
@@ -147,7 +147,7 @@ node /openstack_compute/ {
     cinder_db_password => $cinder_db_password,
     nova_db_password   => $nova_db_password,
     nova_user_password => $nova_user_password,
-    quantum            => false,
+    neutron            => false,
     rabbit_host        => $controller_node_internal,
     rabbit_password    => $rabbit_password,
     rabbit_user        => $rabbit_user,

@@ -26,7 +26,7 @@ describe 'openstack::controller' do
       :cinder_user_password    => 'cinder_pass',
       :secret_key              => 'secret_key',
       :mysql_root_password     => 'sql_pass',
-      :quantum                 => false,
+      :neutron                 => false,
       :vncproxy_host           => '10.0.0.1',
       :nova_admin_tenant_name  => 'services',
       :nova_admin_user         => 'nova',
@@ -71,11 +71,11 @@ describe 'openstack::controller' do
         default_params.merge(
           :enabled                => true,
           :db_type                => 'mysql',
-          :quantum                => true,
+          :neutron                => true,
           :metadata_shared_secret => 'secret',
           :bridge_interface       => 'eth1',
-          :quantum_user_password  => 'q_pass',
-          :quantum_db_password    => 'q_db_pass',
+          :neutron_user_password  => 'q_pass',
+          :neutron_db_password    => 'q_db_pass',
           :cinder                 => true
         )
       end
@@ -112,10 +112,10 @@ describe 'openstack::controller' do
            :dbname        => 'cinder',
            :allowed_hosts => '%'
          )
-         should contain_class('quantum::db::mysql').with(
-           :user          => 'quantum',
+         should contain_class('neutron::db::mysql').with(
+           :user          => 'neutron',
            :password      => 'q_db_pass',
-           :dbname        => 'quantum',
+           :dbname        => 'neutron',
            :allowed_hosts => '%'
          )
       end
@@ -125,16 +125,16 @@ describe 'openstack::controller' do
 
     end
 
-    context 'when cinder and quantum are false' do
+    context 'when cinder and neutron are false' do
 
       let :params do
         default_params.merge(
-          :quantum => false,
+          :neutron => false,
           :cinder  => false
         )
       end
       it do
-        should_not contain_class('quantum::db::mysql')
+        should_not contain_class('neutron::db::mysql')
         should_not contain_class('cinder::db::mysql')
       end
 
@@ -155,7 +155,7 @@ describe 'openstack::controller' do
         config_hash['root_password'].should == 'sql_pass'
       end
 
-      ['keystone', 'nova', 'glance', 'cinder', 'quantum'].each do |x|
+      ['keystone', 'nova', 'glance', 'cinder', 'neutron'].each do |x|
         it { should_not contain_class("#{x}::db::mysql") }
       end
     end
@@ -578,18 +578,18 @@ describe 'openstack::controller' do
 
   context 'network config' do
 
-    context 'when quantum' do
+    context 'when neutron' do
 
       let :params do
         default_params.merge({
-          :quantum                => true,
+          :neutron                => true,
           :debug                  => true,
           :verbose                => true,
           :sql_idle_timeout       => '30',
-          :quantum_user_password  => 'q_pass',
+          :neutron_user_password  => 'q_pass',
           :bridge_interface       => 'eth_27',
           :internal_address       => '10.0.0.3',
-          :quantum_db_password    => 'q_db_pass',
+          :neutron_db_password    => 'q_db_pass',
           :metadata_shared_secret => 'secret',
           :external_bridge_name   => 'br-ex'
         })
@@ -597,9 +597,9 @@ describe 'openstack::controller' do
 
       it { should_not contain_class('nova::network') }
 
-      it 'should configure quantum' do
+      it 'should configure neutron' do
 
-        should contain_class('openstack::quantum').with(
+        should contain_class('openstack::neutron').with(
           :db_host               => '127.0.0.1',
           :sql_idle_timeout      => '30',
           :rabbit_host           => '127.0.0.1',
@@ -613,9 +613,9 @@ describe 'openstack::controller' do
           :bridge_uplinks        => ["br-ex:eth_27"],
           :bridge_mappings       => ["default:br-ex"],
           :enable_ovs_agent      => true,
-          :firewall_driver       => 'quantum.agent.linux.iptables_firewall.OVSHybridIptablesFirewallDriver',
-          :db_name               => 'quantum',
-          :db_user               => 'quantum',
+          :firewall_driver       => 'neutron.agent.linux.iptables_firewall.OVSHybridIptablesFirewallDriver',
+          :db_name               => 'neutron',
+          :db_user               => 'neutron',
           :db_password           => 'q_db_pass',
           :enable_dhcp_agent     => true,
           :enable_l3_agent       => true,
@@ -639,7 +639,7 @@ describe 'openstack::controller' do
 
       context 'when multi-host is not set' do
         let :params do
-          default_params.merge(:quantum => false, :multi_host => false)
+          default_params.merge(:neutron => false, :multi_host => false)
         end
         it {should contain_class('nova::network').with(
           :private_interface => 'eth0',
@@ -657,7 +657,7 @@ describe 'openstack::controller' do
 
       context 'when multi-host is set' do
         let :params do
-          default_params.merge(:quantum => false, :multi_host => true)
+          default_params.merge(:neutron => false, :multi_host => true)
         end
         it { should contain_nova_config('DEFAULT/multi_host').with(:value => true)}
         it {should contain_class('nova::network').with(

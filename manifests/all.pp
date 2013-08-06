@@ -44,20 +44,20 @@
 # [cache_server_ip]     local memcached instance ip
 # [cache_server_port]   local memcached instance port
 # [horizon]             (bool) is horizon installed. Defaults to: true
-# [quantum]             (bool) is quantum installed
+# [neutron]             (bool) is neutron installed
 #   The next is an array of arrays, that can be used to add call-out links to the dashboard for other apps.
 #   There is no specific requirement for these apps to be for monitoring, that's just the defacto purpose.
 #   Each app is defined in two parts, the display name, and the URI
 # [metadata_shared_secret]
-#   Shared secret used by nova and quantum to authenticate metadata.
+#   Shared secret used by nova and neutron to authenticate metadata.
 #   (optional) Defaults to false.
 #
 # [firewall_driver]
 #   Driver used to implement firewall rules.
-#   (optional) Defaults to 'quantum.agent.linux.iptables_firewall.OVSHybridIptablesFirewallDriver'.
+#   (optional) Defaults to 'neutron.agent.linux.iptables_firewall.OVSHybridIptablesFirewallDriver'.
 #
-# [quantum_auth_url]
-#   Url used to quantum to contact the authentication service.
+# [neutron_auth_url]
+#   Url used to neutron to contact the authentication service.
 #  (optional) Default to http://127.0.0.1:35357/v2.0.
 #
 # [horizon_app_links]     array as in '[ ["Nagios","http://nagios_addr:port/path"],["Ganglia","http://ganglia_addr"] ]'
@@ -92,8 +92,8 @@
 #   admin_password         => 'changeme',
 #   rabbit_password        => 'changeme',
 #   keystone_admin_token   => 'changeme',
-#   quantum_user_password  => 'changeme',
-#   quantum_db_password    => 'changeme',
+#   neutron_user_password  => 'changeme',
+#   neutron_db_password    => 'changeme',
 #   secret_key             => 'dummy_secret_key',
 #   bridge_interface       => 'eth0',
 #   metadata_shared_secret => 'shared_md_secret',
@@ -116,10 +116,10 @@ class openstack::all (
   $nova_user_password,
   $secret_key,
   $mysql_root_password,
-  # cinder and quantum password are not required b/c they are
+  # cinder and neutron password are not required b/c they are
   # optional. Not sure what to do about this.
-  $quantum_user_password   = false,
-  $quantum_db_password     = false,
+  $neutron_user_password   = false,
+  $neutron_db_password     = false,
   $cinder_user_password    = false,
   $cinder_db_password      = false,
   # Database
@@ -189,8 +189,8 @@ class openstack::all (
   $setup_test_volume       = false,
   $volume_group            = 'cinder-volumes',
   $iscsi_ip_address        = '127.0.0.1',
-  # Quantum
-  $quantum                 = true,
+  # Neutron
+  $neutron                 = true,
   $bridge_interface        = undef,
   $external_bridge_name    = 'br-ex',
   $enable_ovs_agent        = true,
@@ -198,11 +198,11 @@ class openstack::all (
   $enable_l3_agent         = true,
   $enable_metadata_agent   = true,
   $metadata_shared_secret  = false,
-  $firewall_driver         = 'quantum.agent.linux.iptables_firewall.OVSHybridIptablesFirewallDriver',
-  $quantum_db_user         = 'quantum',
-  $quantum_db_name         = 'quantum',
-  $quantum_auth_url        = 'http://127.0.0.1:35357/v2.0',
-  $enable_quantum_server   = true,
+  $firewall_driver         = 'neutron.agent.linux.iptables_firewall.OVSHybridIptablesFirewallDriver',
+  $neutron_db_user         = 'neutron',
+  $neutron_db_name         = 'neutron',
+  $neutron_auth_url        = 'http://127.0.0.1:35357/v2.0',
+  $enable_neutron_server   = true,
   $ovs_local_ip            = false,
   # General
   $verbose                 = false,
@@ -270,10 +270,10 @@ class openstack::all (
       cinder_db_user         => $cinder_db_user,
       cinder_db_password     => $cinder_db_password,
       cinder_db_dbname       => $cinder_db_dbname,
-      quantum                => $quantum,
-      quantum_db_user        => $quantum_db_user,
-      quantum_db_password    => $quantum_db_password,
-      quantum_db_dbname      => $quantum_db_name,
+      neutron                => $neutron,
+      neutron_db_user        => $neutron_db_user,
+      neutron_db_password    => $neutron_db_password,
+      neutron_db_dbname      => $neutron_db_name,
       allowed_hosts          => $allowed_hosts,
       enabled                => $enabled,
     }
@@ -301,8 +301,8 @@ class openstack::all (
     nova_user_password    => $nova_user_password,
     cinder                => $cinder,
     cinder_user_password  => $cinder_user_password,
-    quantum               => $quantum,
-    quantum_user_password => $quantum_user_password,
+    neutron               => $neutron,
+    neutron_user_password => $neutron_user_password,
     enabled               => $enabled,
     bind_host             => $keystone_bind_address,
   }
@@ -367,9 +367,9 @@ class openstack::all (
     multi_host              => $multi_host,
     public_interface        => $public_interface,
     private_interface       => $private_interface,
-    # Quantum
-    quantum                 => $quantum,
-    quantum_user_password   => $quantum_user_password,
+    # Neutron
+    neutron                 => $neutron,
+    neutron_user_password   => $neutron_user_password,
     metadata_shared_secret  => $metadata_shared_secret,
     # Nova
     nova_admin_tenant_name  => $nova_admin_tenant_name,
@@ -393,22 +393,22 @@ class openstack::all (
     enabled                 => $enabled,
   }
 
-  ######### Quantum Controller Services ########
-  if ($quantum) {
+  ######### Neutron Controller Services ########
+  if ($neutron) {
 
-    if ! $quantum_user_password {
-      fail('quantum_user_password must be set when configuring quantum')
+    if ! $neutron_user_password {
+      fail('neutron_user_password must be set when configuring neutron')
     }
 
-    if ! $quantum_db_password {
-      fail('quantum_db_password must be set when configuring quantum')
+    if ! $neutron_db_password {
+      fail('neutron_db_password must be set when configuring neutron')
     }
 
     if ! $bridge_interface {
-      fail('bridge_interface must be set when configuring quantum')
+      fail('bridge_interface must be set when configuring neutron')
     }
 
-    class { 'openstack::quantum':
+    class { 'openstack::neutron':
       # Database
       db_host               => $db_host,
       # Rabbit
@@ -416,31 +416,31 @@ class openstack::all (
       rabbit_user           => $rabbit_user,
       rabbit_password       => $rabbit_password,
       rabbit_virtual_host   => $rabbit_virtual_host,
-      # Quantum OVS
+      # Neutron OVS
       ovs_local_ip          => $ovs_local_ip_real,
       bridge_uplinks        => ["${external_bridge_name}:${bridge_interface}"],
       bridge_mappings       => ["default:${external_bridge_name}"],
       enable_ovs_agent      => $enable_ovs_agent,
       firewall_driver       => $firewall_driver,
       # Database
-      db_name               => $quantum_db_name,
-      db_user               => $quantum_db_user,
-      db_password           => $quantum_db_password,
-      # Quantum agents
+      db_name               => $neutron_db_name,
+      db_user               => $neutron_db_user,
+      db_password           => $neutron_db_password,
+      # Neutron agents
       enable_dhcp_agent     => $enable_dhcp_agent,
       enable_l3_agent       => $enable_l3_agent,
       enable_metadata_agent => $enable_metadata_agent,
-      auth_url              => $quantum_auth_url,
-      user_password         => $quantum_user_password,
+      auth_url              => $neutron_auth_url,
+      user_password         => $neutron_user_password,
       shared_secret         => $metadata_shared_secret,
       # Keystone
       keystone_host         => $keystone_host,
       # General
       enabled               => $enabled,
-      enable_server         => $enable_quantum_server,
+      enable_server         => $enable_neutron_server,
       verbose               => $verbose,
     }
-    class { 'nova::compute::quantum':
+    class { 'nova::compute::neutron':
       libvirt_vif_driver => $libvirt_vif_driver,
     }
   } else {

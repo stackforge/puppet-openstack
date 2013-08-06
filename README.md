@@ -153,7 +153,7 @@ class { 'openstack::all':
   libvirt_type         => 'kvm',
   fixed_range          => '10.0.0.0/24',
   secret_key           => '12345',
-  quantum              => false,
+  neutron              => false,
 }
 ```
 
@@ -199,7 +199,7 @@ class { 'openstack::controller':
   rabbit_password         => 'rabbit_password',
   rabbit_user             => 'rabbit_user',
   secret_key              => '12345',
-  quantum                 => false,
+  neutron                 => false,
 }
 ```
 
@@ -233,7 +233,7 @@ class { 'openstack::compute':
   vncproxy_host      => '192.168.101.10',
   vnc_enabled        => true,
   manage_volumes     => true,
-  quantum            => false,
+  neutron            => false,
 }
 ```
 
@@ -507,7 +507,7 @@ Release Notes
 **2.0.0**
 
 * Upstream is now part of stackfoge.
-* Initial support for the utilization of the quantum module.
+* Initial support for the utilization of the neutron module.
 * Ability to set vncproxy host.
 * Refactors of db connections for compute.
 * Refactor of glance and cinder related classes.
