@@ -73,7 +73,14 @@ class openstack::provision(
   $tempest_clone_owner       = 'root',
   $setup_venv                = false,
   $resize_available          = undef,
-  $change_password_available = undef
+  $change_password_available = undef,
+  $cinder_available          = undef,
+  $glance_available          = true,
+  $heat_available            = undef,
+  $horizon_available         = undef,
+  $neutron_available         = true,
+  $nova_available            = true,
+  $swift_available           = undef
 ) {
   ## Users
 
@@ -178,10 +185,16 @@ class openstack::provision(
       admin_username            => $admin_username,
       admin_password            => $admin_password,
       admin_tenant_name         => $admin_tenant_name,
-      neutron_available         => true,
       public_network_name       => $public_network_name,
       resize_available          => $resize_available,
       change_password_available => $change_password_available,
+      cinder_available          => $cinder_available,
+      glance_available          => $glance_available,
+      heat_available            => $heat_available,
+      horizon_available         => $horizon_available,
+      neutron_available         => $neutron_available,
+      nova_available            => $nova_available,
+      swift_available           => $swift_available,
       require                   => [
                                     Keystone_user[$username],
                                     Keystone_user[$alt_username],
