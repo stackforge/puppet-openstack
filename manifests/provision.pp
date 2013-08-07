@@ -187,7 +187,7 @@ class openstack::provision(
                                     Keystone_user[$alt_username],
                                     Glance_image[$image_name],
                                     Quantum_network[$public_network_name],
-                                   ],
+                                  ],
     }
   }
 
