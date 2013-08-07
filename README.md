@@ -504,6 +504,38 @@ Contributors
 Release Notes
 -------------
 
+**2.1.0**
+
+* Added support for Quantum OVS VLAN networking.
+* Added Quantum firewall driver at top scope parameter.
+* Added support for Glance Registry MySQL Idle Timeout
+* Added support for debug logging.
+* Added rdb/ceph backend support to Glance.
+* Added rdb/ceph backend support to Cinder.
+* Added support for splitting proxy and storage networks.
+* Added support for memcached.
+* Added support for RabbitMQ clustering.
+* Added support for Nova API Bind Address.
+* Added support for SQL Idle Timeout.
+* Added suport for debug logging.
+* Added support for RabbitMQ mirrored queues.
+* Added support for RDO setup on additional RedHat based systems.
+* Added swift_public_address.
+* Added configuration for Swift auth in controller.
+* Reintroduces support for provider networks.
+* Propogates both internal and admin addresses to services.
+* Passes through quantum core plugin.
+* Exposes public_protocol parameter in openstack::controller.
+* Exposes Glance registry_host parameter.
+* Fixed authentication host parameter bug to use real_keystone_host.
+* Fixed selinux Horizon bug.
+* Fixed Keystone 'token-get' bug.
+* Removed unneeded ovs_local_ip error message.
+* Disabled dhcp on provisioned public subnet.
+* Allows ovs_enable_tunneling to be passed through.
+* Pinned module dependencies.
+* Various lint and bug fixes.
+
 **2.0.0**
 
 * Upstream is now part of stackfoge.
