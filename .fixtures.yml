@@ -1,31 +1,49 @@
 fixtures:
   repositories:
-    'cinder': 'git://github.com/stackforge/puppet-cinder'
-    "keystone": "git://github.com/stackforge/puppet-keystone.git"
-    "nova": "git://github.com/stackforge/puppet-nova.git"
-    "glance": "git://github.com/stackforge/puppet-glance.git"
-    'horizon': 'git://github.com/stackforge/puppet-horizon'
-    'swift' : 'git://github.com/stackforge/puppet-swift'
-    'quantum': 'git://github.com/stackforge/puppet-quantum'
-    'ceilometer' : 'git://github.com/stackforge/puppet-ceilometer'
-    "apt": "git://github.com/puppetlabs/puppetlabs-apt.git"
-    "apache":
-      repo: "git://github.com/puppetlabs/puppetlabs-apache.git"
+    'cinder':
+      repo: 'git://github.com/stackforge/puppet-cinder'
+      ref: 'origin/stable/grizzly'
+    'keystone':
+      repo: 'git://github.com/stackforge/puppet-keystone.git'
+      ref: 'origin/stable/grizzly'
+    'nova':
+      repo: 'git://github.com/stackforge/puppet-nova.git'
+      ref: 'origin/stable/grizzly'
+    'glance':
+      repo: 'git://github.com/stackforge/puppet-glance.git'
+      ref: 'origin/stable/grizzly'
+    'horizon':
+      repo: 'git://github.com/stackforge/puppet-horizon'
+      ref: 'origin/stable/grizzly'
+    'swift' :
+      repo: 'git://github.com/stackforge/puppet-swift'
+      ref: 'origin/stable/grizzly'
+    'quantum':
+      repo: 'git://github.com/stackforge/puppet-quantum'
+      ref: 'origin/stable/grizzly'
+    'ceilometer':
+      repo: 'git://github.com/stackforge/puppet-ceilometer'
+      ref: 'origin/stable/grizzly'
+    'apt': 'git://github.com/puppetlabs/puppetlabs-apt.git'
+    'apache':
+      repo: 'git://github.com/puppetlabs/puppetlabs-apache.git'
       ref: 'origin/0.x'
-    "concat": "git://github.com/ripienaar/puppet-concat.git"
-    "firewall": "git://github.com/puppetlabs/puppetlabs-firewall.git"
-    "mysql":
-      repo: "git://github.com/puppetlabs/puppetlabs-mysql.git"
-      ref: "origin/0.x"
-    "rabbitmq":
-      repo: "git://github.com/puppetlabs/puppetlabs-rabbitmq"
-      ref: "origin/2.x"
+    'concat': 'git://github.com/ripienaar/puppet-concat.git'
+    'firewall': 'git://github.com/puppetlabs/puppetlabs-firewall.git'
+    'mysql':
+      repo: 'git://github.com/puppetlabs/puppetlabs-mysql.git'
+      ref: 'origin/0.x'
+    'rabbitmq':
+      repo: 'git://github.com/puppetlabs/puppetlabs-rabbitmq'
+      ref: 'origin/2.x'
     'memcached': 'git://github.com/saz/puppet-memcached'
-    "stdlib": "git://github.com/puppetlabs/puppetlabs-stdlib.git"
-    "sysctl": "git://github.com/duritong/puppet-sysctl.git"
+    'stdlib': 'git://github.com/puppetlabs/puppetlabs-stdlib.git'
+    'sysctl': 'git://github.com/duritong/puppet-sysctl.git'
     'inifile':  'git://github.com/puppetlabs/puppetlabs-inifile'
     'vswitch': 'git://github.com/bodepd/puppet-vswitch'
-    'tempest': 'git://github.com/stackforge/puppet-tempest'
+    'tempest':
+      repo: 'git://github.com/stackforge/puppet-tempest'
+      ref: 'origin/stable/grizzly'
     'vcsrepo': 'git://github.com/puppetlabs/puppetlabs-vcsrepo'
   symlinks:
-    "openstack": "#{source_dir}"
+    'openstack': "#{source_dir}"
