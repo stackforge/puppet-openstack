@@ -6,7 +6,7 @@ fixtures:
     "glance": "git://github.com/stackforge/puppet-glance.git"
     'horizon': 'git://github.com/stackforge/puppet-horizon'
     'swift' : 'git://github.com/stackforge/puppet-swift'
-    'quantum': 'git://github.com/stackforge/puppet-quantum'
+    'neutron': 'git://github.com/stackforge/puppet-quantum'
     'ceilometer' : 'git://github.com/stackforge/puppet-ceilometer'
     "apt": "git://github.com/puppetlabs/puppetlabs-apt.git"
     "apache":
