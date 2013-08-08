@@ -73,6 +73,8 @@ The swift portions of this module needs Puppet's [exported resources](http://doc
     cd /etc/puppet/modules
     git clone git://github.com/stackforge/puppet-openstack.git openstack
     cd openstack
+    # to use the grizzly version of the module
+    git checkout origin/stable/grizzly
     gem install librarian-puppet
     librarian-puppet install --path ../
 
