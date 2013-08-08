@@ -1,13 +1,13 @@
 forge "http://forge.puppetlabs.com"
 
-mod 'puppetlabs/nova', :git => 'git://github.com/stackforge/puppet-nova'
-mod 'puppetlabs/glance', :git => 'git://github.com/stackforge/puppet-glance'
-mod 'puppetlabs/keystone', :git => 'git://github.com/stackforge/puppet-keystone'
-mod 'puppetlabs/horizon', :git => 'git://github.com/stackforge/puppet-horizon'
-mod 'puppetlabs/swift', :git => 'git://github.com/stackforge/puppet-swift'
-mod 'puppetlabs/cinder', :git => 'git://github.com/stackforge/puppet-cinder'
+mod 'puppetlabs/nova', :git => 'git://github.com/stackforge/puppet-nova', :ref => 'origin/stable/grizzly'
+mod 'puppetlabs/glance', :git => 'git://github.com/stackforge/puppet-glance', :ref => 'origin/stable/grizzly'
+mod 'puppetlabs/keystone', :git => 'git://github.com/stackforge/puppet-keystone', :ref => 'origin/stable/grizzly'
+mod 'puppetlabs/horizon', :git => 'git://github.com/stackforge/puppet-horizon', :ref => 'origin/stable/grizzly'
+mod 'puppetlabs/swift', :git => 'git://github.com/stackforge/puppet-swift', :ref => 'origin/stable/grizzly'
+mod 'puppetlabs/cinder', :git => 'git://github.com/stackforge/puppet-cinder', :ref => 'origin/stable/grizzly'
 mod 'puppetlabs/tempest', :git => 'git://github.com/stackforge/puppet-tempest'
-mod 'puppet/quantum', :git => 'git://github.com/stackforge/puppet-quantum/'
+mod 'puppet/quantum', :git => 'git://github.com/stackforge/puppet-quantum/', :ref => 'origin/stable/grizzly'
 # openstack middleware
 mod 'puppet/vswitch', :git => 'git://github.com/bodepd/puppet-vswitch'
 mod 'puppetlabs/rabbitmq',
