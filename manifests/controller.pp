@@ -240,6 +240,7 @@ class openstack::controller (
   $quantum_db_name         = 'quantum',
   $quantum_auth_url        = 'http://127.0.0.1:35357/v2.0',
   $enable_quantum_server   = true,
+  $security_group_api      = 'quantum',
   # swift
   $swift                   = false,
   $swift_public_address    = false,
@@ -402,6 +403,7 @@ class openstack::controller (
     quantum                 => $quantum,
     quantum_user_password   => $quantum_user_password,
     metadata_shared_secret  => $metadata_shared_secret,
+    security_group_api      => $security_group_api,
     # Nova
     nova_admin_tenant_name  => $nova_admin_tenant_name,
     nova_admin_user         => $nova_admin_user,

@@ -68,7 +68,8 @@ describe 'openstack::nova::controller' do
         :quantum_url               => "http://127.0.0.1:9696",
         :quantum_admin_tenant_name => 'services',
         :quantum_admin_username    => 'quantum',
-        :quantum_admin_auth_url    => "http://127.0.0.1:35357/v2.0"
+        :quantum_admin_auth_url    => "http://127.0.0.1:35357/v2.0",
+        :security_group_api        => 'quantum'
       )
 
       ['nova::scheduler', 'nova::objectstore', 'nova::cert', 'nova::consoleauth', 'nova::conductor'].each do |x|
