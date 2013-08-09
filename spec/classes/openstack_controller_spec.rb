@@ -31,7 +31,8 @@ describe 'openstack::controller' do
       :nova_admin_tenant_name  => 'services',
       :nova_admin_user         => 'nova',
       :enabled_apis            => 'ec2,osapi_compute,metadata',
-      :physical_network        => 'default'
+      :physical_network        => 'default',
+      :security_group_api      => 'neutron'
     }
   end
 
