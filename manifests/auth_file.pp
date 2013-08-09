@@ -31,7 +31,7 @@
 #   (optional) Defaults to 'publicURL'.
 # [*nova_endpoint_type*]
 #   (optional) Defaults to 'publicURL'.
-# [*quantum_endpoint_type*]
+# [*neutron_endpoint_type*]
 #   (optional) Defaults to 'publicURL'.
 #
 class openstack::auth_file(
@@ -46,7 +46,7 @@ class openstack::auth_file(
   $glance_endpoint_type     = 'publicURL',
   $keystone_endpoint_type   = 'publicURL',
   $nova_endpoint_type       = 'publicURL',
-  $quantum_endpoint_type    = 'publicURL',
+  $neutron_endpoint_type    = 'publicURL',
 ) {
 
   file { '/root/openrc':

@@ -506,8 +506,8 @@ Release Notes
 
 **2.1.0**
 
-* Added support for Quantum OVS VLAN networking.
-* Added Quantum firewall driver at top scope parameter.
+* Added support for Neutron OVS VLAN networking.
+* Added Neutron firewall driver at top scope parameter.
 * Added support for Glance Registry MySQL Idle Timeout
 * Added support for debug logging.
 * Added rdb/ceph backend support to Glance.
@@ -524,7 +524,7 @@ Release Notes
 * Added configuration for Swift auth in controller.
 * Reintroduces support for provider networks.
 * Propogates both internal and admin addresses to services.
-* Passes through quantum core plugin.
+* Passes through neutron core plugin.
 * Exposes public_protocol parameter in openstack::controller.
 * Exposes Glance registry_host parameter.
 * Fixed authentication host parameter bug to use real_keystone_host.

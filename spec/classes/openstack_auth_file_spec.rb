@@ -21,7 +21,7 @@ describe 'openstack::auth_file' do
         'export GLANCE_ENDPOINT_TYPE=publicURL',
         'export KEYSTONE_ENDPOINT_TYPE=publicURL',
         'export NOVA_ENDPOINT_TYPE=publicURL',
-        'export QUANTUM_ENDPOINT_TYPE=publicURL'
+        'export NEUTRON_ENDPOINT_TYPE=publicURL'
       ])
     end
   end
@@ -37,7 +37,7 @@ describe 'openstack::auth_file' do
         :glance_endpoint_type     => 'privateURL',
         :keystone_endpoint_type   => 'privateURL',
         :nova_endpoint_type       => 'privateURL',
-        :quantum_endpoint_type    => 'privateURL',
+        :neutron_endpoint_type    => 'privateURL',
       }
     end
 
@@ -56,7 +56,7 @@ describe 'openstack::auth_file' do
         'export GLANCE_ENDPOINT_TYPE=privateURL',
         'export KEYSTONE_ENDPOINT_TYPE=privateURL',
         'export NOVA_ENDPOINT_TYPE=privateURL',
-        'export QUANTUM_ENDPOINT_TYPE=privateURL'
+        'export NEUTRON_ENDPOINT_TYPE=privateURL'
       ])
     end
   end
