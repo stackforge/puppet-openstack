@@ -74,6 +74,7 @@ class openstack::nova::controller (
   $neutron                   = true,
   $neutron_user_password     = false,
   $metadata_shared_secret    = undef,
+  $security_group_api        = 'neutron',
   # Nova
   $nova_admin_tenant_name    = 'services',
   $nova_admin_user           = 'nova',
@@ -217,6 +218,7 @@ class openstack::nova::controller (
       neutron_admin_tenant_name => 'services',
       neutron_admin_username    => 'neutron',
       neutron_admin_auth_url    => "http://${keystone_host}:35357/v2.0",
+      security_group_api        => $security_group_api,
     }
   }
 
