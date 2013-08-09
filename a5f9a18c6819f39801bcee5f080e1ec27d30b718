@@ -1,0 +1,12 @@
+Verified+2: Jenkins
+Approved+1: Dan Prince <dprince@redhat.com>
+Code-Review+2: Dan Prince <dprince@redhat.com>
+Code-Review+2: Xingchao Yu <xingchao@unitedstack.com>
+Code-Review+1: Emilien Macchi <emilien.macchi@enovance.com>
+Code-Review+1: Terry Wilson <twilson@redhat.com>
+Code-Review+1: Chris Hoge <chris.hoge@puppetlabs.com>
+Submitted-by: Jenkins
+Submitted-at: Fri, 09 Aug 2013 16:32:00 +0000
+Reviewed-on: https://review.openstack.org/41045
+Project: stackforge/puppet-openstack
+Branch: refs/heads/master
