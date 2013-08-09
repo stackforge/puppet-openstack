@@ -1,0 +1,9 @@
+Verified+2: Jenkins
+Approved+1: Mathieu Gagné <mgagne@iweb.com>
+Code-Review+2: Mathieu Gagné <mgagne@iweb.com>
+Code-Review+1: Chris Hoge <chris.hoge@puppetlabs.com>
+Submitted-by: Jenkins
+Submitted-at: Fri, 09 Aug 2013 01:28:31 +0000
+Reviewed-on: https://review.openstack.org/39931
+Project: stackforge/puppet-openstack
+Branch: refs/heads/master
