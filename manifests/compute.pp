@@ -96,6 +96,7 @@ class openstack::compute (
   # General
   $migration_support             = false,
   $verbose                       = false,
+  $force_config_dirv             = false,
   $enabled                       = true
 ) {
 
@@ -144,6 +145,7 @@ class openstack::compute (
     vnc_enabled                   => $vnc_enabled,
     vncserver_proxyclient_address => $internal_address,
     vncproxy_host                 => $vncproxy_host,
+    force_config_drive            => $force_config_drive
   }
 
   # Configure libvirt for nova-compute
