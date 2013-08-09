@@ -1,0 +1,9 @@
+Verified+2: Jenkins
+Code-Review+1: William Van Hevelingen <wvan13@gmail.com>
+Approved+1: Mathieu Gagné <mgagne@iweb.com>
+Code-Review+2: Mathieu Gagné <mgagne@iweb.com>
+Submitted-by: Jenkins
+Submitted-at: Fri, 09 Aug 2013 01:35:29 +0000
+Reviewed-on: https://review.openstack.org/40990
+Project: stackforge/puppet-openstack
+Branch: refs/heads/stable/grizzly
