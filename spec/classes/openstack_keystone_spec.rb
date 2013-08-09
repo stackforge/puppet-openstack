@@ -55,7 +55,6 @@ describe 'openstack::keystone' do
         :admin_address    => params[:public_address],
         :internal_address => params[:public_address],
         :region           => 'RegionOne',
-        :cinder           => true
       )
     end
   end
