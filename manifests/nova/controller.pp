@@ -74,6 +74,7 @@ class openstack::nova::controller (
   $quantum                   = true,
   $quantum_user_password     = false,
   $metadata_shared_secret    = undef,
+  $security_group_api        = 'quantum',
   # Nova
   $nova_admin_tenant_name    = 'services',
   $nova_admin_user           = 'nova',
@@ -217,6 +218,7 @@ class openstack::nova::controller (
       quantum_admin_tenant_name => 'services',
       quantum_admin_username    => 'quantum',
       quantum_admin_auth_url    => "http://${keystone_host}:35357/v2.0",
+      security_group_api        => $security_group_api,
     }
   }
 
