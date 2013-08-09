@@ -17,7 +17,8 @@ describe 'openstack::compute' do
       :nova_db_password          => 'pass',
       :cinder_db_password        => 'cinder_pass',
       :neutron                   => false,
-      :fixed_range               => '10.0.0.0/16'
+      :fixed_range               => '10.0.0.0/16',
+      :force_config_drive        => true,
     }
   end
 
@@ -46,7 +47,8 @@ describe 'openstack::compute' do
         :enabled                        => true,
         :vnc_enabled                    => true,
         :vncserver_proxyclient_address  => '127.0.0.2',
-        :vncproxy_host                  => false
+        :vncproxy_host                  => false,
+        :force_config_drive             => true
       )
       should contain_class('nova::compute::libvirt').with(
         :libvirt_type     => 'kvm',
@@ -122,7 +124,8 @@ describe 'openstack::compute' do
         :enabled                        => true,
         :vnc_enabled                    => false,
         :vncserver_proxyclient_address  => '127.0.0.1',
-        :vncproxy_host                  => '127.0.0.2'
+        :vncproxy_host                  => '127.0.0.2',
+        :force_config_drive             => true
       )
       should contain_class('nova::compute::libvirt').with(
         :libvirt_type     => 'qemu',
