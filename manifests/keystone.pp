@@ -239,8 +239,6 @@ class openstack::keystone (
         admin_address    => $nova_admin_real,
         internal_address => $nova_internal_real,
         region           => $region,
-        # indicates that we should not create endpoints for nova-volumes
-        cinder           => true,
       }
     }
 
