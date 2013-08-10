@@ -379,6 +379,9 @@ describe 'openstack::controller' do
           :sql_idle_timeout      => '30',
           :glance_db_user        => 'dan',
           :glance_db_dbname      => 'name',
+          :glance_backend        => 'rbd',
+          :glance_rbd_store_user => 'myuser',
+          :glance_rbd_store_pool => 'mypool',
           :db_host               => '127.0.0.2'
         )
       end
@@ -408,6 +411,21 @@ describe 'openstack::controller' do
           :keystone_user     => 'glance',
           :keystone_password => 'glance_pass2',
           :sql_connection    => "mysql://dan:glance_pass3@127.0.0.2/name"
+        )
+      end
+    end
+
+    context 'when the RBD backend is configured' do
+       let :params do
+        default_params.merge(
+          :glance_backend        => 'rbd',
+          :glance_rbd_store_user => 'myuser',
+          :glance_rbd_store_pool => 'mypool'
+        )
+
+        should contain_class('glance::backend::rbd').with(
+          :rbd_store_user => 'myuser',
+          :rbd_store_pool => 'mypool'
         )
       end
     end
