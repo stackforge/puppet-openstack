@@ -172,6 +172,8 @@ class openstack::controller (
   $glance_db_dbname        = 'glance',
   $glance_api_servers      = undef,
   $glance_backend          = 'file',
+  $glance_rbd_store_user   = undef,
+  $glance_rbd_store_pool   = undef,
   # Glance Swift Backend
   $swift_store_user        = 'swift_store_user',
   $swift_store_key         = 'swift_store_key',
@@ -366,6 +368,8 @@ class openstack::controller (
     backend          => $glance_backend,
     swift_store_user => $swift_store_user,
     swift_store_key  => $swift_store_key,
+    rbd_store_user   => $glance_rbd_store_user,
+    rbd_store_pool   => $glance_rbd_store_pool,
     enabled          => $enabled,
   }
 
