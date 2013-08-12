@@ -63,6 +63,17 @@
 # [horizon_app_links]     array as in '[ ["Nagios","http://nagios_addr:port/path"],["Ganglia","http://ganglia_addr"] ]'
 # [enabled] Whether services should be enabled. This parameter can be used to
 #   implement services in active-passive modes for HA. Optional. Defaults to true.
+# [swift]
+#   Whether or not to configure keystone for swift authorization.
+#   (Optional). Defaults to false.
+#
+# [swift_user_password]
+#   Auth password for swift.
+#   (Optional) Defaults to false. Required if swift is set to true.
+#
+# [swift_public_address]
+#   The swift address used to populate the keystone service catalog.
+#   (optional). Defaults to false.
 #
 # === Examples
 #
@@ -122,6 +133,7 @@ class openstack::all (
   $neutron_db_password     = false,
   $cinder_user_password    = false,
   $cinder_db_password      = false,
+  $swift_user_password     = false,
   # Database
   $db_host                 = '127.0.0.1',
   $db_type                 = 'mysql',
@@ -204,6 +216,9 @@ class openstack::all (
   $neutron_auth_url        = 'http://127.0.0.1:35357/v2.0',
   $enable_neutron_server   = true,
   $ovs_local_ip            = false,
+  # swift
+  $swift                   = false,
+  $swift_public_address    = false,
   # General
   $verbose                 = false,
   $enabled                 = true
@@ -283,28 +298,33 @@ class openstack::all (
 
   ####### KEYSTONE ###########
   class { 'openstack::keystone':
-    verbose               => $verbose,
-    db_type               => $db_type,
-    db_host               => $db_host,
-    db_password           => $keystone_db_password,
-    db_name               => $keystone_db_dbname,
-    db_user               => $keystone_db_user,
-    admin_token           => $keystone_admin_token,
-    admin_tenant          => $keystone_admin_tenant,
-    admin_email           => $admin_email,
-    admin_password        => $admin_password,
-    public_address        => $public_address,
-    internal_address      => $internal_address_real,
-    admin_address         => $admin_address_real,
-    region                => $region,
-    glance_user_password  => $glance_user_password,
-    nova_user_password    => $nova_user_password,
-    cinder                => $cinder,
-    cinder_user_password  => $cinder_user_password,
-    neutron               => $neutron,
-    neutron_user_password => $neutron_user_password,
-    enabled               => $enabled,
-    bind_host             => $keystone_bind_address,
+    verbose                => $verbose,
+    db_type                => $db_type,
+    db_host                => $db_host,
+    db_password            => $keystone_db_password,
+    db_name                => $keystone_db_dbname,
+    db_user                => $keystone_db_user,
+    admin_token            => $keystone_admin_token,
+    admin_tenant           => $keystone_admin_tenant,
+    admin_email            => $admin_email,
+    admin_password         => $admin_password,
+    public_address         => $public_address,
+    internal_address       => $internal_address_real,
+    admin_address          => $admin_address_real,
+    region                 => $region,
+    glance_user_password   => $glance_user_password,
+    nova_user_password     => $nova_user_password,
+    cinder                 => $cinder,
+    cinder_user_password   => $cinder_user_password,
+    neutron                => $neutron,
+    neutron_user_password  => $neutron_user_password,
+    swift                  => $swift,
+    swift_user_password    => $swift_user_password,
+    swift_public_address   => $swift_public_address,
+    swift_internal_address => $internal_address_real,
+    swift_admin_address    => $admin_address_real,
+    enabled                => $enabled,
+    bind_host              => $keystone_bind_address,
   }
 
 
