@@ -1,0 +1,8 @@
+Verified+2: Jenkins
+Approved+1: Dan Bode <bodepd@gmail.com>
+Code-Review+2: Dan Bode <bodepd@gmail.com>
+Submitted-by: Jenkins
+Submitted-at: Mon, 12 Aug 2013 21:58:43 +0000
+Reviewed-on: https://review.openstack.org/41531
+Project: stackforge/puppet-openstack
+Branch: refs/heads/stable/grizzly
