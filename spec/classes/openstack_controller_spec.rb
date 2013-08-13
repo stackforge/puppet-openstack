@@ -597,6 +597,8 @@ describe 'openstack::controller' do
 
       it { should_not contain_class('nova::network') }
 
+      it { should contain_class('nova::network::neutron').with(:security_group_api => 'neutron') }
+
       it 'should configure neutron' do
 
         should contain_class('openstack::neutron').with(
