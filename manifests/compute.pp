@@ -63,6 +63,7 @@ class openstack::compute (
   $quantum_firewall_driver       = false,
   $bridge_mappings               = undef,
   $bridge_uplinks                = undef,
+  $security_group_api            = 'quantum',
   # Nova
   $nova_admin_tenant_name        = 'services',
   $nova_admin_user               = 'nova',
@@ -248,6 +249,7 @@ class openstack::compute (
       quantum_admin_username    => $quantum_admin_user,
       quantum_admin_tenant_name => $quantum_admin_tenant_name,
       quantum_admin_auth_url    => "http://${keystone_host}:35357/v2.0",
+      security_group_api        => $security_group_api
     }
 
   }

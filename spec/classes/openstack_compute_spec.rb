@@ -318,7 +318,8 @@ describe 'openstack::compute' do
         :quantum_url               => "http://127.0.0.2:9696",
         :quantum_admin_tenant_name => 'services',
         :quantum_admin_username    => 'quantum',
-        :quantum_admin_auth_url    => "http://127.0.0.3:35357/v2.0"
+        :quantum_admin_auth_url    => "http://127.0.0.3:35357/v2.0",
+        :security_group_api        => 'quantum'
       )
 
       should_not contain_class('quantum::server')
