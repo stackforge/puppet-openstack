@@ -108,7 +108,15 @@
 #   (Optional) Defaults to false. Required if swift is set to true.
 #
 # [swift_public_address]
-#   The swift address used to populate the keystone service catalog.
+#   The swift public endpoint address used to populate the keystone service catalog.
+#   (optional). Defaults to false.
+#
+# [swift_internal_address]
+#   The swift internal endpoint address used to populate the keystone service catalog.
+#   (optional). Defaults to false.
+#
+# [swift_admin_address]
+#   The swift admin endpoint address used to populate the keystone service catalog.
 #   (optional). Defaults to false.
 #
 # === Examples
@@ -244,6 +252,8 @@ class openstack::controller (
   # swift
   $swift                   = false,
   $swift_public_address    = false,
+  $swift_internal_address  = false,
+  $swift_admin_address     = false,
   $enabled                 = true
 ) {
 
@@ -344,8 +354,8 @@ class openstack::controller (
     swift                     => $swift,
     swift_user_password       => $swift_user_password,
     swift_public_address      => $swift_public_address,
-    swift_internal_address    => $internal_address_real,
-    swift_admin_address       => $admin_address_real,
+    swift_internal_address    => $swift_internal_address,
+    swift_admin_address       => $swift_admin_address,
     enabled                   => $enabled,
     bind_host                 => $keystone_bind_address,
   }
