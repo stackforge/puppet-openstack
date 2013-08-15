@@ -21,6 +21,8 @@
 # [admin_tenant] Name of keystone admin tenant. Optional. Defaults to  'admin'
 # [verbose] Log verbosely. Optional. Defaults to false.
 # [debug] Log at a debug-level. Optional. Defaults to false.
+# [token_driver] Driver to use for managing tokens.
+#   Optional.  Defaults to 'keystone.token.backends.kvs.Token'
 # [bind_host] Address that keystone binds to. Optional. Defaults to  '0.0.0.0'
 # [internal_address] Internal address for keystone. Optional. Defaults to  $public_address
 # [admin_address] Keystone admin address. Optional. Defaults to  $internal_address
@@ -70,6 +72,7 @@ class openstack::keystone (
   $debug                    = false,
   $bind_host                = '0.0.0.0',
   $region                   = 'RegionOne',
+  $token_driver             = 'keystone.token.backends.kvs.Token',
   $internal_address         = false,
   $admin_address            = false,
   $glance_public_address    = false,
@@ -197,6 +200,7 @@ class openstack::keystone (
     idle_timeout   => $idle_timeout,
     catalog_type   => 'sql',
     admin_token    => $admin_token,
+    token_driver   => $token_driver,
     enabled        => $enabled,
     sql_connection => $sql_conn,
   }

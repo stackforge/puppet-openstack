@@ -16,6 +16,7 @@ describe 'openstack::controller' do
       :rabbit_virtual_host     => '/',
       :keystone_db_password    => 'keystone_pass',
       :keystone_admin_token    => 'keystone_admin_token',
+      :keystone_token_driver   => 'keystone.token.backends.kvs.Token',
       :glance_registry_host    => '0.0.0.0',
       :glance_db_password      => 'glance_pass',
       :glance_user_password    => 'glance_pass',
@@ -196,6 +197,7 @@ describe 'openstack::controller' do
           :catalog_type   => 'sql',
           :enabled        => true,
           :admin_token    => 'keystone_admin_token',
+          :token_driver   => 'keystone.token.backends.kvs.Token',
           :sql_connection => "mysql://keystone:keystone_pass@127.0.0.1/keystone"
         )
 
