@@ -45,6 +45,10 @@
 # [cache_server_port]   local memcached instance port
 # [horizon]             (bool) is horizon installed. Defaults to: true
 # [neutron]             (bool) is neutron installed
+# [newtork_vlan_ranges] array of vlan_start:vlan_stop groups
+# [bridge_mappings]     array of physical_newtork:l2_start:l2end groups
+# [bridge_uplinks]      array of bridge_name:bridge_interface groups
+# [tenant_network_type] vlan, gre, etc. needed by ovs to define the default
 #   The next is an array of arrays, that can be used to add call-out links to the dashboard for other apps.
 #   There is no specific requirement for these apps to be for monitoring, that's just the defacto purpose.
 #   Each app is defined in two parts, the display name, and the URI
@@ -76,11 +80,7 @@
 #   admin_email            => 'my_email@mw.com',
 #   admin_password         => 'my_admin_password',
 #   keystone_db_password   => 'changeme',
-#   keystone_admin_token   => '12345',
-#   glance_db_password     => 'changeme',
-#   glance_user_password   => 'changeme',
-#   nova_db_password       => 'changeme',
-#   nova_user_password     => 'changeme',
+#   keystone_admin_token   => 'changeme',
 #   secret_key             => 'dummy_secret_key',
 #   nova_user_password     => 'changeme',
 #   nova_db_password       => 'changeme',
@@ -88,10 +88,7 @@
 #   glance_db_password     => 'changeme',
 #   cinder_user_password   => 'changeme',
 #   cinder_db_password     => 'changeme',
-#   keystone_db_password   => 'changeme',
-#   admin_password         => 'changeme',
 #   rabbit_password        => 'changeme',
-#   keystone_admin_token   => 'changeme',
 #   neutron_user_password  => 'changeme',
 #   neutron_db_password    => 'changeme',
 #   secret_key             => 'dummy_secret_key',
@@ -193,6 +190,10 @@ class openstack::all (
   $neutron                 = true,
   $bridge_interface        = undef,
   $external_bridge_name    = 'br-ex',
+  $network_vlan_ranges     = undef,
+  $bridge_mappings         = undef,
+  $bridge_uplinks          = undef,
+  $tenant_network_type     = 'gre',
   $enable_ovs_agent        = true,
   $enable_dhcp_agent       = true,
   $enable_l3_agent         = true,
@@ -407,6 +408,19 @@ class openstack::all (
     if ! $bridge_interface {
       fail('bridge_interface must be set when configuring neutron')
     }
+    # compare incoming bridge definitions to determie if we need
+    # to construct them, or if they were passed in
+    if ! $bridge_mappings {
+       $bridge_mappings_real = ["default:${external_bridge_name}"]
+    } else {
+       $bridge_mappings_real = $bridge_mappings
+    }
+
+    if ! $bridge_uplinks {
+       $bridge_uplinks_real = ["${external_bridge_name}:${bridge_interface}"]
+    } else {
+       $bridge_uplinks_real = $bridge_uplinks
+    }
 
     class { 'openstack::neutron':
       # Database
@@ -418,8 +432,10 @@ class openstack::all (
       rabbit_virtual_host   => $rabbit_virtual_host,
       # Neutron OVS
       ovs_local_ip          => $ovs_local_ip_real,
-      bridge_uplinks        => ["${external_bridge_name}:${bridge_interface}"],
-      bridge_mappings       => ["default:${external_bridge_name}"],
+      network_vlan_ranges   => $network_vlan_ranges,
+      bridge_uplinks        => $bridge_uplinks_real,
+      bridge_mappings       => $bridge_mappings_real,
+      tenant_network_type   => $tenant_network_type,
       enable_ovs_agent      => $enable_ovs_agent,
       firewall_driver       => $firewall_driver,
       # Database
