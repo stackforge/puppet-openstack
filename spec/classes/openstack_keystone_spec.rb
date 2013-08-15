@@ -38,6 +38,7 @@ describe 'openstack::keystone' do
         :catalog_type   => 'sql',
         :admin_token    => 'token',
         :enabled        => true,
+        :token_driver   => 'keystone.token.backends.kvs.Token',
         :sql_connection => 'mysql://keystone:pass@127.0.0.1/keystone'
       )
       [ 'glance', 'cinder', 'quantum' ].each do |type|
