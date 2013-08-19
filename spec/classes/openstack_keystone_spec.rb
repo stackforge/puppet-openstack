@@ -98,4 +98,154 @@ describe 'openstack::keystone' do
     end
   end
 
+  describe 'address specification' do
+    let :test_params do
+      required_params.merge(
+        :swift => true,
+        :swift_user_password => 'pass'
+      )
+    end
+
+    describe 'supplying admin and internal' do
+      let :addresses do
+        {
+          :public_address => '1.1.1.1',
+          :admin_address => '2.2.2.2',
+          :internal_address => '3.3.3.3'
+        }
+      end
+      let :params do
+        test_params.merge(addresses)
+      end
+
+      it do
+        should contain_class('keystone::endpoint').with(addresses)
+
+        [ 'glance', 'nova', 'swift', 'cinder', 'neutron' ].each do |type|
+          should contain_class("#{type}::keystone::auth").with(addresses)
+        end
+      end
+    end
+
+    describe 'supplying admin only, internal defaults' do
+      let :addresses do
+        {
+          :public_address => '1.1.1.1',
+          :admin_address => '2.2.2.2',
+        }
+      end
+      let :expected_addresses do
+        {
+          :public_address => '1.1.1.1',
+          :admin_address => '2.2.2.2',
+          :internal_address => '1.1.1.1'
+        }
+      end
+
+      let :params do
+        test_params.merge(addresses)
+      end
+
+      it do
+        should contain_class('keystone::endpoint').with(expected_addresses)
+
+        [ 'glance', 'nova', 'swift', 'cinder', 'neutron' ].each do |type|
+          should contain_class("#{type}::keystone::auth").with(expected_addresses)
+        end
+      end
+    end
+
+    describe 'supplying internal only, admin defaults' do
+      let :addresses do
+        {
+          :public_address => '1.1.1.1',
+          :internal_address => '3.3.3.3'
+        }
+      end
+      let :expected_addresses do
+        {
+          :public_address => '1.1.1.1',
+          :admin_address => '1.1.1.1',
+          :internal_address => '3.3.3.3'
+        }
+      end
+
+      let :params do
+        test_params.merge(addresses)
+      end
+
+      it do
+        should contain_class('keystone::endpoint').with(expected_addresses)
+
+        [ 'glance', 'nova', 'swift', 'cinder', 'neutron' ].each do |type|
+          should contain_class("#{type}::keystone::auth").with(expected_addresses)
+        end
+      end
+    end
+
+    describe 'per service overrides' do
+      let :addresses do
+        {
+          :public_address => '1.1.1.1',
+          :admin_address => '2.2.2.2',
+          :internal_address => '3.3.3.3',
+
+          :glance_public_address    => '2.1.1.1',
+          :glance_admin_address     => '2.1.1.2',
+          :glance_internal_address  => '2.1.1.3',
+          :nova_public_address      => '2.1.2.1',
+          :nova_admin_address       => '2.1.2.2',
+          :nova_internal_address    => '2.1.2.3',
+          :cinder_public_address    => '2.1.3.1',
+          :cinder_admin_address     => '2.1.3.2',
+          :cinder_internal_address  => '2.1.3.3',
+          :neutron_public_address   => '2.1.4.1',
+          :neutron_admin_address    => '2.1.4.2',
+          :neutron_internal_address => '2.1.4.3',
+          :swift_public_address     => '2.1.5.1',
+          :swift_admin_address      => '2.1.5.2',
+          :swift_internal_address   => '2.1.5.3'
+
+        }
+      end
+      let :params do
+        test_params.merge(addresses)
+      end
+
+      it do
+        should contain_class('keystone::endpoint').with(
+          :public_address => '1.1.1.1',
+          :admin_address => '2.2.2.2',
+          :internal_address => '3.3.3.3'
+        )
+
+        should contain_class("glance::keystone::auth").with( 
+          :public_address    => '2.1.1.1',
+          :admin_address     => '2.1.1.2',
+          :internal_address  => '2.1.1.3'
+        )
+        should contain_class("nova::keystone::auth").with( 
+          :public_address      => '2.1.2.1',
+          :admin_address       => '2.1.2.2',
+          :internal_address    => '2.1.2.3'
+        )
+        should contain_class("cinder::keystone::auth").with( 
+          :public_address    => '2.1.3.1',
+          :admin_address     => '2.1.3.2',
+          :internal_address  => '2.1.3.3',
+        )
+        should contain_class("neutron::keystone::auth").with( 
+          :public_address   => '2.1.4.1',
+          :admin_address    => '2.1.4.2',
+          :internal_address => '2.1.4.3',
+        )
+        should contain_class("swift::keystone::auth").with( 
+          :public_address     => '2.1.5.1',
+          :admin_address      => '2.1.5.2',
+          :internal_address   => '2.1.5.3'
+        )           
+      end
+    end
+
+  end
 end
