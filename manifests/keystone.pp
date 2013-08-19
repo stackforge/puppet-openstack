@@ -23,7 +23,7 @@
 # [debug] Log at a debug-level. Optional. Defaults to false.
 # [bind_host] Address that keystone binds to. Optional. Defaults to  '0.0.0.0'
 # [internal_address] Internal address for keystone. Optional. Defaults to  $public_address
-# [admin_address] Keystone admin address. Optional. Defaults to  $internal_address
+# [admin_address] Keystone admin address. Optional. Defaults to  $public_address
 # [glance] Set up glance endpoints and auth. Optional. Defaults to  true
 # [nova] Set up nova endpoints and auth. Optional. Defaults to  true
 # [swift] Set up swift endpoints and auth. Optional. Defaults to false
@@ -112,7 +112,7 @@ class openstack::keystone (
   if($admin_address) {
     $admin_real = $admin_address
   } else {
-    $admin_real = $internal_real
+    $admin_real = $public_address
   }
   if($glance_public_address) {
     $glance_public_real = $glance_public_address
@@ -122,12 +122,12 @@ class openstack::keystone (
   if($glance_internal_address) {
     $glance_internal_real = $glance_internal_address
   } else {
-    $glance_internal_real = $glance_public_real
+    $glance_internal_real = $internal_real
   }
   if($glance_admin_address) {
     $glance_admin_real = $glance_admin_address
   } else {
-    $glance_admin_real = $glance_internal_real
+    $glance_admin_real = $admin_real
   }
   if($nova_public_address) {
     $nova_public_real = $nova_public_address
@@ -137,12 +137,12 @@ class openstack::keystone (
   if($nova_internal_address) {
     $nova_internal_real = $nova_internal_address
   } else {
-    $nova_internal_real = $nova_public_real
+    $nova_internal_real = $internal_real
   }
   if($nova_admin_address) {
     $nova_admin_real = $nova_admin_address
   } else {
-    $nova_admin_real = $nova_internal_real
+    $nova_admin_real = $admin_real
   }
   if($cinder_public_address) {
     $cinder_public_real = $cinder_public_address
@@ -152,12 +152,12 @@ class openstack::keystone (
   if($cinder_internal_address) {
     $cinder_internal_real = $cinder_internal_address
   } else {
-    $cinder_internal_real = $cinder_public_real
+    $cinder_internal_real = $internal_real
   }
   if($cinder_admin_address) {
     $cinder_admin_real = $cinder_admin_address
   } else {
-    $cinder_admin_real = $cinder_internal_real
+    $cinder_admin_real = $admin_real
   }
   if($neutron_public_address) {
     $neutron_public_real = $neutron_public_address
@@ -167,12 +167,12 @@ class openstack::keystone (
   if($neutron_internal_address) {
     $neutron_internal_real = $neutron_internal_address
   } else {
-    $neutron_internal_real = $neutron_public_real
+    $neutron_internal_real = $internal_real
   }
   if($neutron_admin_address) {
     $neutron_admin_real = $neutron_admin_address
   } else {
-    $neutron_admin_real = $neutron_internal_real
+    $neutron_admin_real = $admin_real
   }
   if($swift_public_address) {
     $swift_public_real = $swift_public_address
@@ -182,12 +182,12 @@ class openstack::keystone (
   if($swift_internal_address) {
     $swift_internal_real = $swift_internal_address
   } else {
-    $swift_internal_real = $swift_public_real
+    $swift_internal_real = $internal_real
   }
   if($swift_admin_address) {
     $swift_admin_real = $swift_admin_address
   } else {
-    $swift_admin_real = $swift_internal_real
+    $swift_admin_real = $admin_real
   }
 
   class { '::keystone':
