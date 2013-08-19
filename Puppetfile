@@ -7,7 +7,7 @@ mod 'puppetlabs/horizon', :git => 'git://github.com/stackforge/puppet-horizon'
 mod 'puppetlabs/swift', :git => 'git://github.com/stackforge/puppet-swift'
 mod 'puppetlabs/cinder', :git => 'git://github.com/stackforge/puppet-cinder'
 mod 'puppetlabs/tempest', :git => 'git://github.com/stackforge/puppet-tempest'
-mod 'stackforge/neutron', :git => 'git://github.com/stackforge/puppet-quantum/'
+mod 'stackforge/neutron', :git => 'git://github.com/stackforge/puppet-neutron'
 # openstack middleware
 mod 'puppet/vswitch', :git => 'git://github.com/bodepd/puppet-vswitch'
 mod 'puppetlabs/rabbitmq',
