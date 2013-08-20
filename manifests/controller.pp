@@ -6,6 +6,8 @@
 # [public_interface] Public interface used to route public traffic. Required.
 # [public_address] Public address for public endpoints. Required.
 # [public_protocol] Protocol used by public endpoints. Defaults to 'http'
+# [token_format] Format keystone uses for tokens. Optional. Defaults to PKI.
+#   Supports PKI and UUID.
 # [private_interface] Interface used for vm networking connectivity. Required.
 # [internal_address] Internal address used for management. Required.
 # [mysql_root_password] Root password for mysql server.
@@ -174,6 +176,7 @@ class openstack::controller (
   $keystone_bind_address   = '0.0.0.0',
   $region                  = 'RegionOne',
   $public_protocol         = 'http',
+  $token_format            = 'PKI',
   # Glance
   $glance_registry_host    = '0.0.0.0',
   $glance_db_user          = 'glance',
@@ -334,6 +337,7 @@ class openstack::controller (
     admin_password            => $admin_password,
     public_address            => $public_address,
     public_protocol           => $public_protocol,
+    token_format              => $token_format,
     internal_address          => $internal_address_real,
     admin_address             => $admin_address_real,
     region                    => $region,
