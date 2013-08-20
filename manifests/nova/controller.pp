@@ -107,9 +107,14 @@ class openstack::nova::controller (
   # Configure the db string
   case $db_type {
     'mysql': {
-      $nova_db = "mysql://${nova_db_user}:${nova_db_password}@${db_host}/${nova_db_dbname}"
+      if $db_ssl == true {
+        $nova_db = "mysql://${nova_db_user}:${nova_db_password}@${db_host}/${nova_db_name}?ssl_ca=${db_ssl_ca}"
+      } else {
+        $nova_db = "mysql://${nova_db_user}:${nova_db_password}@${db_host}/${nova_db_name}"
+      }
     }
     default: {
+      fail("db_type ${db_type} is not supported")
     }
   }
 
