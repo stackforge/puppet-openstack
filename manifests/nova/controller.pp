@@ -90,6 +90,8 @@ class openstack::nova::controller (
   $rabbit_cluster_nodes      = false,
   # Database
   $db_type                   = 'mysql',
+  $db_ssl                    = false,
+  $db_ssl_ca                 = undef,
   $sql_idle_timeout          = '3600',
   # Glance
   $glance_api_servers        = undef,
@@ -107,9 +109,14 @@ class openstack::nova::controller (
   # Configure the db string
   case $db_type {
     'mysql': {
-      $nova_db = "mysql://${nova_db_user}:${nova_db_password}@${db_host}/${nova_db_dbname}"
+      if $db_ssl == true {
+        $nova_db = "mysql://${nova_db_user}:${nova_db_password}@${db_host}/${nova_db_dbname}?ssl_ca=${db_ssl_ca}"
+      } else {
+        $nova_db = "mysql://${nova_db_user}:${nova_db_password}@${db_host}/${nova_db_dbname}"
+      }
     }
     default: {
+      fail("db_type ${db_type} is not supported")
     }
   }
 
