@@ -18,6 +18,8 @@
 # [registry_host] Address used by API to find the Registry service. Optional. Defaults to '0.0.0.0'
 # [bind_host] Address for binding API and Registry services. Optional. Defaults to '0.0.0.0'
 # [db_type] Type of sql databse to use. Optional. Defaults to 'mysql'
+# [db_ssl] Boolean whether to use SSL for database. Defaults to false.
+# [db_ssl_ca] If db_ssl is true, this is used in the connection to define the CA. Default undef.
 # [db_user] Name of glance DB user. Optional. Defaults to 'glance'
 # [db_name] Name of glance DB. Optional. Defaults to 'glance'
 # [backend] Backends used to store images.  Defaults to file.
@@ -48,6 +50,8 @@ class openstack::glance (
   $registry_host            = '0.0.0.0',
   $bind_host                = '0.0.0.0',
   $db_type                  = 'mysql',
+  $db_ssl                   = false,
+  $db_ssl_ca                = undef,
   $db_user                  = 'glance',
   $db_name                  = 'glance',
   $backend                  = 'file',
@@ -62,10 +66,17 @@ class openstack::glance (
 ) {
 
   # Configure the db string
-  if $db_type == 'mysql' {
-    $sql_connection = "mysql://${db_user}:${db_password}@${db_host}/${db_name}"
-  } else {
-    fail("Unsupported db_type ${db_type}. Only mysql is currently supported")
+  case $db_type {
+    'mysql': {
+      if $db_ssl == true {
+        $sql_connection = "mysql://${db_user}:${db_password}@${db_host}/${db_name}?ssl_ca=${db_ssl_ca}"
+      } else {
+        $sql_connection = "mysql://${db_user}:${db_password}@${db_host}/${db_name}"
+      }
+    }
+    default: {
+      fail("db_type ${db_type} is not supported")
+    }
   }
 
   # Install and configure glance-api

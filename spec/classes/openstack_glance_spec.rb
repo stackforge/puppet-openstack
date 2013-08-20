@@ -57,7 +57,7 @@ describe 'openstack::glance' do
       params.merge!(:db_type => 'sqlite' )
     end
     it 'should fail' do
-      expect { subject }.to raise_error(Puppet::Error, /Unsupported db_type sqlite/)
+      expect { subject }.to raise_error(Puppet::Error, /db_type sqlite is not supported/)
     end
   end
 

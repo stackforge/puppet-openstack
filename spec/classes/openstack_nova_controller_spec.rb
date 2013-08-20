@@ -95,4 +95,16 @@ describe 'openstack::nova::controller' do
       )
     end
   end
+
+  context 'when configuring SSL' do
+    let :params do
+      default_params.merge(
+        :mysql_ssl => true,
+        :mysql_ca => '/etc/mysql/ca.pem'
+      )
+      should contain_class('nova').with(
+        :sql_connection       => 'mysql://nova:nova_db_pass@127.0.0.1/nova?ssl_ca=/etc/mysql/ca.pem'
+      )
+    end
+  end
 end
