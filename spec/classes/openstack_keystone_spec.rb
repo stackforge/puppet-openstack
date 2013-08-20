@@ -37,6 +37,7 @@ describe 'openstack::keystone' do
         :idle_timeout   => '200',
         :catalog_type   => 'sql',
         :admin_token    => 'token',
+        :token_format   => 'PKI',
         :enabled        => true,
         :token_driver   => 'keystone.token.backends.kvs.Token',
         :sql_connection => 'mysql://keystone:pass@127.0.0.1/keystone'

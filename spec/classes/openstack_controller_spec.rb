@@ -198,6 +198,7 @@ describe 'openstack::controller' do
           :enabled        => true,
           :admin_token    => 'keystone_admin_token',
           :token_driver   => 'keystone.token.backends.kvs.Token',
+          :token_format   => 'PKI',
           :sql_connection => "mysql://keystone:keystone_pass@127.0.0.1/keystone"
         )
 

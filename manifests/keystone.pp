@@ -15,6 +15,8 @@
 # [nova_user_password] Auth password for nova user. Required.
 # [public_address] Public address where keystone can be accessed. Required.
 # [public_protocol] Public protocol over which keystone can be accessed. Defaults to 'http'
+# [token_format] Format keystone uses for tokens. Optional. Defaults to PKI.
+#   Supports PKI and UUID.
 # [db_type] Type of DB used. Currently only supports mysql. Optional. Defaults to  'mysql'
 # [db_user] Name of keystone db user. Optional. Defaults to  'keystone'
 # [db_name] Name of keystone DB. Optional. Defaults to  'keystone'
@@ -61,6 +63,7 @@ class openstack::keystone (
   $quantum_user_password,
   $public_address,
   $public_protocol          = 'http',
+  $token_format             = 'PKI',
   $db_host                  = '127.0.0.1',
   $idle_timeout             = '200',
   $swift_user_password      = false,
@@ -201,6 +204,7 @@ class openstack::keystone (
     catalog_type   => 'sql',
     admin_token    => $admin_token,
     token_driver   => $token_driver,
+    token_format   => $token_format,
     enabled        => $enabled,
     sql_connection => $sql_conn,
   }
