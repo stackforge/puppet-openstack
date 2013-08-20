@@ -18,6 +18,8 @@
 # [token_format] Format keystone uses for tokens. Optional. Defaults to PKI.
 #   Supports PKI and UUID.
 # [db_type] Type of DB used. Currently only supports mysql. Optional. Defaults to  'mysql'
+# [db_ssl] Boolean whether to use SSL for database. Defaults to false.
+# [db_ssl_ca] If db_ssl is true, this is used in the connection to define the CA. Default undef.
 # [db_user] Name of keystone db user. Optional. Defaults to  'keystone'
 # [db_name] Name of keystone DB. Optional. Defaults to  'keystone'
 # [admin_tenant] Name of keystone admin tenant. Optional. Defaults to  'admin'
@@ -68,6 +70,8 @@ class openstack::keystone (
   $idle_timeout             = '200',
   $swift_user_password      = false,
   $db_type                  = 'mysql',
+  $db_ssl                   = false,
+  $db_ssl_ca                = undef,
   $db_user                  = 'keystone',
   $db_name                  = 'keystone',
   $admin_tenant             = 'admin',
@@ -103,7 +107,11 @@ class openstack::keystone (
 
   # Install and configure Keystone
   if $db_type == 'mysql' {
-    $sql_conn = "mysql://${db_user}:${db_password}@${db_host}/${db_name}"
+    if $db_ssl == true {
+      $sql_conn = "mysql://${db_user}:${db_password}@${db_host}/${db_name}?ssl_ca=${db_ssl_ca}"
+    } else {
+      $sql_conn = "mysql://${db_user}:${db_password}@${db_host}/${db_name}"
+    }
   } else {
     fail("db_type ${db_type} is not supported")
   }
