@@ -129,6 +129,10 @@
 #   Host running keystone.
 #   (optional) Defaults to 127.0.0.1.
 #
+# [keystone_auth_protocol]
+#   Protocol used for authenticating against keystone.
+#   (optional) Defaults to 'http'.
+#
 # [verbose]
 #   Enables verbose for neutron services.
 #   (optional) Defaults to false.
@@ -194,6 +198,7 @@ class openstack::neutron (
   # General
   $bind_address           = '0.0.0.0',
   $keystone_host          = '127.0.0.1',
+  $keystone_auth_protocol = 'http',
   $verbose                = false,
   $debug                  = false,
 ) {
@@ -222,6 +227,7 @@ class openstack::neutron (
     }
     class { 'neutron::server':
       auth_host     => $keystone_host,
+      auth_protocol => $keystone_auth_protocol,
       auth_password => $user_password,
     }
     class { 'neutron::plugins::ovs':

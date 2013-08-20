@@ -36,6 +36,7 @@
 #
 class openstack::auth_file(
   $admin_password,
+  $auth_protocol            = 'http',
   $controller_node          = '127.0.0.1',
   $keystone_admin_token     = undef,
   $admin_user               = 'admin',

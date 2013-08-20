@@ -55,9 +55,10 @@ class openstack::compute (
   $enable_ovs_agent              = true,
   $enable_l3_agent               = false,
   $enable_dhcp_agent             = false,
-  $neutron_auth_url              = 'http://127.0.0.1:35357/v2.0',
+  $neutron_auth_url              = "${keystone_auth_protocol}://${keystone_host}:35357/v2.0",
   $keystone_host                 = '127.0.0.1',
   $neutron_host                  = '127.0.0.1',
+  $keystone_auth_protocol        = 'http',
   $ovs_enable_tunneling          = true,
   $ovs_local_ip                  = false,
   $neutron_firewall_driver       = false,
@@ -229,6 +230,7 @@ class openstack::compute (
       user_password        => $neutron_user_password,
       # Keystone
       keystone_host        => $keystone_host,
+      keystone_auth_protocol => $keystone_auth_protocol,
       # General
       enabled              => $enabled,
       enable_server        => false,
@@ -248,7 +250,7 @@ class openstack::compute (
       neutron_url               => "http://${neutron_host}:9696",
       neutron_admin_username    => $neutron_admin_user,
       neutron_admin_tenant_name => $neutron_admin_tenant_name,
-      neutron_admin_auth_url    => "http://${keystone_host}:35357/v2.0",
+      neutron_admin_auth_url    => "${keystone_auth_protocol}://${keystone_host}:35357/v2.0",
       security_group_api        => $security_group_api
     }
 

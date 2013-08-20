@@ -14,6 +14,7 @@
 # [db_password] Password for glance DB. Required.
 # [db_host] Host where DB resides. Required.
 # [keystone_host] Host whre keystone is running. Optional. Defaults to '127.0.0.1'
+# [keystone_auth_protocol] Protocol used to authenticate against Keystone. Defaults to 'http'.
 # [sql_idle_timeout] Timeout for SQL to reap connections. Optional. Defaults to '3600'
 # [registry_host] Address used by API to find the Registry service. Optional. Defaults to '0.0.0.0'
 # [bind_host] Address for binding API and Registry services. Optional. Defaults to '0.0.0.0'
@@ -44,6 +45,7 @@ class openstack::glance (
   $db_password,
   $db_host                  = '127.0.0.1',
   $keystone_host            = '127.0.0.1',
+  $keystone_auth_protocol   = 'http',
   $sql_idle_timeout         = '3600',
   $registry_host            = '0.0.0.0',
   $bind_host                = '0.0.0.0',
@@ -77,6 +79,7 @@ class openstack::glance (
     auth_type         => 'keystone',
     auth_port         => '35357',
     auth_host         => $keystone_host,
+    auth_protocol     => $keystone_auth_protocol,
     keystone_tenant   => 'services',
     keystone_user     => 'glance',
     keystone_password => $user_password,
@@ -91,6 +94,7 @@ class openstack::glance (
     debug             => $debug,
     bind_host         => $bind_host,
     auth_host         => $keystone_host,
+    auth_protocol     => $keystone_auth_protocol,
     auth_port         => '35357',
     auth_type         => 'keystone',
     keystone_tenant   => 'services',

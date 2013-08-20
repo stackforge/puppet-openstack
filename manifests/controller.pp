@@ -5,7 +5,7 @@
 #
 # [public_interface] Public interface used to route public traffic. Required.
 # [public_address] Public address for public endpoints. Required.
-# [public_protocol] Protocol used by public endpoints. Defaults to 'http'
+# [keystone_auth_protocol] Protocol used by public endpoints. Defaults to 'http'
 # [private_interface] Interface used for vm networking connectivity. Required.
 # [internal_address] Internal address used for management. Required.
 # [mysql_root_password] Root password for mysql server.
@@ -173,7 +173,7 @@ class openstack::controller (
   $keystone_admin_tenant   = 'admin',
   $keystone_bind_address   = '0.0.0.0',
   $region                  = 'RegionOne',
-  $public_protocol         = 'http',
+  $keystone_auth_protocol  = 'http',
   # Glance
   $glance_registry_host    = '0.0.0.0',
   $glance_db_user          = 'glance',
@@ -339,7 +339,7 @@ class openstack::controller (
     admin_email               => $admin_email,
     admin_password            => $admin_password,
     public_address            => $public_address,
-    public_protocol           => $public_protocol,
+    public_protocol           => $keystone_auth_protocol,
     internal_address          => $internal_address_real,
     admin_address             => $admin_address_real,
     region                    => $region,
@@ -376,6 +376,7 @@ class openstack::controller (
     sql_idle_timeout => $sql_idle_timeout,
     keystone_host    => $keystone_host,
     registry_host    => $glance_registry_host,
+    keystone_auth_protocol => $keystone_auth_protocol,
     db_user          => $glance_db_user,
     db_name          => $glance_db_dbname,
     db_password      => $glance_db_password,
@@ -403,6 +404,8 @@ class openstack::controller (
     # Database
     db_host                 => $db_host,
     sql_idle_timeout        => $sql_idle_timeout,
+    # Keystone
+    keystone_auth_protocol  => $keystone_auth_protocol,
     # Network
     network_manager         => $network_manager,
     network_config          => $network_config,
@@ -509,6 +512,7 @@ class openstack::controller (
       shared_secret         => $metadata_shared_secret,
       # Keystone
       keystone_host         => $keystone_host,
+      keystone_auth_protocol => $keystone_auth_protocol,
       # General
       enabled               => $enabled,
       enable_server         => $enable_neutron_server,
@@ -531,6 +535,7 @@ class openstack::controller (
     class { 'openstack::cinder::all':
       bind_host          => $cinder_bind_address,
       sql_idle_timeout   => $sql_idle_timeout,
+      keystone_auth_protocol => $keystone_auth_protocol,
       keystone_auth_host => $keystone_host,
       keystone_password  => $cinder_user_password,
       rabbit_userid      => $rabbit_user,
@@ -556,6 +561,7 @@ class openstack::controller (
   if ($horizon) {
     class { 'openstack::horizon':
       secret_key        => $secret_key,
+      keystone_scheme   => $keystone_auth_protocol,
       cache_server_ip   => $cache_server_ip,
       cache_server_port => $cache_server_port,
       horizon_app_links => $horizon_app_links,

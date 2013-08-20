@@ -1,13 +1,13 @@
 #!/bin/sh
 <% if @keystone_admin_token -%>
 export OS_SERVICE_TOKEN=<%= @keystone_admin_token %>
-export OS_SERVICE_ENDPOINT=http://<%= @controller_node %>:35357/v2.0/
+export OS_SERVICE_ENDPOINT=<%= @auth_protocol %>://<%= @controller_node %>:35357/v2.0/
 <% end -%>
 export OS_NO_CACHE=<%= @use_no_cache %>
 export OS_TENANT_NAME=<%= @admin_tenant %>
 export OS_USERNAME=<%= @admin_user %>
 export OS_PASSWORD=<%= @admin_password %>
-export OS_AUTH_URL=http://<%= @controller_node %>:5000/v2.0/
+export OS_AUTH_URL=<%= @auth_protocol %>://<%= @controller_node %>:5000/v2.0/
 export OS_AUTH_STRATEGY=keystone
 export OS_REGION_NAME=<%= @region_name %>
 export CINDER_ENDPOINT_TYPE=<%= @cinder_endpoint_type %>

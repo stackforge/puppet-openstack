@@ -98,6 +98,7 @@ class openstack::nova::controller (
   $vncproxy_host             = undef,
   # Keystone
   $keystone_host             = '127.0.0.1',
+  $keystone_auth_protocol    = 'http',
   # General
   $debug                     = false,
   $verbose                   = false,
@@ -162,6 +163,7 @@ class openstack::nova::controller (
     enabled_apis                         => $enabled_apis,
     api_bind_address                     => $api_bind_address,
     auth_host                            => $keystone_host,
+    auth_protocol                        => $keystone_auth_protocol,
     neutron_metadata_proxy_shared_secret => $metadata_shared_secret,
   }
 
