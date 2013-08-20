@@ -196,6 +196,7 @@ describe 'openstack::controller' do
           :catalog_type   => 'sql',
           :enabled        => true,
           :admin_token    => 'keystone_admin_token',
+          :token_format   => 'PKI',
           :sql_connection => "mysql://keystone:keystone_pass@127.0.0.1/keystone"
         )
 
