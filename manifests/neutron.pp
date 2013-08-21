@@ -137,6 +137,10 @@
 #   Enables debug for neutron services.
 #   (optional) Defaults to false.
 #
+# [allow_overlapping_ips]
+#   Allow subnets with overlaps to be used.
+#   (optional) Defaults to false.
+#
 # === Examples
 #
 # class { 'openstack::neutron':
@@ -196,19 +200,21 @@ class openstack::neutron (
   $keystone_host          = '127.0.0.1',
   $verbose                = false,
   $debug                  = false,
+  $allow_overlapping_ips  = false,
 ) {
 
   class { '::neutron':
-    enabled             => $enabled,
-    core_plugin         => $core_plugin,
-    bind_host           => $bind_address,
-    rabbit_host         => $rabbit_host,
-    rabbit_hosts        => $rabbit_hosts,
-    rabbit_virtual_host => $rabbit_virtual_host,
-    rabbit_user         => $rabbit_user,
-    rabbit_password     => $rabbit_password,
-    verbose             => $verbose,
-    debug               => $debug,
+    enabled               => $enabled,
+    core_plugin           => $core_plugin,
+    bind_host             => $bind_address,
+    rabbit_host           => $rabbit_host,
+    rabbit_hosts          => $rabbit_hosts,
+    rabbit_virtual_host   => $rabbit_virtual_host,
+    rabbit_user           => $rabbit_user,
+    rabbit_password       => $rabbit_password,
+    verbose               => $verbose,
+    debug                 => $debug,
+    allow_overlapping_ips => $allow_overlapping_ips,
   }
 
   if $enable_server {

@@ -654,7 +654,8 @@ describe 'openstack::controller' do
           :enabled               => true,
           :enable_server         => true,
           :debug                 => true,
-          :verbose               => true
+          :verbose               => true,
+          :allow_overlapping_ips => false
         )
 
       end
