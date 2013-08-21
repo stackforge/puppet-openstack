@@ -255,6 +255,7 @@ class openstack::controller (
   $neutron_auth_url        = 'http://127.0.0.1:35357/v2.0',
   $enable_neutron_server   = true,
   $security_group_api      = 'neutron',
+  $allow_overlapping_ips   = false,
   # swift
   $swift                   = false,
   $swift_public_address    = false,
@@ -514,6 +515,7 @@ class openstack::controller (
       enable_server         => $enable_neutron_server,
       debug                 => $debug,
       verbose               => $verbose,
+      allow_overlapping_ips => $allow_overlapping_ips,
     }
   }
 
