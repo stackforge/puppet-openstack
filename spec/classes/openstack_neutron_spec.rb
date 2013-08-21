@@ -134,4 +134,20 @@ describe 'openstack::neutron' do
     end
   end
 
+  context 'overlapping IPs default off' do
+    it { should contain_class('neutron').with(
+      :allow_overlapping_ips => false
+    ) }
+  end
+
+  context 'when overlapping IPs are allowed' do
+    before do
+      params.merge!(:allow_overlapping_ips => true)
+    end
+    it { should contain_class('neutron').with(
+      :allow_overlapping_ips => true
+    ) }
+  end
+
+
 end

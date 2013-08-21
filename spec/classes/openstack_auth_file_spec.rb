@@ -37,7 +37,7 @@ describe 'openstack::auth_file' do
         :glance_endpoint_type     => 'privateURL',
         :keystone_endpoint_type   => 'privateURL',
         :nova_endpoint_type       => 'privateURL',
-        :neutron_endpoint_type    => 'privateURL',
+        :neutron_endpoint_type    => 'privateURL'
       }
     end
 
