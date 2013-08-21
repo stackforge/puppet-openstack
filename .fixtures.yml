@@ -19,7 +19,7 @@ fixtures:
       repo: 'git://github.com/stackforge/puppet-swift'
       ref: 'origin/stable/grizzly'
     'quantum':
-      repo: 'git://github.com/stackforge/puppet-quantum'
+      repo: 'git://github.com/stackforge/puppet-neutron'
       ref: 'origin/stable/grizzly'
     'ceilometer':
       repo: 'git://github.com/stackforge/puppet-ceilometer'

@@ -22,7 +22,7 @@ mod 'puppetlabs/tempest',
     :git => 'git://github.com/stackforge/puppet-tempest',
     :ref => 'origin/stable/grizzly'
 mod 'puppet/quantum',
-    :git => 'git://github.com/stackforge/puppet-quantum/',
+    :git => 'git://github.com/stackforge/puppet-neutron/',
     :ref => 'origin/stable/grizzly'
 # openstack middleware
 mod 'puppet/vswitch',
