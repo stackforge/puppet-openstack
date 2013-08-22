@@ -17,6 +17,8 @@
 # [keystone_admin_token] Admin token for keystone.
 # [keystone_bind_address] Address that keystone api service should bind to.
 #   Optional. Defaults to '0.0.0.0'.
+# [keystone_token_driver] Driver to use for managing tokens.
+#   Optional.  Defaults to 'keystone.token.backends.kvs.Token'
 # [glance_registry_host] Address used by Glance API to find the Glance Registry service.
 #   Optional. Defaults to '0.0.0.0'.
 # [glance_db_password] Glance DB password.
@@ -174,6 +176,7 @@ class openstack::controller (
   $keystone_bind_address   = '0.0.0.0',
   $region                  = 'RegionOne',
   $public_protocol         = 'http',
+  $keystone_token_driver   = 'keystone.token.backends.kvs.Token',
   # Glance
   $glance_registry_host    = '0.0.0.0',
   $glance_db_user          = 'glance',
@@ -332,6 +335,7 @@ class openstack::controller (
     admin_tenant              => $keystone_admin_tenant,
     admin_email               => $admin_email,
     admin_password            => $admin_password,
+    token_driver              => $keystone_token_driver,
     public_address            => $public_address,
     public_protocol           => $public_protocol,
     internal_address          => $internal_address_real,
