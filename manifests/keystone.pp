@@ -62,43 +62,47 @@ class openstack::keystone (
   $cinder_user_password,
   $neutron_user_password,
   $public_address,
-  $public_protocol          = 'http',
-  $token_format             = 'PKI',
-  $db_host                  = '127.0.0.1',
-  $idle_timeout             = '200',
-  $swift_user_password      = false,
-  $db_type                  = 'mysql',
-  $db_user                  = 'keystone',
-  $db_name                  = 'keystone',
-  $admin_tenant             = 'admin',
-  $verbose                  = false,
-  $debug                    = false,
-  $bind_host                = '0.0.0.0',
-  $region                   = 'RegionOne',
-  $token_driver             = 'keystone.token.backends.sql.Token',
-  $internal_address         = false,
-  $admin_address            = false,
-  $glance_public_address    = false,
-  $glance_internal_address  = false,
-  $glance_admin_address     = false,
-  $nova_public_address      = false,
-  $nova_internal_address    = false,
-  $nova_admin_address       = false,
-  $cinder_public_address    = false,
-  $cinder_internal_address  = false,
-  $cinder_admin_address     = false,
-  $neutron_public_address   = false,
-  $neutron_internal_address = false,
-  $neutron_admin_address    = false,
-  $swift_public_address     = false,
-  $swift_internal_address   = false,
-  $swift_admin_address      = false,
-  $glance                   = true,
-  $nova                     = true,
-  $cinder                   = true,
-  $neutron                  = true,
-  $swift                    = false,
-  $enabled                  = true
+  $public_protocol             = 'http',
+  $token_format                = 'PKI',
+  $db_host                     = '127.0.0.1',
+  $idle_timeout                = '200',
+  $swift_user_password         = false,
+  $ceilometer_user_password    = false,
+  $db_type                     = 'mysql',
+  $db_user                     = 'keystone',
+  $db_name                     = 'keystone',
+  $admin_tenant                = 'admin',
+  $verbose                     = false,
+  $debug                       = false,
+  $bind_host                   = '0.0.0.0',
+  $region                      = 'RegionOne',
+  $token_driver                = 'keystone.token.backends.sql.Token',
+  $internal_address            = false,
+  $admin_address               = false,
+  $glance_public_address       = false,
+  $glance_internal_address     = false,
+  $glance_admin_address        = false,
+  $nova_public_address         = false,
+  $nova_internal_address       = false,
+  $nova_admin_address          = false,
+  $cinder_public_address       = false,
+  $cinder_internal_address     = false,
+  $cinder_admin_address        = false,
+  $neutron_public_address      = false,
+  $neutron_internal_address    = false,
+  $neutron_admin_address       = false,
+  $ceilometer_public_address   = false,
+  $ceilometer_internal_address = false,
+  $ceilometer_admin_address    = false,
+  $swift_public_address        = false,
+  $swift_internal_address      = false,
+  $swift_admin_address         = false,
+  $glance                      = true,
+  $nova                        = true,
+  $cinder                      = true,
+  $neutron                     = true,
+  $swift                       = false,
+  $enabled                     = true
 ) {
 
   # Install and configure Keystone
@@ -180,6 +184,21 @@ class openstack::keystone (
   } else {
     $neutron_admin_real = $neutron_internal_real
   }
+  if($ceilometer_public_address) {
+    $ceilometer_public_real = $ceilometer_public_address
+  } else {
+    $ceilometer_public_real = $public_address
+  }
+  if($ceilometer_internal_address) {
+    $ceilometer_internal_real = $ceilometer_internal_address
+  } else {
+    $ceilometer_internal_real = $ceilometer_public_real
+  }
+  if($ceilometer_admin_address) {
+    $ceilometer_admin_real = $ceilometer_admin_address
+  } else {
+    $ceilometer_admin_real = $ceilometer_internal_real
+  }
   if($swift_public_address) {
     $swift_public_real = $swift_public_address
   } else {
@@ -250,7 +269,7 @@ class openstack::keystone (
       }
     }
 
-    # Configure Nova endpoint in Keystone
+    # Configure Cinder endpoint in Keystone
     if $cinder {
       class { 'cinder::keystone::auth':
         password         => $cinder_user_password,
@@ -261,6 +280,7 @@ class openstack::keystone (
         region           => $region,
       }
     }
+
     if $neutron {
       class { 'neutron::keystone::auth':
         password         => $neutron_user_password,
@@ -268,6 +288,22 @@ class openstack::keystone (
         public_protocol  => $public_protocol,
         admin_address    => $neutron_admin_real,
         internal_address => $neutron_internal_real,
+        region           => $region,
+      }
+    }
+
+    if $ceilometer {
+
+      if ! $ceilometer_user_password {
+        fail('Must set a ceilometer_user_password when ceilometer auth is being configured')
+      }
+
+      class { 'ceilometer::keystone::auth':
+        password         => $ceilometer_user_password,
+        public_address   => $ceilometer_public_real,
+        public_protocol  => $public_protocol,
+        admin_address    => $ceilometer_admin_real,
+        internal_address => $ceilometer_internal_real,
         region           => $region,
       }
     }
