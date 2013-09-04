@@ -27,6 +27,8 @@ describe 'openstack::cinder::all' do
       :rabbit_virtual_host => '/',
       :package_ensure      => 'present',
       :api_paste_config    => '/etc/cinder/api-paste.ini',
+      :use_syslog          => false,
+      :log_facility        => 'LOG_USER',
       :debug               => false,
       :verbose             => false
     )
@@ -111,6 +113,19 @@ describe 'openstack::cinder::all' do
         :volume_name => 'foo'
       )}
     end
+  end
+
+  describe 'with custom syslog settings' do
+    before do
+      params.merge!(
+        :use_syslog   => true,
+        :log_facility => 'LOG_LOCAL0'
+      )
+    end
+    it { should contain_class('cinder').with(
+      :use_syslog   => true,
+      :log_facility => 'LOG_LOCAL0'
+    )}
   end
 
   context 'with unsupported db type' do

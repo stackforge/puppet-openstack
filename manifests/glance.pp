@@ -30,6 +30,8 @@
 # [swift_store_auth_addres] The URL where the Swift auth service lives. Defaults to "http://${keystone_host}:5000/v2.0/"
 # [verbose] Log verbosely. Optional. Defaults to false.
 # [debug] Log at a debug-level. Optional. Defaults to false.
+# [use_syslog] Use syslog for logging. Optional. Defaults to false.
+# [syslog_facility] Syslog facility to receive log lines. Optional. Defaults to LOG_USER.
 # [enabled] Used to indicate if the service should be active (true) or passive (false).
 #   Optional. Defaults to true
 #
@@ -62,6 +64,8 @@ class openstack::glance (
   $rbd_store_pool           = 'images',
   $verbose                  = false,
   $debug                    = false,
+  $use_syslog               = false,
+  $log_facility             = 'LOG_USER',
   $enabled                  = true
 ) {
 
@@ -93,6 +97,8 @@ class openstack::glance (
     keystone_password => $user_password,
     sql_connection    => $sql_connection,
     sql_idle_timeout  => $sql_idle_timeout,
+    use_syslog        => $use_syslog,
+    log_facility      => $log_facility,
     enabled           => $enabled,
   }
 
@@ -109,6 +115,8 @@ class openstack::glance (
     keystone_password => $user_password,
     sql_connection    => $sql_connection,
     sql_idle_timeout  => $sql_idle_timeout,
+    use_syslog        => $use_syslog,
+    log_facility      => $log_facility,
     enabled           => $enabled,
   }
 

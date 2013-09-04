@@ -40,7 +40,9 @@ describe 'openstack::keystone' do
         :token_format   => 'PKI',
         :enabled        => true,
         :token_driver   => 'keystone.token.backends.sql.Token',
-        :sql_connection => 'mysql://keystone:pass@127.0.0.1/keystone'
+        :sql_connection => 'mysql://keystone:pass@127.0.0.1/keystone',
+        :use_syslog     => false,
+        :log_facility   => 'LOG_USER'
       )
       [ 'glance', 'cinder', 'neutron' ].each do |type|
         should contain_class("#{type}::keystone::auth").with(
@@ -173,4 +175,19 @@ describe 'openstack::keystone' do
     end
   end
 
+  describe 'with custom syslog settings' do
+    let :params do
+      required_params.merge(
+        :use_syslog   => true,
+        :log_facility => 'LOG_LOCAL0'
+      )
+    end
+
+    it 'should set parameters in included classes' do
+      should contain_class('keystone').with(
+        :use_syslog   => true,
+        :log_facility => 'LOG_LOCAL0'
+      )
+    end
+  end
 end

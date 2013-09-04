@@ -36,6 +36,8 @@
 # [swift_user_password]
 #   Auth password for swift.
 #   (Optional) Defaults to false.
+# [use_syslog] Use syslog for logging. Defaults to false.
+# [log_facility] Syslog facility to receive log lines. Defaults to LOG_USER.
 # [enabled] If the service is active (true) or passive (false).
 #   Optional. Defaults to  true
 #
@@ -126,7 +128,15 @@ class openstack::keystone (
   $heat_cfn_public_address     = false,
   $heat_cfn_internal_address   = false,
   $heat_cfn_admin_address      = false,
-
+  $glance                      = true,
+  $nova                        = true,
+  $cinder                      = true,
+  $neutron                     = true,
+  $ceilometer                  = false,
+  $swift                       = false,
+  $use_syslog                  = false,
+  $log_facility                = 'LOG_USER',
+  $enabled                     = true
 ) {
 
   # Install and configure Keystone
@@ -286,6 +296,8 @@ class openstack::keystone (
     token_format   => $token_format,
     enabled        => $enabled,
     sql_connection => $sql_conn,
+    use_syslog     => $use_syslog,
+    log_facility   => $log_facility,
   }
 
   if ($enabled) {

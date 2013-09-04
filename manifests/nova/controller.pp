@@ -36,6 +36,14 @@
 #   Timeout for sql to reap connections.
 #   (Optional) Defaults to '3600'.
 #
+# [use_syslog]
+#   Use syslog for logging.
+#   (Optional) Defaults to false.
+#
+# [log_facility]
+#   Syslog facility to receive log lines.
+#   (Optional) Defaults to LOG_USER.
+#
 # === Examples
 #
 # class { 'openstack::nova::controller':
@@ -100,6 +108,9 @@ class openstack::nova::controller (
   $vncproxy_host             = undef,
   # Keystone
   $keystone_host             = '127.0.0.1',
+  # Syslog
+  $use_syslog                = false,
+  $log_facility              = 'LOG_USER',
   # General
   $debug                     = false,
   $verbose                   = false,
@@ -158,6 +169,8 @@ class openstack::nova::controller (
     verbose              => $verbose,
     rabbit_host          => $rabbit_connection,
     rabbit_hosts         => $rabbit_hosts,
+    use_syslog           => $use_syslog,
+    log_facility         => $log_facility,
   }
 
   # Configure nova-api

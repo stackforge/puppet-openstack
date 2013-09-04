@@ -32,6 +32,8 @@ describe 'openstack::glance' do
         :keystone_password => 'glance_user_pass',
         :sql_connection    => 'mysql://glance:glance_db_pass@127.0.0.1/glance',
         :sql_idle_timeout  => '3600',
+        :use_syslog        => false,
+        :log_facility      => 'LOG_USER',
         :enabled           => true
       )
       should contain_class('glance::registry').with(
@@ -46,6 +48,8 @@ describe 'openstack::glance' do
         :keystone_password => 'glance_user_pass',
         :sql_connection    => 'mysql://glance:glance_db_pass@127.0.0.1/glance',
         :sql_idle_timeout  => '3600',
+        :use_syslog        => false,
+        :log_facility      => 'LOG_USER',
         :enabled           => true
       )
       should contain_class('glance::backend::file')
@@ -150,4 +154,24 @@ describe 'openstack::glance' do
     end
   end
 
+  describe 'with custom syslog settings' do
+    before do
+      params.merge!({
+        :use_syslog   => true,
+        :log_facility => 'LOG_LOCAL0'
+      })
+    end
+
+    it 'should set parameters in included classes' do
+      should contain_class('glance::api').with(
+        :use_syslog   => true,
+        :log_facility => 'LOG_LOCAL0'
+      )
+
+      should contain_class('glance::registry').with(
+        :use_syslog   => true,
+        :log_facility => 'LOG_LOCAL0'
+      )
+    end
+  end
 end
