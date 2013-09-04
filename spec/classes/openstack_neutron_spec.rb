@@ -34,6 +34,8 @@ describe 'openstack::neutron' do
         :rabbit_virtual_host => '/',
         :rabbit_user         => 'rabbit_user',
         :rabbit_password     => 'rabbit_pass',
+        :use_syslog          => false,
+        :log_facility        => 'LOG_USER',
         :verbose             => false,
         :debug               => false
       )
@@ -121,6 +123,19 @@ describe 'openstack::neutron' do
         :debug          => false
       ) }
     end
+  end
+
+  context 'with custom syslog settings' do
+    before do
+      params.merge!(
+        :use_syslog   => true,
+        :log_facility => 'LOG_LOCAL0'
+      )
+    end
+    it { should contain_class('neutron').with(
+      :use_syslog   => true,
+      :log_facility => 'LOG_LOCAL0' 
+    ) }
   end
 
   context 'with invalid db_type' do

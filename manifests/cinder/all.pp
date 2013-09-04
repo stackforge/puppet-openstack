@@ -31,6 +31,8 @@ class openstack::cinder::all(
   $iscsi_ip_address         = '127.0.0.1',
   $setup_test_volume        = false,
   $manage_volumes           = true,
+  $use_syslog               = false,
+  $log_facility             = 'LOG_USER',
   $debug                    = false,
   $verbose                  = false
 ) {
@@ -55,6 +57,8 @@ class openstack::cinder::all(
     rabbit_virtual_host => $rabbit_virtual_host,
     package_ensure      => $package_ensure,
     api_paste_config    => $api_paste_config,
+    use_syslog          => $use_syslog,
+    log_facility        => $log_facility,
     debug               => $debug,
     verbose             => $verbose,
   }
