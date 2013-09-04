@@ -129,6 +129,14 @@
 #   Host running keystone.
 #   (optional) Defaults to 127.0.0.1.
 #
+# [use_syslog]
+#   Use syslog for logging.
+#   (optional) Default to false.
+#
+# [log_facility]
+#   Syslog facility to receive log lines.
+#   (optional) Default to LOG_USER.
+#
 # [verbose]
 #   Enables verbose for quantum services.
 #   (optional) Defaults to false.
@@ -194,6 +202,8 @@ class openstack::quantum (
   # General
   $bind_address           = '0.0.0.0',
   $keystone_host          = '127.0.0.1',
+  $use_syslog             = false,
+  $log_facility           = 'LOG_USER',
   $verbose                = false,
   $debug                  = false,
 ) {
@@ -207,6 +217,8 @@ class openstack::quantum (
     rabbit_virtual_host => $rabbit_virtual_host,
     rabbit_user         => $rabbit_user,
     rabbit_password     => $rabbit_password,
+    use_syslog          => $use_syslog,
+    log_facility        => $log_facility,
     verbose             => $verbose,
     debug               => $debug,
   }

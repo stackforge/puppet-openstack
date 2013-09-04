@@ -125,6 +125,14 @@
 #   The swift admin endpoint address used to populate the keystone service catalog.
 #   (optional). Defaults to false.
 #
+# [use_syslog]
+#   Use syslog for logging.
+#   (Optional) Defaults to false.
+#
+# [log_facility]
+#   Syslog facility to receive log lines.
+#   (Optional) Defaults to LOG_USER.
+#
 # === Examples
 #
 # class { 'openstack::controller':
@@ -265,6 +273,9 @@ class openstack::controller (
   $swift_public_address    = false,
   $swift_internal_address  = false,
   $swift_admin_address     = false,
+  # Syslog
+  $use_syslog              = false,
+  $log_facility            = 'LOG_USER',
   $enabled                 = true
 ) {
 
@@ -371,6 +382,8 @@ class openstack::controller (
     swift_admin_address       => $swift_admin_address,
     enabled                   => $enabled,
     bind_host                 => $keystone_bind_address,
+    use_syslog                => $use_syslog,
+    log_facility              => $log_facility,
   }
 
 
@@ -392,6 +405,8 @@ class openstack::controller (
     swift_store_key  => $swift_store_key,
     rbd_store_user   => $glance_rbd_store_user,
     rbd_store_pool   => $glance_rbd_store_pool,
+    use_syslog       => $use_syslog,
+    log_facility     => $log_facility,
     enabled          => $enabled,
   }
 
@@ -452,6 +467,9 @@ class openstack::controller (
     # VNC
     vnc_enabled             => $vnc_enabled,
     vncproxy_host           => $vncproxy_host_real,
+    # Syslog
+    use_syslog              => $use_syslog,
+    log_facility            => $log_facility,
     # General
     debug                   => $debug,
     verbose                 => $verbose,
@@ -519,6 +537,9 @@ class openstack::controller (
       shared_secret         => $metadata_shared_secret,
       # Keystone
       keystone_host         => $keystone_host,
+      # Syslog
+      use_syslog            => $use_syslog,
+      log_facility          => $log_facility,
       # General
       enabled               => $enabled,
       enable_server         => $enable_quantum_server,
@@ -554,6 +575,8 @@ class openstack::controller (
       db_host            => $db_host,
       api_enabled        => $enabled,
       scheduler_enabled  => $enabled,
+      use_syslog         => $use_syslog,
+      log_facility       => $log_facility,
       debug              => $debug,
       verbose            => $verbose
     }
