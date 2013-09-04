@@ -48,7 +48,9 @@ describe 'openstack::nova::controller' do
         :debug                => false,
         :verbose              => false,
         :rabbit_hosts         => false,
-        :rabbit_host          => '127.0.0.1'
+        :rabbit_host          => '127.0.0.1',
+        :use_syslog           => false,
+        :log_facility         => 'LOG_USER'
       )
 
       should contain_class('nova::api').with(
@@ -95,4 +97,20 @@ describe 'openstack::nova::controller' do
       )
     end
   end
+
+  context 'with custom syslog settings' do
+    let :params do
+      default_params.merge(
+        :use_syslog   => true,
+        :log_facility => 'LOG_LOCAL0'
+      )
+    end
+    it do
+      should contain_class('nova').with(
+        :use_syslog   => true,
+        :log_facility => 'LOG_LOCAL0'
+      )
+    end
+  end
+
 end

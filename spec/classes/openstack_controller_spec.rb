@@ -188,7 +188,9 @@ describe 'openstack::controller' do
           :swift_user_password    => false,
           :swift_public_address   => false,
           :swift_internal_address => false,
-          :swift_admin_address    => false
+          :swift_admin_address    => false,
+          :use_syslog             => false,
+          :log_facility           => 'LOG_USER'
         )
 
         should contain_class('keystone').with(
@@ -320,6 +322,15 @@ describe 'openstack::controller' do
     context 'when enabled' do
       it 'should contain enabled glance with defaults' do
 
+        should contain_class('openstack::glance').with(
+          :verbose           => false,
+          :debug             => false,
+          :registry_host     => '0.0.0.0',
+          :enabled           => true,
+          :use_syslog        => false,
+          :log_facility      => 'LOG_USER'
+        )
+
         should contain_class('glance::api').with(
           :verbose           => false,
           :debug             => false,
@@ -382,11 +393,22 @@ describe 'openstack::controller' do
           :glance_backend        => 'rbd',
           :glance_rbd_store_user => 'myuser',
           :glance_rbd_store_pool => 'mypool',
-          :db_host               => '127.0.0.2'
+          :db_host               => '127.0.0.2',
+          :use_syslog            => true,
+          :log_facility          => 'LOG_LOCAL0'
         )
       end
 
       it 'should override params for glance' do
+        should contain_class('openstack::glance').with(
+          :verbose           => false,
+          :debug             => false,
+          :registry_host     => '127.0.0.2',
+          :enabled           => true,
+          :use_syslog        => true,
+          :log_facility      => 'LOG_LOCAL0'
+        )
+
         should contain_class('glance::api').with(
           :verbose           => false,
           :debug             => false,
@@ -447,6 +469,49 @@ describe 'openstack::controller' do
     context 'with default params' do
 
       it 'should contain enabled nova services' do
+        should contain_class('openstack::nova::controller').with(
+          :db_host                 => '127.0.0.1',
+          :sql_idle_timeout        => '3600',
+          :network_manager         => 'nova.network.manager.FlatDHCPManager',
+          :network_config          => {},
+          :floating_range          => false,
+          :fixed_range             => '10.0.0.0/24',
+          :public_address          => '10.0.0.1',
+          :admin_address           => false,
+          :internal_address        => '127.0.0.1',
+          :auto_assign_floating_ip => false,
+          :create_networks         => true,
+          :num_networks            => 1,
+          :multi_host              => false,
+          :public_interface        => 'eth1',
+          :private_interface       => 'eth0',
+          :quantum                 => false,
+          :quantum_user_password   => false,
+          :metadata_shared_secret  => false,
+          :security_group_api      => 'quantum',
+          :nova_admin_tenant_name  => 'services',
+          :nova_admin_user         => 'nova',
+          :nova_user_password      => 'nova_pass',
+          :nova_db_password        => 'nova_pass',
+          :nova_db_user            => 'nova',
+          :nova_db_dbname          => 'nova',
+          :enabled_apis            => 'ec2,osapi_compute,metadata',
+          :api_bind_address        => '0.0.0.0',
+          :rabbit_user             => 'openstack',
+          :rabbit_password         => 'rabbit_pw',
+          :rabbit_hosts            => false,
+          :rabbit_cluster_nodes    => false,
+          :rabbit_virtual_host     => '/',
+          :glance_api_servers      => '',
+          :vnc_enabled             => true,
+          :vncproxy_host           => '10.0.0.1',
+          :use_syslog              => false,
+          :log_facility            => 'LOG_USER',
+          :debug                   => false,
+          :verbose                 => false,
+          :enabled                 => true
+        )
+
         should_not contain_resources('nova_config').with_purge(true)
         should contain_class('nova::rabbitmq').with(
           :userid               => 'openstack',
@@ -510,10 +575,18 @@ describe 'openstack::controller' do
     context 'when params are overridden' do
       let :params do
         default_params.merge(
-          :sql_idle_timeout => '30'
+          :sql_idle_timeout => '30',
+          :use_syslog       => true,
+          :log_facility     => 'LOG_LOCAL0'
         )
       end
       it 'should override params for nova' do
+        should contain_class('openstack::nova::controller').with(
+          :sql_idle_timeout => '30',
+          :use_syslog       => true,
+          :log_facility     => 'LOG_LOCAL0'
+        )
+
         should contain_class('nova').with(
           :sql_idle_timeout  => '30'
         )
@@ -584,10 +657,12 @@ describe 'openstack::controller' do
           :cinder_db_user       => 'baz',
           :cinder_db_dbname     => 'blah',
           :sql_idle_timeout     => '30',
-          :db_host              => '127.0.0.2'
+          :db_host              => '127.0.0.2',
+          :use_syslog           => true,
+          :log_facility         => 'LOG_LOCAL0'
         )
       end
-      it 'should configure cinder using defaults' do
+      it 'should configure cinder using custom parameters' do
         should contain_class('cinder').with(
           :debug            => true,
           :verbose          => true,
@@ -655,6 +730,8 @@ describe 'openstack::controller' do
           :keystone_host         => '127.0.0.1',
           :enabled               => true,
           :enable_server         => true,
+          :use_syslog            => false,
+          :log_facility          => 'LOG_USER',
           :debug                 => true,
           :verbose               => true
         )
