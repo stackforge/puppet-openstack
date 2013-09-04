@@ -123,6 +123,14 @@
 #   The swift admin endpoint address used to populate the keystone service catalog.
 #   (optional). Defaults to false.
 #
+# [use_syslog]
+#   Use syslog for logging.
+#   (Optional) Defaults to undef.
+#
+# [log_facility]
+#   Syslog facility to receive log lines.
+#   (Optional) Defaults to undef.
+#
 # === Examples
 #
 # class { 'openstack::controller':
@@ -266,6 +274,9 @@ class openstack::controller (
   $swift_public_address    = false,
   $swift_internal_address  = false,
   $swift_admin_address     = false,
+  # Syslog
+  $use_syslog              = undef,
+  $log_facility            = undef,
   $enabled                 = true
 ) {
 
@@ -372,6 +383,8 @@ class openstack::controller (
     swift_admin_address       => $swift_admin_address,
     enabled                   => $enabled,
     bind_host                 => $keystone_bind_address,
+    use_syslog                => $use_syslog,
+    log_facility              => $log_facility,
   }
 
 
@@ -450,6 +463,9 @@ class openstack::controller (
     # VNC
     vnc_enabled             => $vnc_enabled,
     vncproxy_host           => $vncproxy_host_real,
+    # Syslog
+    use_syslog              => $use_syslog,
+    log_facility            => $log_facility,
     # General
     debug                   => $debug,
     verbose                 => $verbose,
@@ -517,6 +533,9 @@ class openstack::controller (
       shared_secret         => $metadata_shared_secret,
       # Keystone
       keystone_host         => $keystone_host,
+      # Syslog
+      use_syslog            => $use_syslog,
+      log_facility          => $log_facility,
       # General
       enabled               => $enabled,
       enable_server         => $enable_neutron_server,

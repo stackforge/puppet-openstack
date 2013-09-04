@@ -129,6 +129,14 @@
 #   Host running keystone.
 #   (optional) Defaults to 127.0.0.1.
 #
+# [use_syslog]
+#   Use syslog for logging.
+#   (optional) Default to undef.
+#
+# [syslog_facility]
+#   Syslog facility to receive log lines.
+#   (optional) Default to undef.
+#
 # [verbose]
 #   Enables verbose for neutron services.
 #   (optional) Defaults to false.
@@ -194,6 +202,8 @@ class openstack::neutron (
   # General
   $bind_address           = '0.0.0.0',
   $keystone_host          = '127.0.0.1',
+  $use_syslog             = undef,
+  $log_facility           = undef,
   $verbose                = false,
   $debug                  = false,
 ) {
@@ -207,6 +217,8 @@ class openstack::neutron (
     rabbit_virtual_host => $rabbit_virtual_host,
     rabbit_user         => $rabbit_user,
     rabbit_password     => $rabbit_password,
+    use_syslog          => $use_syslog,
+    syslog_facility     => $syslog_facility,
     verbose             => $verbose,
     debug               => $debug,
   }

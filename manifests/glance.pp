@@ -58,6 +58,8 @@ class openstack::glance (
   $rbd_store_pool           = 'images',
   $verbose                  = false,
   $debug                    = false,
+  $use_syslog               = $use_syslog,
+  $log_facility             = $log_facility,
   $enabled                  = true
 ) {
 
@@ -82,6 +84,8 @@ class openstack::glance (
     keystone_password => $user_password,
     sql_connection    => $sql_connection,
     sql_idle_timeout  => $sql_idle_timeout,
+    use_syslog        => $use_syslog,
+    log_facility      => $log_facility,
     enabled           => $enabled,
   }
 
@@ -98,6 +102,8 @@ class openstack::glance (
     keystone_password => $user_password,
     sql_connection    => $sql_connection,
     sql_idle_timeout  => $sql_idle_timeout,
+    use_syslog        => $use_syslog,
+    log_facility      => $log_facility,
     enabled           => $enabled,
   }
 
