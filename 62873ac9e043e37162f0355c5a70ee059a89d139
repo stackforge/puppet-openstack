@@ -1,0 +1,9 @@
+Verified+2: Jenkins
+Code-Review+2: Dan Prince <dprince@redhat.com>
+Approved+1: Mathieu Gagné <mgagne@iweb.com>
+Code-Review+2: Mathieu Gagné <mgagne@iweb.com>
+Submitted-by: Jenkins
+Submitted-at: Thu, 05 Sep 2013 05:21:25 +0000
+Reviewed-on: https://review.openstack.org/41835
+Project: stackforge/puppet-openstack
+Branch: refs/heads/master
