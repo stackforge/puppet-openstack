@@ -3,13 +3,17 @@
 # on RHEL-alikes and Ubuntu
 #
 class openstack::repo(
-  $release = 'grizzly'
+  $release = 'grizzly',
+  $repo    = 'updates',
 ) {
   if $release == 'grizzly' {
     if $::osfamily == 'RedHat' {
       include openstack::repo::rdo
     } elsif $::operatingsystem == 'Ubuntu' {
-      class {'openstack::repo::uca': release => $release }
+      class {'openstack::repo::uca':
+        release => $release,
+        repo    => $repo,
+      }
     }
   } elsif $release == 'folsom' {
     if $::osfamily == 'RedHat' {

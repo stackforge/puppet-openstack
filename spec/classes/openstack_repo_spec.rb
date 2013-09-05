@@ -27,7 +27,7 @@ describe 'openstack::repo' do
 
   describe 'Fedora and grizzly' do
     let :params do
-      { :release => 'grizzly' }
+      { :release => 'grizzly'}
     end
 
     let :facts do
@@ -46,9 +46,27 @@ describe 'openstack::repo' do
     end
   end
 
+  describe 'Ubuntu with defaults' do
+
+    let :facts do
+      {
+        :osfamily               => 'Debian',
+        :operatingsystem        => 'Ubuntu',
+        :operatingsystemrelease => '12.04',
+        :lsbdistdescription     => 'Ubuntu 12.04.1 LTS',
+        :lsbdistcodename        => 'precise',
+      }
+    end
+    it do
+      should contain_apt__source('ubuntu-cloud-archive').with(
+        :release => 'precise-updates/grizzly'
+      )
+    end
+  end
+
   describe 'Ubuntu and grizzly' do
     let :params do
-      { :release => 'grizzly' }
+      { :release => 'foo', :repo => 'proposed' }
     end
 
     let :facts do
@@ -62,7 +80,9 @@ describe 'openstack::repo' do
     end
 
     it do
-      should contain_apt__source('ubuntu-cloud-archive').with_release('precise-updates/grizzly')
+      should contain_apt__source('ubuntu-cloud-archive').with(
+        :release => 'precise-proposed/foo'
+      )
     end
   end
 end

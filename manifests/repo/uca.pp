@@ -1,6 +1,7 @@
 # Ubuntu Cloud Archive repo (supports either Folsom or Grizzly)
 class openstack::repo::uca(
-  $release = 'grizzly'
+  $release = 'grizzly',
+  $repo    = 'updates'
 ) {
   if ($::operatingsystem == 'Ubuntu' and
       $::lsbdistdescription =~ /^.*LTS.*$/) {
@@ -8,7 +9,7 @@ class openstack::repo::uca(
 
     apt::source { 'ubuntu-cloud-archive':
       location          => 'http://ubuntu-cloud.archive.canonical.com/ubuntu',
-      release           => "${::lsbdistcodename}-updates/${release}",
+      release           => "${::lsbdistcodename}-${repo}/${release}",
       repos             => 'main',
       required_packages => 'ubuntu-cloud-keyring',
     }
