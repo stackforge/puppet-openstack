@@ -456,7 +456,6 @@ class openstack::all (
       }
     } else {
       nova_config {
-        'DEFAULT/multi_host':      value => false;
         'DEFAULT/send_arp_for_ha': value => false;
       }
     }
