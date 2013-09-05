@@ -1,4 +1,4 @@
-# Ubuntu Cloud Archive repo (supports either Folsom or Grizzly)
+# Ubuntu Cloud Archive repo (supports either Folsom, Grizzly or Havana)
 class openstack::repo::uca(
   $release = 'grizzly'
 ) {
