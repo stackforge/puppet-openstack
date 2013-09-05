@@ -1,5 +1,7 @@
-# RDO repo (supports Grizzly on both RHEL-alikes and Fedora, requires EPEL)
-class openstack::repo::rdo {
+# RDO repo (supports Grizzly and Havana on both RHEL-alikes and Fedora, requires EPEL)
+class openstack::repo::rdo(
+  $release = 'grizzly'
+) {
   include openstack::repo::epel
 
   if $::osfamily == 'RedHat' {
@@ -11,8 +13,8 @@ class openstack::repo::rdo {
     $osver = regsubst($::operatingsystemrelease, '(\d+)\..*', '\1')
 
     yumrepo { 'rdo-release':
-      baseurl  => "http://repos.fedorapeople.org/repos/openstack/openstack-grizzly/${dist}-${osver}/",
-      descr    => 'OpenStack Grizzly Repository',
+      baseurl  => "http://repos.fedorapeople.org/repos/openstack/openstack-${release}/${dist}-${osver}/",
+      descr    => 'OpenStack ${release} Repository',
       enabled  => 1,
       gpgcheck => 1,
       gpgkey   => 'file:///etc/pki/rpm-gpg/RPM-GPG-KEY-RDO-Grizzly',

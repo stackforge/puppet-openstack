@@ -7,13 +7,19 @@ class openstack::repo(
 ) {
   if $release == 'grizzly' {
     if $::osfamily == 'RedHat' {
-      include openstack::repo::rdo
+      class {'openstack::repo::rdo': release => $release }
     } elsif $::operatingsystem == 'Ubuntu' {
       class {'openstack::repo::uca': release => $release }
     }
   } elsif $release == 'folsom' {
     if $::osfamily == 'RedHat' {
       include openstack::repo::epel
+    } elsif $::operatingsystem == 'Ubuntu' {
+      class {'openstack::repo::uca': release => $release }
+    }
+  } elsif $release == 'havana' {
+    if $::osfamily == 'RedHat' {
+      class {'openstack::repo::rdo': release => $release }
     } elsif $::operatingsystem == 'Ubuntu' {
       class {'openstack::repo::uca': release => $release }
     }
