@@ -284,7 +284,6 @@ class openstack::keystone (
         public_protocol  => $public_protocol,
         admin_address    => $swift_admin_real,
         internal_address => $swift_internal_real,
-        address          => $swift_public_real,
         region           => $region,
       }
     }
