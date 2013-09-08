@@ -85,7 +85,7 @@ The things that follow can be handled by Puppet but are out of scope of this doc
 * Each of the machines running the Openstack services should have a minimum of 2 NICS.
   * One for the public/internal network
     - This nic should be assigned an IP address
-  * One of the virtual machine network
+  * One for the virtual machine network
     - This nic should not have an ipaddress assigned
 * If machines only have one NIC, it is necessary to manually create a bridge called br100 that bridges into the ip address specified on that NIC.
 * All interfaces that are used to bridge traffic for the internal network need to have promiscuous mode set.
