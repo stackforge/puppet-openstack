@@ -216,6 +216,7 @@ class openstack::compute (
       ovs_local_ip         => $ovs_local_ip_real,
       # Rabbit
       rabbit_host          => $rabbit_host,
+      rabbit_hosts         => $rabbit_hosts,
       rabbit_user          => $rabbit_user,
       rabbit_password      => $rabbit_password,
       # Neutron OVS
@@ -267,6 +268,7 @@ class openstack::compute (
       rabbit_password     => $rabbit_password,
       rabbit_userid       => $rabbit_user,
       rabbit_host         => $rabbit_host,
+      rabbit_hosts        => $rabbit_hosts,
       rabbit_virtual_host => $rabbit_virtual_host,
       volume_group        => $volume_group,
       iscsi_ip_address    => $iscsi_ip_address,
