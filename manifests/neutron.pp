@@ -74,6 +74,10 @@
 #    Whether ovs tunnels should be enabled.
 #    (optional) Defaults to true.
 #
+# [allow_overlapping_ips]
+#   Whether IP namespaces are in use
+#   Optional. Defaults to 'false'.
+#
 # [tenant_network_type]
 #   Type of network to allocate for tenant networks
 #   Optional. Defualts to 'gre'.
@@ -167,6 +171,7 @@ class openstack::neutron (
   $network_vlan_ranges    = undef,
   $ovs_local_ip           = false,
   $ovs_enable_tunneling   = true,
+  $allow_overlapping_ips  = false,
   $bridge_uplinks         = [],
   $bridge_mappings        = [],
   # rely on the default set in ovs
@@ -199,16 +204,17 @@ class openstack::neutron (
 ) {
 
   class { '::neutron':
-    enabled             => $enabled,
-    core_plugin         => $core_plugin,
-    bind_host           => $bind_address,
-    rabbit_host         => $rabbit_host,
-    rabbit_hosts        => $rabbit_hosts,
-    rabbit_virtual_host => $rabbit_virtual_host,
-    rabbit_user         => $rabbit_user,
-    rabbit_password     => $rabbit_password,
-    verbose             => $verbose,
-    debug               => $debug,
+    enabled               => $enabled,
+    core_plugin           => $core_plugin,
+    bind_host             => $bind_address,
+    allow_overlapping_ips => $allow_overlapping_ips,
+    rabbit_host           => $rabbit_host,
+    rabbit_hosts          => $rabbit_hosts,
+    rabbit_virtual_host   => $rabbit_virtual_host,
+    rabbit_user           => $rabbit_user,
+    rabbit_password       => $rabbit_password,
+    verbose               => $verbose,
+    debug                 => $debug,
   }
 
   if $enable_server {

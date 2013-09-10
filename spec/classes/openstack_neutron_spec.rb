@@ -27,15 +27,16 @@ describe 'openstack::neutron' do
   context 'install neutron with default and database password' do
     it 'should perform default configuration' do
       should contain_class('neutron').with(
-        :enabled             => true,
-        :bind_host           => '0.0.0.0',
-        :rabbit_host         => '127.0.0.1',
-        :rabbit_hosts        => false,
-        :rabbit_virtual_host => '/',
-        :rabbit_user         => 'rabbit_user',
-        :rabbit_password     => 'rabbit_pass',
-        :verbose             => false,
-        :debug               => false
+        :enabled               => true,
+        :bind_host             => '0.0.0.0',
+        :rabbit_host           => '127.0.0.1',
+        :rabbit_hosts          => false,
+        :rabbit_virtual_host   => '/',
+        :rabbit_user           => 'rabbit_user',
+        :rabbit_password       => 'rabbit_pass',
+        :allow_overlapping_ips => false,
+        :verbose               => false,
+        :debug                 => false
       )
       should contain_class('neutron::server').with(
         :auth_host     => '127.0.0.1',
