@@ -57,7 +57,7 @@ describe 'openstack::glance' do
       params.merge!(:db_type => 'sqlite' )
     end
     it 'should fail' do
-      expect { subject }.to raise_error(Puppet::Error, /Unsupported db_type sqlite/)
+      expect { subject }.to raise_error(Puppet::Error, /db_type sqlite is not supported/)
     end
   end
 
@@ -131,6 +131,21 @@ describe 'openstack::glance' do
       should contain_class('glance::backend::rbd').with(
         :rbd_store_user => 'don',
         :rbd_store_pool => 'images'
+      )
+    end
+  end
+
+  describe 'when configuring mysql with SSL' do
+    before do
+      params.merge!({
+        :db_ssl    => true,
+        :db_ssl_ca => '/etc/mysql/ca.pem'
+      })
+    end
+
+    it 'should configure mysql properly' do
+      should contain_class('glance::registry').with(
+        :sql_connection    => 'mysql://glance:glance_db_pass@127.0.0.1/glance?ssl_ca=/etc/mysql/ca.pem'
       )
     end
   end
