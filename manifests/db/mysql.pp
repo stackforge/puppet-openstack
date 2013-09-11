@@ -12,6 +12,7 @@
 # [nova_db_password] Password for nova database. Required.
 # [cinder_db_password] Password for cinder database. Required.
 # [neutron_db_password] Password for neutron database. Required.
+# [ceilometer_db_password] Password for ceilometer database. Required.
 # [mysql_bind_address] Address that mysql will bind to. Optional .Defaults to '0.0.0.0'.
 # [mysql_account_security] If a secure mysql db should be setup. Optional .Defaults to true.
 # [keystone_db_user] DB user for keystone. Optional. Defaults to 'keystone'.
@@ -26,6 +27,9 @@
 # [neutron]. Whether create neutron db. Optional. Defaults to 'true'.
 # [neutron_db_user]. Name of neutron DB user. Optional. Defaults to 'neutron'.
 # [neutron_db_dbname]. Name of neutron DB. Optional. Defaults to 'neutron'.
+# [ceilometer]. Whether create ceilometer db. Optional. Defaults to 'true'.
+# [ceilometer_db_user]. Name of ceilometer DB user. Optional. Defaults to 'ceilometer'.
+# [ceilometer_db_dbname]. Name of ceilometer DB. Optional. Defaults to 'ceilometer'.
 # [allowed_hosts] List of hosts that are allowed access. Optional. Defaults to false.
 # [enabled] If the db service should be started. Optional. Defaults to true.
 #
@@ -49,6 +53,12 @@ class openstack::db::mysql (
     $nova_db_password,
     $cinder_db_password,
     $neutron_db_password,
+    #TODO(yuxcer) b/c ceilometer codes has not been merged in
+    # openstack::all and some other class which use openstack::db::mysql,
+    # so if not set default value, it will lead spec test fail.
+    # This default value should be removed as soon as related
+    # ceilometer code has been added.
+    $ceilometer_db_password = false,
     # MySQL
     $mysql_bind_address     = '0.0.0.0',
     $mysql_account_security = true,
@@ -65,10 +75,15 @@ class openstack::db::mysql (
     $cinder                 = true,
     $cinder_db_user         = 'cinder',
     $cinder_db_dbname       = 'cinder',
-    # neutron
+    # Neutron
     $neutron                = true,
     $neutron_db_user        = 'neutron',
     $neutron_db_dbname      = 'neutron',
+    # Ceilometer
+    $ceilometer             = false,
+    $ceilometer_db_user     = 'ceilometer',
+    $ceilometer_db_dbname   = 'ceilometer',
+    # General
     $allowed_hosts          = false,
     $enabled                = true
 ) {
@@ -128,6 +143,15 @@ class openstack::db::mysql (
         user          => $neutron_db_user,
         password      => $neutron_db_password,
         dbname        => $neutron_db_dbname,
+        allowed_hosts => $allowed_hosts,
+      }
+    }
+
+    if ($ceilometer) {
+      class { 'ceilometer::db::mysql':
+        user          => $ceilometer_db_user,
+        password      => $ceilometer_db_password,
+        dbname        => $ceilometer_db_dbname,
         allowed_hosts => $allowed_hosts,
       }
     }
