@@ -158,4 +158,19 @@ describe 'openstack::keystone' do
     end
   end
 
+  describe 'when configuring mysql with SSL' do
+    let :params do
+      required_params.merge(
+        :db_ssl    => true,
+        :db_ssl_ca => '/etc/mysql/ca.pem'
+      )
+    end
+
+    it 'should configure mysql properly' do
+      should contain_class('keystone').with(
+        :sql_connection => 'mysql://keystone:pass@127.0.0.1/keystone?ssl_ca=/etc/mysql/ca.pem'
+      )
+    end
+  end
+
 end

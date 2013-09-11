@@ -173,6 +173,35 @@ describe 'openstack::controller' do
       it { should_not contain_class('mysql::server::account_security')}
     end
 
+    context 'with default SSL params, disabled' do
+
+      it 'SSL in mysql should be disabled' do
+        config_hash = param_value(subject, 'class', 'mysql::server', 'config_hash')
+        config_hash['ssl'].should == false
+      end
+
+    end
+
+    context 'SSL is enabled' do
+      let :params do
+        default_params.merge(
+          :mysql_ssl => true,
+          :mysql_ca => '/etc/mysql/ca.pem',
+          :mysql_cert => '/etc/mysql/server.pem',
+          :mysql_key => '/etc/mysql/server.key'
+        )
+      end
+
+      it 'should configure mysql server' do
+        config_hash = param_value(subject, 'class', 'mysql::server', 'config_hash')
+        config_hash['ssl'].should == true
+        config_hash['ssl_ca'].should == '/etc/mysql/ca.pem'
+        config_hash['ssl_cert'].should == '/etc/mysql/server.pem'
+        config_hash['ssl_key'].should == '/etc/mysql/server.key'
+      end
+
+    end
+
   end
 
   context 'keystone' do
@@ -307,6 +336,24 @@ describe 'openstack::controller' do
         end
       end
     end
+
+    context 'with mysql SSL enabled' do
+
+      let :params do
+        default_params.merge(
+          :mysql_ssl => true,
+          :mysql_ca => '/etc/mysql/ca.pem',
+          :mysql_cert => '/etc/mysql/server.pem',
+          :mysql_key => '/etc/mysql/server.key'
+        )
+      end
+
+      it 'should configure keystone with SSL mysql connection' do
+        should contain_class('keystone').with(
+          :sql_connection => "mysql://keystone:keystone_pass@127.0.0.1/keystone?ssl_ca=/etc/mysql/ca.pem"
+        )
+      end
+    end
   end
 
   it do
@@ -431,6 +478,25 @@ describe 'openstack::controller' do
         )
       end
     end
+
+    context 'with mysql SSL enabled' do
+
+      let :params do
+        default_params.merge(
+          :mysql_ssl => true,
+          :mysql_ca => '/etc/mysql/ca.pem',
+          :mysql_cert => '/etc/mysql/server.pem',
+          :mysql_key => '/etc/mysql/server.key'
+        )
+      end
+
+      it 'should configure glance with SSL mysql connection' do
+        should contain_class('glance::api').with(
+          :sql_connection    => "mysql://glance:glance_pass@127.0.0.1/glance?ssl_ca=/etc/mysql/ca.pem"
+        )
+      end
+    end
+
   end
 
   context 'config for nova' do

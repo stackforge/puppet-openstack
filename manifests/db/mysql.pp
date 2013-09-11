@@ -15,6 +15,10 @@
 # [ceilometer_db_password] Password for ceilometer database. Required.
 # [mysql_bind_address] Address that mysql will bind to. Optional .Defaults to '0.0.0.0'.
 # [mysql_account_security] If a secure mysql db should be setup. Optional .Defaults to true.
+# [mysql_ssl] Enable SSL in the mysql server. Default is false.
+# [mysql_ca] The path to the CA certificate in PEM format.
+# [mysql_cert] The path to the server certificate in PEM format.
+# [mysql_key] The path to the server private key in PEM format, unencrypted.
 # [keystone_db_user] DB user for keystone. Optional. Defaults to 'keystone'.
 # [keystone_db_dbname] DB name for keystone. Optional. Defaults to 'keystone'.
 # [glance_db_user] DB user for glance. Optional. Defaults to 'glance'.
@@ -63,6 +67,10 @@ class openstack::db::mysql (
     # MySQL
     $mysql_bind_address     = '0.0.0.0',
     $mysql_account_security = true,
+    $mysql_ssl              = false,
+    $mysql_ca               = undef,
+    $mysql_cert             = undef,
+    $mysql_key              = undef,
     # Keystone
     $keystone_db_user       = 'keystone',
     $keystone_db_dbname     = 'keystone',
@@ -95,6 +103,10 @@ class openstack::db::mysql (
     config_hash => {
       'root_password' => $mysql_root_password,
       'bind_address'  => $mysql_bind_address,
+      'ssl'           => $mysql_ssl,
+      'ssl_ca'        => $mysql_ca,
+      'ssl_cert'      => $mysql_cert,
+      'ssl_key'       => $mysql_key,
     },
     enabled     => $enabled,
   }
