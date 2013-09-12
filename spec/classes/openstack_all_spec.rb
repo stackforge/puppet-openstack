@@ -125,6 +125,51 @@ describe 'openstack::all' do
         )
       end
     end
+
+    context 'with neutron_user_password, neutron_db_password, bridge_interface, ovs_local_ip, bridge_mappings, bridge_uplinks, and shared_secret set' do
+      before do
+        params.merge!(
+          :neutron_user_password => 'neutron_user_password',
+          :neutron_db_password   => 'neutron_db_password',
+          :bridge_interface      => 'eth0',
+          :ovs_local_ip          => '10.0.1.1',
+          :network_vlan_ranges => '1:1000',
+          :bridge_mappings     => ['intranet:br-intra','extranet:br-extra'],
+          :bridge_uplinks      => ['intranet:eth1','extranet:eth2'],
+          :tenant_network_type => 'vlan',
+          :metadata_shared_secret => 'shared_md_secret'
+        )
+      end
+      it 'contains an openstack::neutron class' do
+        should contain_class('openstack::neutron').with(
+          :db_host             => '127.0.0.1',
+          :rabbit_host         => '127.0.0.1',
+          :rabbit_user         => 'openstack',
+          :rabbit_password     => 'rabbit_pw',
+          :rabbit_virtual_host => '/',
+          :ovs_local_ip        => '10.0.1.1',
+          :network_vlan_ranges => '1:1000',
+          :bridge_uplinks      => ['intranet:eth1','extranet:eth2'],
+          :bridge_mappings     => ['intranet:br-intra','extranet:br-extra'],
+          :tenant_network_type => 'vlan',
+          :enable_ovs_agent    => true,
+          :firewall_driver     => 'neutron.agent.linux.iptables_firewall.OVSHybridIptablesFirewallDriver',
+          :db_name             => 'neutron',
+          :db_user             => 'neutron',
+          :db_password         => 'neutron_db_password',
+          :enable_dhcp_agent   => true,
+          :enable_l3_agent     => true,
+          :enable_metadata_agent => true,
+          :auth_url            => 'http://127.0.0.1:35357/v2.0',
+          :user_password       => 'neutron_user_password',
+          :shared_secret       => 'shared_md_secret',
+          :keystone_host       => '127.0.0.1',
+          :enabled             => true,
+          :enable_server       => true,
+          :verbose             => false
+        )
+      end
+    end
   end
 
   context 'cinder enabled (which is the default)' do
