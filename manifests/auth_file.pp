@@ -18,7 +18,7 @@
 # [*admin_user*]
 #   (optional) Defaults to 'admin'.
 # [*admin_tenant*]
-#   (optional) Defaults to 'admin'.
+#   (optional) Defaults to 'openstack'.
 # [*region_name*]
 #   (optional) Defaults to 'RegionOne'.
 # [*use_no_cache*]
@@ -39,7 +39,7 @@ class openstack::auth_file(
   $controller_node          = '127.0.0.1',
   $keystone_admin_token     = undef,
   $admin_user               = 'admin',
-  $admin_tenant             = 'admin',
+  $admin_tenant             = 'openstack',
   $region_name              = 'RegionOne',
   $use_no_cache             = true,
   $cinder_endpoint_type     = 'publicURL',
