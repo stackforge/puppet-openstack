@@ -100,4 +100,62 @@ describe 'openstack::keystone' do
     end
   end
 
+  describe 'without heat' do
+    it { should_not contain_class('heat::keystone::auth') }
+  end
+
+  describe 'heat' do
+    describe 'without password' do
+      let :params do
+        required_params.merge(:heat => true)
+      end
+      it 'should fail when the password is not set' do
+        expect do
+          subject
+        end.to raise_error(Puppet::Error)
+      end
+    end
+    describe 'with password' do
+      let :params do
+        required_params.merge(:heat => true, :heat_user_password => 'dude')
+      end
+      it do
+        should contain_class('heat::keystone::auth').with(
+          :password        => 'dude',
+          :public_address  => '127.0.0.1',
+          :region          => 'RegionOne'
+        )
+      end
+    end
+  end
+
+  describe 'without heat_cfn' do
+    it { should_not contain_class('heat::keystone::auth_cfn') }
+  end
+
+  describe 'heat_cfn' do
+    describe 'without password' do
+      let :params do
+        required_params.merge(:heat_cfn => true)
+      end
+      it 'should fail when the password is not set' do
+        expect do
+          subject
+        end.to raise_error(Puppet::Error)
+      end
+    end
+    describe 'with password' do
+      let :params do
+        required_params.merge(:heat_cfn => true, :heat_cfn_user_password => 'dude')
+      end
+      it do
+        should contain_class('heat::keystone::auth_cfn').with(
+          :password        => 'dude',
+          :public_address  => '127.0.0.1',
+          :region          => 'RegionOne'
+        )
+      end
+    end
+  end
+
 end
