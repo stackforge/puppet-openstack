@@ -144,6 +144,7 @@ node /openstack_compute/ {
     fixed_range        => $fixed_network_range,
     network_manager    => 'nova.network.manager.FlatDHCPManager',
     multi_host         => true,
+    db_host            => $controller_node_internal,
     cinder_db_password => $cinder_db_password,
     nova_db_password   => $nova_db_password,
     nova_user_password => $nova_user_password,
