@@ -97,9 +97,11 @@ ssh $login_user@$floating_ip -i /tmp/id_rsa -o StrictHostKeyChecking=no hostname
 ip_addr=`nova show $instance_name | grep 'net1 network' | awk -F'|' '{print $3}'`
 port_id=`neutron port-list | grep $ip_addr | awk -F' ' '{print $2}'`
 floating_ip=`neutron floatingip-create --port_id $port_id $neutron_public_net | grep floating_ip_address | awk '{print $4}'`
-neutron security-group-rule-create --protocol icmp --direction ingress default
+neutron security-group-create test_sec_group
+nova add-secgroup $instance_name test_sec_group
+neutron security-group-rule-create --protocol icmp --direction ingress test_sec_group
 neutron security-group-rule-create --protocol tcp --port-range-min 22 \
-  --port-range-max 22 --direction ingress default
+  --port-range-max 22 --direction ingress test_sec_group
 sleep <%= @sleep_time %>
 ssh $login_user@$floating_ip -i /tmp/id_rsa -o StrictHostKeyChecking=no hostname
 <% end %>
