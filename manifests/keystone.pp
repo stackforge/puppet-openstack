@@ -57,17 +57,11 @@ class openstack::keystone (
   $admin_token,
   $admin_email,
   $admin_password,
-  $glance_user_password,
-  $nova_user_password,
-  $cinder_user_password,
-  $neutron_user_password,
   $public_address,
   $public_protocol             = 'http',
   $token_format                = 'PKI',
   $db_host                     = '127.0.0.1',
   $idle_timeout                = '200',
-  $swift_user_password         = false,
-  $ceilometer_user_password    = false,
   $db_type                     = 'mysql',
   $db_user                     = 'keystone',
   $db_name                     = 'keystone',
@@ -79,31 +73,56 @@ class openstack::keystone (
   $token_driver                = 'keystone.token.backends.sql.Token',
   $internal_address            = false,
   $admin_address               = false,
-  $glance_public_address       = false,
-  $glance_internal_address     = false,
-  $glance_admin_address        = false,
+  $enabled                     = true,
+  # nova
+  $nova                        = true,
+  $nova_user_password,
   $nova_public_address         = false,
   $nova_internal_address       = false,
   $nova_admin_address          = false,
+  # glance
+  $glance                      = true,
+  $glance_user_password,
+  $glance_public_address       = false,
+  $glance_internal_address     = false,
+  $glance_admin_address        = false,
+  # cinder
+  $cinder                      = true,
+  $cinder_user_password,
   $cinder_public_address       = false,
   $cinder_internal_address     = false,
   $cinder_admin_address        = false,
+  # neutron
+  $neutron                     = true,
+  $neutron_user_password,
   $neutron_public_address      = false,
   $neutron_internal_address    = false,
   $neutron_admin_address       = false,
+  # ceilometer
+  $ceilometer                  = false,
+  $ceilometer_user_password    = false,
   $ceilometer_public_address   = false,
   $ceilometer_internal_address = false,
   $ceilometer_admin_address    = false,
+  # swift
+  $swift                       = false,
+  $swift_user_password         = false,
   $swift_public_address        = false,
   $swift_internal_address      = false,
   $swift_admin_address         = false,
-  $glance                      = true,
-  $nova                        = true,
-  $cinder                      = true,
-  $neutron                     = true,
-  $ceilometer                  = false,
-  $swift                       = false,
-  $enabled                     = true
+  # heat
+  $heat                        = false,
+  $heat_user_password          = false,
+  $heat_public_address         = false,
+  $heat_internal_address       = false,
+  $heat_admin_address          = false,
+  # heat-cfn (cloudformation api)
+  $heat_cfn                    = false,
+  $heat_cfn_user_password      = false,
+  $heat_cfn_public_address     = false,
+  $heat_cfn_internal_address   = false,
+  $heat_cfn_admin_address      = false,
+
 ) {
 
   # Install and configure Keystone
@@ -215,6 +234,38 @@ class openstack::keystone (
   } else {
     $swift_admin_real = $swift_internal_real
   }
+  if($heat_public_address) {
+    $heat_public_real = $heat_public_address
+  } else {
+    $heat_public_real = $public_address
+  }
+  if($heat_internal_address) {
+    $heat_internal_real = $heat_internal_address
+  } else {
+    $heat_internal_real = $heat_public_real
+  }
+  if($heat_admin_address) {
+    $heat_admin_real = $heat_admin_address
+  } else {
+    $heat_admin_real = $heat_internal_real
+  }
+  if($heat_cfn_public_address) {
+    $heat_cfn_public_real = $heat_cfn_public_address
+  } else {
+    $heat_cfn_public_real = $public_address
+  }
+  if($heat_cfn_internal_address) {
+    $heat_cfn_internal_real = $heat_cfn_internal_address
+  } else {
+    $heat_cfn_internal_real = $heat_cfn_public_real
+  }
+  if($heat_cfn_admin_address) {
+    $heat_cfn_admin_real = $heat_cfn_admin_address
+  } else {
+    $heat_cfn_admin_real = $heat_cfn_internal_real
+  }
+
+
 
   class { '::keystone':
     verbose        => $verbose,
@@ -324,6 +375,43 @@ class openstack::keystone (
         region           => $region,
       }
     }
+
+    if $heat {
+
+      if ! $heat_user_password {
+        fail('Must set a heat_user_password when heat auth is being configured')
+      }
+
+      class { 'heat::keystone::auth':
+        password         => $heat_user_password,
+        public_address   => $heat_public_real,
+        public_protocol  => $public_protocol,
+        admin_address    => $heat_admin_real,
+        internal_address => $heat_internal_real,
+        region           => $region,
+      }
+    }
+
+    if $heat_cfn {
+
+      if ! $heat_cfn_user_password {
+        fail('Must set a heat_cfn_user_password when heat_cfn auth is being configured')
+      }
+
+      class { 'heat::keystone::auth_cfn':
+        password         => $heat_cfn_user_password,
+        public_address   => $heat_cfn_public_real,
+        public_protocol  => $public_protocol,
+        admin_address    => $heat_cfn_admin_real,
+        internal_address => $heat_cfn_internal_real,
+        region           => $region,
+      }
+    }
+
+
+
   }
+
+
 
 }
