@@ -29,6 +29,9 @@ class openstack::cinder::all(
   $volume_group             = 'cinder-volumes',
   $volume_driver            = 'iscsi',
   $iscsi_ip_address         = '127.0.0.1',
+  $rbd_user                 = 'volumes',
+  $rbd_pool                 = 'volumes',
+  $rbd_secret_uuid          = false,
   $setup_test_volume        = false,
   $manage_volumes           = true,
   $debug                    = false,
@@ -89,6 +92,17 @@ class openstack::cinder::all(
         class { 'cinder::volume::iscsi':
           iscsi_ip_address => $iscsi_ip_address,
           volume_group     => $volume_group,
+        }
+        if $setup_test_volume {
+          class {'::cinder::setup_test_volume':
+            volume_name => $volume_group,
+          }
+        }
+      } elsif $volume_driver == 'rbd' {
+        class { 'cinder::volume::rbd':
+          rbd_pool        => $rbd_pool,
+          rbd_user        => $rbd_user,
+          rbd_secret_uuid => $rbd_secret_uuid,
         }
         if $setup_test_volume {
           class {'::cinder::setup_test_volume':

@@ -67,13 +67,22 @@ describe 'openstack::cinder::all' do
     it { should_not contain_class('cinder::volume') }
   end
 
-  describe 'with a volume driver other than iscsi' do
+  describe 'with a volume driver other than iscsi or rbd' do
     before do
       params.merge!(
         :volume_driver => 'netapp'
       )
     end
     it { should_not contain_class('cinder::volume::iscsi') }
+  end
+
+  describe 'with the rbd volume driver' do
+    before do
+      params.merge!(
+        :volume_driver => 'rbd'
+      )
+    end
+    it { should contain_class('cinder::volume::rbd') }
   end
 
   describe 'when setting up test volumes for iscsi' do
