@@ -440,4 +440,26 @@ describe 'openstack::all' do
       )
     end
   end
+
+  context 'glance enabled and rbd as the backend' do
+    before do
+      params.merge!(
+        :quantum_user_password  => 'quantum_user_password',
+        :quantum_db_password    => 'quantum_db_password',
+        :bridge_interface       => 'eth0',
+        :ovs_local_ip           => '10.0.1.1',
+        :metadata_shared_secret => 'shared_md_secret',
+        :cinder_db_password     => 'cinder_db_password',
+        :cinder_user_password   => 'cinder_user_password',
+        :glance_backend         => 'rbd'
+      )
+    end
+
+    it 'should have glance::backend::rbd with default user/pool' do
+      should contain_class('glance::backend::rbd').with(
+        :rbd_store_user   => 'images',
+        :rbd_store_pool   => 'images'
+      )
+    end
+  end
 end
