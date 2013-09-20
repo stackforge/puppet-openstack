@@ -17,6 +17,7 @@ describe 'openstack::controller' do
       :keystone_db_password    => 'keystone_pass',
       :keystone_admin_token    => 'keystone_admin_token',
       :keystone_token_driver   => 'keystone.token.backends.kvs.Token',
+      :keystone_host           => '127.0.0.1',
       :glance_registry_host    => '0.0.0.0',
       :glance_db_password      => 'glance_pass',
       :glance_user_password    => 'glance_pass',
@@ -473,6 +474,7 @@ describe 'openstack::controller' do
           :admin_user        => 'nova',
           :admin_password    => 'nova_pass',
           :enabled_apis      => 'ec2,osapi_compute,metadata',
+          :auth_host         => '127.0.0.1',
           :api_bind_address  => '0.0.0.0'
         )
         should contain_class('nova::cert').with(:enabled => true)
