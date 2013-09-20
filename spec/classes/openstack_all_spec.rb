@@ -225,6 +225,30 @@ describe 'openstack::all' do
     end
   end
 
+  context 'cinder enabled and Ceph RBD as the backend' do
+    before do
+      params.merge!(
+        :neutron_user_password  => 'neutron_user_password',
+        :neutron_db_password    => 'neutron_db_password',
+        :bridge_interface       => 'eth0',
+        :ovs_local_ip           => '10.0.1.1',
+        :metadata_shared_secret => 'shared_md_secret',
+        :cinder_db_password     => 'cinder_db_password',
+        :cinder_user_password   => 'cinder_user_password',
+        :cinder_volume_driver   => 'rbd',
+        :cinder_rbd_secret_uuid => 'e80afa94-a64c-486c-9e34-d55e85f26406'
+      )
+    end
+
+    it 'should have cinder::volume::rbd' do
+      should contain_class('cinder::volume::rbd').with(
+        :rbd_pool        => 'volumes',
+        :rbd_user        => 'volumes',
+        :rbd_secret_uuid => 'e80afa94-a64c-486c-9e34-d55e85f26406'
+      )
+    end
+  end
+
   context 'cinder and neutron enabled (which is the default)' do
     before do
       params.merge!(
