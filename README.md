@@ -154,6 +154,7 @@ class { 'openstack::all':
   fixed_range          => '10.0.0.0/24',
   secret_key           => '12345',
   neutron              => false,
+  mysql_root_password  => 'mysql_root_password',
 }
 ```
 
