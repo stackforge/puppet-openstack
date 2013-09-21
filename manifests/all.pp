@@ -60,6 +60,7 @@
 #   Driver used to implement firewall rules.
 #   (optional) Defaults to 'neutron.agent.linux.iptables_firewall.OVSHybridIptablesFirewallDriver'.
 #
+# [neutron_enabled]     (bool) is nova-network enabled. Defaults to: true
 # [neutron_auth_url]
 #   Url used to neutron to contact the authentication service.
 #  (optional) Default to http://127.0.0.1:35357/v2.0.
@@ -210,6 +211,7 @@ class openstack::all (
   $enable_metadata_agent   = true,
   $metadata_shared_secret  = false,
   $firewall_driver         = 'neutron.agent.linux.iptables_firewall.OVSHybridIptablesFirewallDriver',
+  $neutron_enabled         = true,
   $neutron_db_user         = 'neutron',
   $neutron_db_name         = 'neutron',
   $neutron_auth_url        = 'http://127.0.0.1:35357/v2.0',
@@ -355,6 +357,7 @@ class openstack::all (
   # Install / configure nova-compute
   class { '::nova::compute':
     enabled                       => $enabled,
+    neutron_enabled               => $neutron_enabled,
     vnc_enabled                   => $vnc_enabled,
     vncserver_proxyclient_address => $internal_address_real,
     vncproxy_host                 => $vncproxy_host,

@@ -334,6 +334,7 @@ describe 'openstack::all' do
     it 'should have nova::compute configured' do
       should contain_class('nova::compute').with(
         :enabled               => true,
+        :neutron_enabled       => true,
         :vnc_enabled           => true,
         :vncserver_proxyclient_address => '10.0.0.1',
         :vncproxy_host         => false
