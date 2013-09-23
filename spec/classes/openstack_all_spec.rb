@@ -126,6 +126,25 @@ describe 'openstack::all' do
       end
     end
 
+    context 'with neutron_user_password, neutron_db_password, bridge_interface, ovs_local_ip, metadata_shared_secret, and force_config_drive set' do
+      before do
+        params.merge!(
+          :neutron_user_password  => 'neutron_user_password',
+          :neutron_db_password    => 'neutron_db_password',
+          :bridge_interface       => 'eth0',
+          :ovs_local_ip           => '10.0.1.1',
+          :metadata_shared_secret => 'shared_md_secret',
+          :force_config_drive     => true
+        )
+      end
+      it 'contains a nova::compute class with force_config_drive set' do
+        should contain_class('nova::compute').with(
+          :enabled                => true,
+          :force_config_drive     => true
+        )
+      end
+    end
+
     context 'with neutron_user_password, neutron_db_password, bridge_interface, ovs_local_ip, bridge_mappings, bridge_uplinks, and shared_secret set' do
       before do
         params.merge!(
