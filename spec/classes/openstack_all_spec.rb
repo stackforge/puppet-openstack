@@ -343,7 +343,7 @@ describe 'openstack::all' do
     it 'should have nova::compute::libvirt configured' do
       should contain_class('nova::compute::libvirt').with(
         :libvirt_type          => 'kvm',
-        :vncserver_listen      => false,
+        :vncserver_listen      => '10.0.0.1',
         :migration_support     => false
       )
     end

@@ -248,7 +248,7 @@ class openstack::all (
   if $vncserver_listen {
     $vncserver_listen_real = $vncserver_listen
   } else {
-    $vncserver_listen_real = $internal_address
+    $vncserver_listen_real = $internal_address_real
   }
   if $glance_api_servers {
     $glance_api_servers_real = $glance_api_servers
