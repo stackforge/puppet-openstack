@@ -48,7 +48,8 @@ describe 'openstack::nova::controller' do
         :debug                => false,
         :verbose              => false,
         :rabbit_hosts         => false,
-        :rabbit_host          => '127.0.0.1'
+        :rabbit_host          => '127.0.0.1',
+        :memcached_servers    => false
       )
 
       should contain_class('nova::api').with(
