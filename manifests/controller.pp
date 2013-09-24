@@ -27,6 +27,8 @@
 # [glance_user_password] Glance service user password.
 # [nova_db_password] Nova DB password.
 # [nova_user_password] Nova service password.
+# [nova_memcached_servers]   (array) List of memcached servers for use with nova.
+#    (optional) Defaults to false.  Values should be hostname:port format.
 #
 # [purge_nova_config]
 #   Whether unmanaged nova.conf entries should be purged.
@@ -153,6 +155,7 @@ class openstack::controller (
   $glance_user_password,
   $nova_db_password,
   $nova_user_password,
+  $nova_memcached_servers  = false,
   $secret_key,
   $mysql_root_password,
   # cinder and neutron password are not required b/c they are
@@ -438,6 +441,7 @@ class openstack::controller (
     nova_db_password        => $nova_db_password,
     nova_db_user            => $nova_db_user,
     nova_db_dbname          => $nova_db_dbname,
+    memcached_servers       => $nova_memcached_servers,
     enabled_apis            => $enabled_apis,
     api_bind_address        => $nova_bind_address,
     # Rabbit
