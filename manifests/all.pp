@@ -158,6 +158,7 @@ class openstack::all (
   $purge_nova_config       = false,
   $libvirt_vif_driver      = 'nova.virt.libvirt.vif.LibvirtGenericVIFDriver',
   $enabled_apis            = 'ec2,osapi_compute,metadata',
+  $force_config_drive      = false,
   # Virtualization
   $libvirt_type            = 'kvm',
   $migration_support       = false,
@@ -358,6 +359,7 @@ class openstack::all (
     vnc_enabled                   => $vnc_enabled,
     vncserver_proxyclient_address => $internal_address_real,
     vncproxy_host                 => $vncproxy_host,
+    force_config_drive            => $force_config_drive
   }
 
   # Configure libvirt for nova-compute
