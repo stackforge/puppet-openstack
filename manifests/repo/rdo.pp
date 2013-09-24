@@ -3,9 +3,9 @@ class openstack::repo::rdo {
   include openstack::repo::epel
 
   if $::osfamily == 'RedHat' {
-    $dist = $::operatingsystem ? {
-      /(CentOS|RedHat|Scientific|SLC)/ => 'epel',
-      'Fedora' => 'fedora',
+    case $operatingsystem {
+      centos, redhat, scientific, slc: { $dist = 'epel' }
+      fedora: { $dist = 'fedora' }
     }
     # $lsbmajdistrelease is only available with redhat-lsb installed
     $osver = regsubst($::operatingsystemrelease, '(\d+)\..*', '\1')
