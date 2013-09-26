@@ -355,7 +355,7 @@ describe 'openstack::all' do
         :enabled               => true,
         :vnc_enabled           => true,
         :vncserver_proxyclient_address => '10.0.0.1',
-        :vncproxy_host         => false
+        :vncproxy_host         => '10.0.0.1'
       )
     end
 

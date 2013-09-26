@@ -358,7 +358,7 @@ class openstack::all (
     enabled                       => $enabled,
     vnc_enabled                   => $vnc_enabled,
     vncserver_proxyclient_address => $internal_address_real,
-    vncproxy_host                 => $vncproxy_host,
+    vncproxy_host                 => $vncproxy_host_real,
     force_config_drive            => $force_config_drive
   }
 
