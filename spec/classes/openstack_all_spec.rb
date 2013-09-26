@@ -283,6 +283,7 @@ describe 'openstack::all' do
 
     it 'should have openstack::db::mysql configured' do
       should contain_class('openstack::db::mysql').with(
+        :charset                => 'latin1',
         :mysql_root_password    => 'sql_pass',
         :mysql_bind_address     => '0.0.0.0',
         :mysql_account_security => true,
