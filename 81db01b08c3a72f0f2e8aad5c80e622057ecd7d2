@@ -1,0 +1,9 @@
+Verified+2: Jenkins
+Code-Review+2: Xingchao Yu <xingchao@unitedstack.com>
+Approved+1: Dan Bode <bodepd@gmail.com>
+Code-Review+2: Dan Bode <bodepd@gmail.com>
+Submitted-by: Jenkins
+Submitted-at: Thu, 26 Sep 2013 00:06:15 +0000
+Reviewed-on: https://review.openstack.org/47701
+Project: stackforge/puppet-openstack
+Branch: refs/heads/master
