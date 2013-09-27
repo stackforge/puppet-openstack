@@ -107,6 +107,7 @@ describe 'openstack::all' do
           :ovs_local_ip        => '10.0.1.1',
           :bridge_uplinks      => 'br-ex:eth0',
           :bridge_mappings     => 'default:br-ex',
+          :external_network_bridge => 'br-ex',
           :enable_ovs_agent    => true,
           :firewall_driver     => 'neutron.agent.linux.iptables_firewall.OVSHybridIptablesFirewallDriver',
           :db_name             => 'neutron',
@@ -155,6 +156,7 @@ describe 'openstack::all' do
           :network_vlan_ranges => '1:1000',
           :bridge_mappings     => ['intranet:br-intra','extranet:br-extra'],
           :bridge_uplinks      => ['intranet:eth1','extranet:eth2'],
+          :external_network_bridge => 'br-intra',
           :tenant_network_type => 'vlan',
           :metadata_shared_secret => 'shared_md_secret'
         )
@@ -170,6 +172,7 @@ describe 'openstack::all' do
           :network_vlan_ranges => '1:1000',
           :bridge_uplinks      => ['intranet:eth1','extranet:eth2'],
           :bridge_mappings     => ['intranet:br-intra','extranet:br-extra'],
+          :external_network_bridge => 'br-intra',
           :tenant_network_type => 'vlan',
           :enable_ovs_agent    => true,
           :firewall_driver     => 'neutron.agent.linux.iptables_firewall.OVSHybridIptablesFirewallDriver',
