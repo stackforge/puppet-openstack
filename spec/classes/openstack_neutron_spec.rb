@@ -65,6 +65,7 @@ describe 'openstack::neutron' do
         :enable_ovs_agent => true,
         :bridge_uplinks   => ['br-ex:eth0'],
         :bridge_mappings  => ['default:br-ex'],
+        :external_network_bridge => 'br-ex',
         :ovs_local_ip     => '10.0.0.2'
       )
     end
@@ -72,6 +73,7 @@ describe 'openstack::neutron' do
       :bridge_uplinks   => ['br-ex:eth0'],
       :bridge_mappings  => ['default:br-ex'],
       :enable_tunneling => true,
+      :external_network_bridge => 'br-ex',
       :local_ip         => '10.0.0.2',
       :firewall_driver  => 'neutron.agent.linux.iptables_firewall.OVSHybridIptablesFirewallDriver'
     )}
