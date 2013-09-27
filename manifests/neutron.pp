@@ -38,6 +38,10 @@
 #   Whether the ovs agent should be enabled.
 #   (optional) Defaults to false.
 #
+# [*external_network_bridge*]
+#   (optional) The name of the external bridge.
+#   Defaults to br-ex
+#
 # [bridge_uplinks]
 #   OVS external bridge name and physical bridge interface tuple.
 #   (optional) Defaults to [].
@@ -159,48 +163,49 @@ class openstack::neutron (
   $user_password,
   $rabbit_password,
   # enable or disable neutron
-  $enabled                = true,
-  $enable_server          = true,
+  $enabled                 = true,
+  $enable_server           = true,
   # Set DHCP/L3 Agents on Primary Controller
-  $enable_dhcp_agent      = false,
-  $enable_l3_agent        = false,
-  $enable_metadata_agent  = false,
-  $enable_ovs_agent       = false,
+  $enable_dhcp_agent       = false,
+  $enable_l3_agent         = false,
+  $enable_metadata_agent   = false,
+  $enable_ovs_agent        = false,
   # OVS settings
-  $tenant_network_type    = 'gre',
-  $network_vlan_ranges    = undef,
-  $ovs_local_ip           = false,
-  $ovs_enable_tunneling   = true,
-  $allow_overlapping_ips  = false,
-  $bridge_uplinks         = [],
-  $bridge_mappings        = [],
+  $external_network_bridge = 'br-ex',
+  $tenant_network_type     = 'gre',
+  $network_vlan_ranges     = undef,
+  $ovs_local_ip            = false,
+  $ovs_enable_tunneling    = true,
+  $allow_overlapping_ips   = false,
+  $bridge_uplinks          = [],
+  $bridge_mappings         = [],
   # rely on the default set in ovs
-  $firewall_driver       = undef,
+  $firewall_driver         = undef,
   # networking and Interface Information
   # Metadata configuration
-  $shared_secret          = false,
-  $metadata_ip            = '127.0.0.1',
+  $shared_secret           = false,
+  $metadata_ip             = '127.0.0.1',
   # Neutron Authentication Information
-  $auth_url               = 'http://localhost:35357/v2.0',
+  $auth_url                = 'http://localhost:35357/v2.0',
   # Rabbit Information
-  $rabbit_user            = 'rabbit_user',
-  $rabbit_host            = '127.0.0.1',
-  $rabbit_hosts           = false,
-  $rabbit_virtual_host    = '/',
+  $rabbit_user             = 'rabbit_user',
+  $rabbit_host             = '127.0.0.1',
+  $rabbit_hosts            = false,
+  $rabbit_virtual_host     = '/',
   # Database. Currently mysql is the only option.
-  $db_type                = 'mysql',
-  $db_password            = false,
-  $db_host                = '127.0.0.1',
-  $db_name                = 'neutron',
-  $db_user                = 'neutron',
-  $sql_idle_timeout       = '3600',
+  $db_type                 = 'mysql',
+  $db_password             = false,
+  $db_host                 = '127.0.0.1',
+  $db_name                 = 'neutron',
+  $db_user                 = 'neutron',
+  $sql_idle_timeout        = '3600',
   # Plugin
-  $core_plugin            = undef,
+  $core_plugin             = undef,
   # General
-  $bind_address           = '0.0.0.0',
-  $keystone_host          = '127.0.0.1',
-  $verbose                = false,
-  $debug                  = false,
+  $bind_address            = '0.0.0.0',
+  $keystone_host           = '127.0.0.1',
+  $verbose                 = false,
+  $debug                   = false,
 ) {
 
   class { '::neutron':
@@ -240,11 +245,11 @@ class openstack::neutron (
 
   if $enable_ovs_agent {
     class { 'neutron::agents::ovs':
-      bridge_uplinks   => $bridge_uplinks,
-      bridge_mappings  => $bridge_mappings,
-      enable_tunneling => $ovs_enable_tunneling,
-      local_ip         => $ovs_local_ip,
-      firewall_driver  => $firewall_driver,
+      bridge_uplinks          => $bridge_uplinks,
+      bridge_mappings         => $bridge_mappings,
+      enable_tunneling        => $ovs_enable_tunneling,
+      local_ip                => $ovs_local_ip,
+      firewall_driver         => $firewall_driver,
     }
   }
 
@@ -256,8 +261,9 @@ class openstack::neutron (
   }
   if $enable_l3_agent {
     class { 'neutron::agents::l3':
-      use_namespaces => true,
-      debug          => $debug,
+      external_network_bridge => $external_network_bridge,
+      use_namespaces          => true,
+      debug                   => $debug,
     }
   }
 
