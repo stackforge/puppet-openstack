@@ -92,8 +92,9 @@ describe 'openstack::neutron' do
       params.merge!(:enable_l3_agent => true)
     end
     it { should contain_class('neutron::agents::l3').with(
-      :use_namespaces => true,
-      :debug          => false
+      :external_network_bridge => 'br-ex',
+      :use_namespaces          => true,
+      :debug                   => false
     ) }
   end
 
