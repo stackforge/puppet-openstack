@@ -441,37 +441,38 @@ class openstack::all (
 
     class { 'openstack::neutron':
       # Database
-      db_host               => $db_host,
+      db_host                 => $db_host,
       # Rabbit
-      rabbit_host           => $rabbit_host,
-      rabbit_user           => $rabbit_user,
-      rabbit_password       => $rabbit_password,
-      rabbit_virtual_host   => $rabbit_virtual_host,
+      rabbit_host             => $rabbit_host,
+      rabbit_user             => $rabbit_user,
+      rabbit_password         => $rabbit_password,
+      rabbit_virtual_host     => $rabbit_virtual_host,
       # Neutron OVS
-      ovs_local_ip          => $ovs_local_ip_real,
-      bridge_uplinks        => $bridge_uplinks_real,
-      bridge_mappings       => $bridge_mappings_real,
-      enable_ovs_agent      => $enable_ovs_agent,
-      firewall_driver       => $firewall_driver,
-      tenant_network_type   => $tenant_network_type,
-      network_vlan_ranges   => $network_vlan_ranges,
+      ovs_local_ip            => $ovs_local_ip_real,
+      bridge_uplinks          => $bridge_uplinks_real,
+      bridge_mappings         => $bridge_mappings_real,
+      enable_ovs_agent        => $enable_ovs_agent,
+      external_network_bridge => $external_bridge_name,
+      firewall_driver         => $firewall_driver,
+      tenant_network_type     => $tenant_network_type,
+      network_vlan_ranges     => $network_vlan_ranges,
       # Database
-      db_name               => $neutron_db_name,
-      db_user               => $neutron_db_user,
-      db_password           => $neutron_db_password,
+      db_name                 => $neutron_db_name,
+      db_user                 => $neutron_db_user,
+      db_password             => $neutron_db_password,
       # Neutron agents
-      enable_dhcp_agent     => $enable_dhcp_agent,
-      enable_l3_agent       => $enable_l3_agent,
-      enable_metadata_agent => $enable_metadata_agent,
-      auth_url              => $neutron_auth_url,
-      user_password         => $neutron_user_password,
-      shared_secret         => $metadata_shared_secret,
+      enable_dhcp_agent       => $enable_dhcp_agent,
+      enable_l3_agent         => $enable_l3_agent,
+      enable_metadata_agent   => $enable_metadata_agent,
+      auth_url                => $neutron_auth_url,
+      user_password           => $neutron_user_password,
+      shared_secret           => $metadata_shared_secret,
       # Keystone
-      keystone_host         => $keystone_host,
+      keystone_host           => $keystone_host,
       # General
-      enabled               => $enabled,
-      enable_server         => $enable_neutron_server,
-      verbose               => $verbose,
+      enabled                 => $enabled,
+      enable_server           => $enable_neutron_server,
+      verbose                 => $verbose,
     }
     class { 'nova::compute::neutron':
       libvirt_vif_driver => $libvirt_vif_driver,
