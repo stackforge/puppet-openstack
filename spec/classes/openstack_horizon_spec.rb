@@ -35,7 +35,8 @@ describe 'openstack::horizon' do
       :keystone_scheme       => 'http',
       :keystone_default_role => 'Member',
       :django_debug          => 'False',
-      :api_result_limit      => 1000
+      :api_result_limit      => 1000,
+      :listen_ssl            => false
     )
   end
 
@@ -56,7 +57,8 @@ describe 'openstack::horizon' do
         :keystone_scheme       => 'http',
         :keystone_default_role => 'Member',
         :django_debug          => 'False',
-        :api_result_limit      => 1000
+        :api_result_limit      => 1000,
+        :listen_ssl            => false
       )
     end
   end

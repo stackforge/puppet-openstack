@@ -54,6 +54,10 @@
 #    (Optional) Maximum results to show on a page before pagination kicks in.
 #    Defaults to 1000.
 #
+# [*listen_ssl*]
+#    (Optional) Whether horizon should listen on SSL port.
+#    Defaults to false.
+#
 # === Examples
 #
 # class { 'openstack::horizon':
@@ -72,7 +76,8 @@ class openstack::horizon (
   $keystone_scheme       = 'http',
   $keystone_default_role = 'Member',
   $django_debug          = 'False',
-  $api_result_limit      = 1000
+  $api_result_limit      = 1000,
+  $listen_ssl            = false
 ) {
 
   if $configure_memcached {
@@ -99,6 +104,7 @@ class openstack::horizon (
     keystone_default_role => $keystone_default_role,
     django_debug          => $django_debug,
     api_result_limit      => $api_result_limit,
+    listen_ssl            => $listen_ssl,
   }
 
   if str2bool($::selinux) {

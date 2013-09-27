@@ -65,6 +65,7 @@
 # [cache_server_ip]     local memcached instance ip
 # [cache_server_port]   local memcached instance port
 # [horizon]             (bool) is horizon installed. Defaults to: true
+# [horizon_listen_ssl]  (bool) whether horizon should listen on ssl port. Defaults to: false
 # [neutron]             (bool) is neutron installed
 #   The next is an array of arrays, that can be used to add call-out links to the dashboard for other apps.
 #   There is no specific requirement for these apps to be for monitoring, that's just the defacto purpose.
@@ -223,6 +224,7 @@ class openstack::controller (
   $rabbit_virtual_host     = '/',
   # Horizon
   $horizon                 = true,
+  $horizon_listen_ssl      = false,
   $cache_server_ip         = '127.0.0.1',
   $cache_server_port       = '11211',
   $horizon_app_links       = undef,
@@ -573,6 +575,7 @@ class openstack::controller (
       cache_server_ip   => $cache_server_ip,
       cache_server_port => $cache_server_port,
       horizon_app_links => $horizon_app_links,
+      listen_ssl        => $horizon_listen_ssl,
     }
   }
 
