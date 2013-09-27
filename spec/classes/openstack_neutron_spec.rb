@@ -72,6 +72,7 @@ describe 'openstack::neutron' do
       :bridge_uplinks   => ['br-ex:eth0'],
       :bridge_mappings  => ['default:br-ex'],
       :enable_tunneling => true,
+
       :local_ip         => '10.0.0.2',
       :firewall_driver  => 'neutron.agent.linux.iptables_firewall.OVSHybridIptablesFirewallDriver'
     )}
@@ -92,8 +93,9 @@ describe 'openstack::neutron' do
       params.merge!(:enable_l3_agent => true)
     end
     it { should contain_class('neutron::agents::l3').with(
-      :use_namespaces => true,
-      :debug          => false
+      :external_network_bridge => 'br-ex',
+      :use_namespaces          => true,
+      :debug                   => false
     ) }
   end
 
