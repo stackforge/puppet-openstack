@@ -23,6 +23,7 @@ describe 'openstack::controller' do
       :nova_bind_address       => '0.0.0.0',
       :nova_db_password        => 'nova_pass',
       :nova_user_password      => 'nova_pass',
+      :nova_memcached_servers  => false,
       :cinder_db_password      => 'cinder_pass',
       :cinder_user_password    => 'cinder_pass',
       :secret_key              => 'secret_key',
@@ -465,7 +466,8 @@ describe 'openstack::controller' do
           :image_service       => 'nova.image.glance.GlanceImageService',
           :glance_api_servers  => '10.0.0.1:9292',
           :debug               => false,
-          :verbose             => false
+          :verbose             => false,
+          :memcached_servers   => false
         )
         should contain_class('nova::api').with(
           :enabled           => true,
