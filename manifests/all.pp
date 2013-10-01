@@ -30,6 +30,7 @@
 # [fixed_range] Range of ipv4 network for vms.
 # [floating_range] Floating ip range to create.
 # [create_networks] Rather network and floating ips should be created.
+# [debug] (bool) Whether to log services at debug. Default to: false.
 # [num_networks] Number of networks that fixed range should be split into.
 # [multi_host] Rather node should support multi-host networking mode for HA.
 #   Optional. Defaults to false.
@@ -221,6 +222,7 @@ class openstack::all (
   $bridge_uplinks          = undef,
   $tenant_network_type     = 'gre',
   # General
+  $debug                   = false,
   $verbose                 = false,
   $enabled                 = true
 ) {
@@ -305,6 +307,7 @@ class openstack::all (
     db_password           => $keystone_db_password,
     db_name               => $keystone_db_dbname,
     db_user               => $keystone_db_user,
+    debug                 => $debug,
     admin_token           => $keystone_admin_token,
     admin_tenant          => $keystone_admin_tenant,
     admin_email           => $admin_email,
@@ -329,6 +332,7 @@ class openstack::all (
     verbose          => $verbose,
     db_type          => $db_type,
     db_host          => $db_host,
+    debug            => $debug,
     keystone_host    => $keystone_host,
     db_user          => $glance_db_user,
     db_name          => $glance_db_dbname,
@@ -408,6 +412,7 @@ class openstack::all (
     vnc_enabled             => $vnc_enabled,
     vncproxy_host           => $vncproxy_host_real,
     # General
+    debug                   => $debug,
     verbose                 => $verbose,
     enabled                 => $enabled,
   }
@@ -440,6 +445,7 @@ class openstack::all (
     }
 
     class { 'openstack::neutron':
+      debug                 => $debug,
       # Database
       db_host               => $db_host,
       # Rabbit
@@ -507,6 +513,7 @@ class openstack::all (
 
     class { 'openstack::cinder::all':
       bind_host          => $cinder_bind_address,
+      debug              => $debug,
       keystone_auth_host => $keystone_host,
       keystone_password  => $cinder_user_password,
       rabbit_userid      => $rabbit_user,

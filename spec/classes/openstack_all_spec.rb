@@ -121,6 +121,7 @@ describe 'openstack::all' do
           :keystone_host       => '127.0.0.1',
           :enabled             => true,
           :enable_server       => true,
+          :debug               => false,
           :verbose             => false
         )
       end
@@ -185,6 +186,7 @@ describe 'openstack::all' do
           :keystone_host       => '127.0.0.1',
           :enabled             => true,
           :enable_server       => true,
+          :debug               => false,
           :verbose             => false
         )
       end
@@ -237,6 +239,7 @@ describe 'openstack::all' do
           :setup_test_volume  => false,
           :manage_volumes     => true,
           :volume_group       => 'cinder-volumes',
+          :debug              => false,
           :verbose            => false
         )
         should contain_nova_config('DEFAULT/volume_api_class').with(:value => 'nova.volume.cinder.API')
@@ -310,6 +313,7 @@ describe 'openstack::all' do
 
     it 'should have openstack::keystone configured' do
       should contain_class('openstack::keystone').with(
+        :debug                 => false,
         :verbose               => false,
         :db_type               => 'mysql',
         :db_host               => '127.0.0.1',
@@ -337,6 +341,7 @@ describe 'openstack::all' do
 
     it 'should have openstack::glance configured' do
       should contain_class('openstack::glance').with(
+        :debug                 => false,
         :verbose               => false,
         :db_type               => 'mysql',
         :db_host               => '127.0.0.1',
@@ -399,6 +404,7 @@ describe 'openstack::all' do
         :glance_api_servers      => '10.0.0.1:9292',
         :vnc_enabled             => true,
         :vncproxy_host           => '10.0.0.1',
+        :debug                   => false,
         :verbose                 => false,
         :enabled                 => true
       )
