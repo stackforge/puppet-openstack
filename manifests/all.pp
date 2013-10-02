@@ -216,6 +216,7 @@ class openstack::all (
   $neutron_db_name         = 'neutron',
   $neutron_auth_url        = 'http://127.0.0.1:35357/v2.0',
   $enable_neutron_server   = true,
+  $ovs_enable_tunneling    = true,
   $ovs_local_ip            = false,
   $network_vlan_ranges     = undef,
   $bridge_mappings         = undef,
@@ -454,6 +455,7 @@ class openstack::all (
       rabbit_password       => $rabbit_password,
       rabbit_virtual_host   => $rabbit_virtual_host,
       # Neutron OVS
+      ovs_enable_tunneling  => $ovs_enable_tunneling,
       ovs_local_ip          => $ovs_local_ip_real,
       bridge_uplinks        => $bridge_uplinks_real,
       bridge_mappings       => $bridge_mappings_real,

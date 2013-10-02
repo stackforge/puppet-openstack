@@ -79,6 +79,7 @@ describe 'openstack::all' do
           :neutron_user_password => 'neutron_user_password',
           :neutron_db_password   => 'neutron_db_password',
           :bridge_interface      => 'eth0',
+          :ovs_enable_tunneling  => true,
           :ovs_local_ip          => '10.0.1.1'
         )
       end
@@ -93,6 +94,7 @@ describe 'openstack::all' do
           :neutron_user_password => 'neutron_user_password',
           :neutron_db_password   => 'neutron_db_password',
           :bridge_interface      => 'eth0',
+          :ovs_enable_tunneling  => true,
           :ovs_local_ip          => '10.0.1.1',
           :metadata_shared_secret => 'shared_md_secret'
         )
@@ -104,6 +106,7 @@ describe 'openstack::all' do
           :rabbit_user         => 'openstack',
           :rabbit_password     => 'rabbit_pw',
           :rabbit_virtual_host => '/',
+          :ovs_enable_tunneling => true,
           :ovs_local_ip        => '10.0.1.1',
           :bridge_uplinks      => 'br-ex:eth0',
           :bridge_mappings     => 'default:br-ex',
@@ -133,6 +136,7 @@ describe 'openstack::all' do
           :neutron_user_password  => 'neutron_user_password',
           :neutron_db_password    => 'neutron_db_password',
           :bridge_interface       => 'eth0',
+          :ovs_enable_tunneling   => true,
           :ovs_local_ip           => '10.0.1.1',
           :metadata_shared_secret => 'shared_md_secret',
           :force_config_drive     => true
@@ -152,6 +156,7 @@ describe 'openstack::all' do
           :neutron_user_password => 'neutron_user_password',
           :neutron_db_password   => 'neutron_db_password',
           :bridge_interface      => 'eth0',
+          :ovs_enable_tunneling  => true,
           :ovs_local_ip          => '10.0.1.1',
           :network_vlan_ranges => '1:1000',
           :bridge_mappings     => ['intranet:br-intra','extranet:br-extra'],
@@ -167,6 +172,7 @@ describe 'openstack::all' do
           :rabbit_user         => 'openstack',
           :rabbit_password     => 'rabbit_pw',
           :rabbit_virtual_host => '/',
+          :ovs_enable_tunneling => true,
           :ovs_local_ip        => '10.0.1.1',
           :network_vlan_ranges => '1:1000',
           :bridge_uplinks      => ['intranet:eth1','extranet:eth2'],
@@ -199,6 +205,7 @@ describe 'openstack::all' do
         :neutron_user_password => 'neutron_user_password',
         :neutron_db_password   => 'neutron_db_password',
         :bridge_interface      => 'eth0',
+        :ovs_enable_tunneling  => true,
         :ovs_local_ip          => '10.0.1.1',
         :metadata_shared_secret => 'shared_md_secret'
       )
@@ -253,6 +260,7 @@ describe 'openstack::all' do
         :neutron_user_password  => 'neutron_user_password',
         :neutron_db_password    => 'neutron_db_password',
         :bridge_interface       => 'eth0',
+        :ovs_enable_tunneling   => true,
         :ovs_local_ip           => '10.0.1.1',
         :metadata_shared_secret => 'shared_md_secret',
         :cinder_db_password     => 'cinder_db_password',
@@ -277,6 +285,7 @@ describe 'openstack::all' do
         :neutron_user_password  => 'neutron_user_password',
         :neutron_db_password    => 'neutron_db_password',
         :bridge_interface       => 'eth0',
+        :ovs_enable_tunneling   => true,
         :ovs_local_ip           => '10.0.1.1',
         :metadata_shared_secret => 'shared_md_secret',
         :cinder_db_password     => 'cinder_db_password',
@@ -496,6 +505,7 @@ describe 'openstack::all' do
         :neutron_user_password  => 'neutron_user_password',
         :neutron_db_password    => 'neutron_db_password',
         :bridge_interface       => 'eth0',
+        :ovs_enable_tunneling   => true,
         :ovs_local_ip           => '10.0.1.1',
         :metadata_shared_secret => 'shared_md_secret',
         :cinder_db_password     => 'cinder_db_password',
