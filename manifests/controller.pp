@@ -447,6 +447,8 @@ class openstack::controller (
     rabbit_virtual_host     => $rabbit_virtual_host,
     # Glance
     glance_api_servers      => $glance_api_servers,
+    # Keystone
+    keystone_host           => $keystone_host,
     # VNC
     vnc_enabled             => $vnc_enabled,
     vncproxy_host           => $vncproxy_host_real,
@@ -564,6 +566,7 @@ class openstack::controller (
       cache_server_ip   => $cache_server_ip,
       cache_server_port => $cache_server_port,
       horizon_app_links => $horizon_app_links,
+      keystone_host     => $keystone_host,
     }
   }
 
