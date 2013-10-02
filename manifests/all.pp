@@ -133,6 +133,7 @@ class openstack::all (
   $mysql_account_security  = true,
   $mysql_bind_address      = '0.0.0.0',
   $allowed_hosts           = '%',
+  $charset                 = 'latin1',
   # Keystone
   $keystone_host           = '127.0.0.1',
   $keystone_db_user        = 'keystone',
@@ -294,6 +295,7 @@ class openstack::all (
       neutron_db_password    => $neutron_db_password,
       neutron_db_dbname      => $neutron_db_name,
       allowed_hosts          => $allowed_hosts,
+      charset                => $charset,
       enabled                => $enabled,
     }
   } else {
