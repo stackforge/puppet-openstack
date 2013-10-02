@@ -81,8 +81,8 @@ class openstack::swift::proxy (
     operator_roles => ['admin', 'SwiftOperator'],
   }
   class { '::swift::proxy::authtoken':
-    admin_user        => 'swift',
-    admin_tenant_name => 'services',
+    admin_user        => $swift_admin_user,
+    admin_tenant_name => $swift_admin_tenant,
     admin_password    => $swift_user_password,
     auth_host         => $real_keystone_host,
   }
