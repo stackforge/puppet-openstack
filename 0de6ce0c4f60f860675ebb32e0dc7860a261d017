@@ -1,0 +1,11 @@
+Verified+2: Jenkins
+Approved+1: Dan Bode <bodepd@gmail.com>
+Code-Review+2: Dan Bode <bodepd@gmail.com>
+Code-Review+1: Paul Belanger <paul.belanger@polybeacon.com>
+Code-Review+1: Mark T. Voelker <mvoelker@cisco.com>
+Code-Review+2: Mathieu Gagné <mgagne@iweb.com>
+Submitted-by: Jenkins
+Submitted-at: Wed, 02 Oct 2013 17:51:49 +0000
+Reviewed-on: https://review.openstack.org/47834
+Project: stackforge/puppet-openstack
+Branch: refs/heads/master
