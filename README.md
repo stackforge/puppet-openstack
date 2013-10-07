@@ -506,6 +506,22 @@ Contributors
 Release Notes
 -------------
 
+**2.2.0**
+
+* Added support for syslog.
+* Added passing keystone_host to controller class to support non-local keystone server.
+* Added parameter for memcached_servers to support multiple memcache servers.
+* Fixed bug to make vncserver_listen default to internal_address if not set.
+* Added force_config_drive to openstack::all.
+* Added support for rdb volumes.
+* Added support for rdb as glance backend.
+* Added ovs network provider.
+* Added support for keystone token_format and token_driver.
+* Fixed reference to 'quantum' repository to reflect upstream change to puppet-neutron.
+* Added support for security_group_api.
+* Fixed swift keystone authentication endpoints.
+* Fixed selinux logic for horizon.
+
 **2.1.0**
 
 * Added support for Quantum OVS VLAN networking.
