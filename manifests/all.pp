@@ -507,26 +507,27 @@ class openstack::all (
     }
 
     class { 'openstack::cinder::all':
-      bind_host          => $cinder_bind_address,
-      keystone_auth_host => $keystone_host,
-      keystone_password  => $cinder_user_password,
-      rabbit_userid      => $rabbit_user,
-      rabbit_password    => $rabbit_password,
-      rabbit_host        => $rabbit_host,
-      db_password        => $cinder_db_password,
-      db_dbname          => $cinder_db_dbname,
-      db_user            => $cinder_db_user,
-      db_type            => $db_type,
-      db_host            => $db_host,
-      iscsi_ip_address   => $iscsi_ip_address,
-      volume_driver      => $cinder_volume_driver,
-      rbd_user           => $cinder_rbd_user,
-      rbd_pool           => $cinder_rbd_pool,
-      rbd_secret_uuid    => $cinder_rbd_secret_uuid,
-      setup_test_volume  => $setup_test_volume,
-      manage_volumes     => $manage_volumes,
-      volume_group       => $volume_group,
-      verbose            => $verbose
+      bind_host           => $cinder_bind_address,
+      keystone_auth_host  => $keystone_host,
+      keystone_password   => $cinder_user_password,
+      rabbit_userid       => $rabbit_user,
+      rabbit_password     => $rabbit_password,
+      rabbit_host         => $rabbit_host,
+      rabbit_virtual_host => $rabbit_virtual_host,
+      db_password         => $cinder_db_password,
+      db_dbname           => $cinder_db_dbname,
+      db_user             => $cinder_db_user,
+      db_type             => $db_type,
+      db_host             => $db_host,
+      iscsi_ip_address    => $iscsi_ip_address,
+      volume_driver       => $cinder_volume_driver,
+      rbd_user            => $cinder_rbd_user,
+      rbd_pool            => $cinder_rbd_pool,
+      rbd_secret_uuid     => $cinder_rbd_secret_uuid,
+      setup_test_volume   => $setup_test_volume,
+      manage_volumes      => $manage_volumes,
+      volume_group        => $volume_group,
+      verbose             => $verbose
     }
 
     # set in nova::api
