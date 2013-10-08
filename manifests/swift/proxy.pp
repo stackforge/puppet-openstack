@@ -107,11 +107,6 @@ class openstack::swift::proxy (
     local_net_ip => $swift_local_net_ip,
   }
 
-  # exports rsync gets that can be used to sync the ring files
-  @@swift::ringsync { ['account', 'object', 'container']:
-    ring_server => $swift_local_net_ip
-  }
-
   # deploy a script that can be used for testing
   class {'swift::test_file':
     auth_server  => $real_keystone_host,

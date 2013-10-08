@@ -1,5 +1,6 @@
 class openstack::swift::storage-node (
   $swift_zone,
+  $ring_server,
   $swift_hash_suffix    = 'swift_secret',
   $swift_local_net_ip   = $::ipaddress_eth0,
   $storage_type         = 'loopback',
@@ -47,7 +48,8 @@ class openstack::swift::storage-node (
     weight             => $storage_weight,
   }
 
-  # collect resources for synchronizing the ring databases
-  Swift::Ringsync<<||>>
-
+  # rsync rings from the ring server
+  swift::ringsync { ['account','container','object']:
+    ring_server => $ring_server,
+  }
 }
