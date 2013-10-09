@@ -1,0 +1,10 @@
+Verified+2: Jenkins
+Code-Review+2: Xingchao Yu <xingchao@unitedstack.com>
+Code-Review+1: Donald Talton <dotalton@cisco.com>
+Approved+1: Mathieu Gagné <mgagne@iweb.com>
+Code-Review+2: Mathieu Gagné <mgagne@iweb.com>
+Submitted-by: Jenkins
+Submitted-at: Wed, 09 Oct 2013 17:28:52 +0000
+Reviewed-on: https://review.openstack.org/50444
+Project: stackforge/puppet-openstack
+Branch: refs/heads/stable/grizzly
