@@ -199,6 +199,7 @@ class openstack::all (
   $setup_test_volume       = false,
   $volume_group            = 'cinder-volumes',
   $iscsi_ip_address        = '127.0.0.1',
+  $volume_name_template    = 'volume-%s',
   $cinder_volume_driver    = 'iscsi',
   $cinder_rbd_user         = 'volumes',
   $cinder_rbd_pool         = 'volumes',
@@ -542,6 +543,27 @@ class openstack::all (
     # set in nova::api
     if ! defined(Nova_config['DEFAULT/volume_api_class']) {
       nova_config { 'DEFAULT/volume_api_class': value => 'nova.volume.cinder.API' }
+    }
+
+    # Set params for volume configuration in nova if using iscsi.
+    if $cinder_volume_driver == 'iscsi' {
+      if ! defined(Nova_config['DEFAULT/volume_name_template']) {
+        nova_config { 'DEFAULT/volume_name_template':
+          value => $volume_name_template
+        }
+      }
+
+      if ! defined(Nova_config['DEFAULT/volume_group']) {
+        nova_config { 'DEFAULT/volume_group':
+          value => $volume_group
+        }
+      }
+
+      if ! defined(Nova_config['DEFAULT/iscsi_ip_address']) {
+        nova_config { 'DEFAULT/iscsi_ip_address':
+          value => $iscsi_ip_address
+        }
+      }
     }
   }
 

@@ -250,6 +250,9 @@ describe 'openstack::all' do
           :verbose            => false
         )
         should contain_nova_config('DEFAULT/volume_api_class').with(:value => 'nova.volume.cinder.API')
+        should contain_nova_config('DEFAULT/iscsi_ip_address').with(:value => '127.0.0.1')
+        should contain_nova_config('DEFAULT/volume_group').with(:value => 'cinder-volumes')
+        should contain_nova_config('DEFAULT/volume_name_template').with(:value => 'volume-%s')
       end
     end
   end
