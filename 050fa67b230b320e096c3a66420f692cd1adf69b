@@ -1,0 +1,11 @@
+Verified+2: Jenkins
+Code-Review+2: Dan Prince <dprince@redhat.com>
+Approved+1: Dan Bode <bodepd@gmail.com>
+Code-Review+2: Dan Bode <bodepd@gmail.com>
+Approved+1: Mathieu Gagné <mgagne@iweb.com>
+Code-Review+2: Mathieu Gagné <mgagne@iweb.com>
+Submitted-by: Jenkins
+Submitted-at: Mon, 21 Oct 2013 16:49:16 +0000
+Reviewed-on: https://review.openstack.org/52938
+Project: stackforge/puppet-openstack
+Branch: refs/heads/master
