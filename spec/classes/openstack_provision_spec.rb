@@ -38,4 +38,18 @@ describe 'openstack::provision' do
 
   end
 
+  describe 'should be possible to provision with neutron disabled' do
+    let :params do
+      {
+        :configure_tempest     => true,
+        :neutron_available     => false,
+        :tempest_repo_revision => 'stable/grizzly'
+      }
+    end
+
+    it { should contain_class('tempest').with(
+      :tempest_repo_revision     => 'stable/grizzly'
+    ) }
+  end
+
 end

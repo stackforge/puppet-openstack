@@ -118,53 +118,67 @@ class openstack::provision(
     source           => $image_source,
   }
 
-  ## Networks
+  ## Neutron
 
-  neutron_network { $public_network_name:
-    ensure          => present,
-    router_external => true,
-    tenant_name     => $admin_tenant_name,
-  }
-  neutron_subnet { $public_subnet_name:
-    ensure          => 'present',
-    cidr            => $floating_range,
-    enable_dhcp     => false,
-    network_name    => $public_network_name,
-    tenant_name     => $admin_tenant_name,
-  }
-  neutron_network { $private_network_name:
-    ensure      => present,
-    tenant_name => $tenant_name,
-  }
-  neutron_subnet { $private_subnet_name:
-    ensure       => present,
-    cidr         => $fixed_range,
-    network_name => $private_network_name,
-    tenant_name  => $tenant_name,
-  }
-  # Tenant-owned router - assumes network namespace isolation
-  neutron_router { $router_name:
-    ensure               => present,
-    tenant_name          => $tenant_name,
-    gateway_network_name => $public_network_name,
-    # A neutron_router resource must explicitly declare a dependency on
-    # the first subnet of the gateway network.
-    require              => Neutron_subnet[$public_subnet_name],
-  }
-  neutron_router_interface { "${router_name}:${private_subnet_name}":
-    ensure => present,
-  }
+  if $neutron_available {
+    $neutron_deps = [Neutron_network[$public_network_name]]
 
-  if $setup_ovs_bridge {
-    neutron_l3_ovs_bridge { $public_bridge_name:
-      ensure      => present,
-      subnet_name => $public_subnet_name,
+    neutron_network { $public_network_name:
+      ensure          => present,
+      router_external => true,
+      tenant_name     => $admin_tenant_name,
     }
+    neutron_subnet { $public_subnet_name:
+      ensure          => 'present',
+      cidr            => $floating_range,
+      enable_dhcp     => false,
+      network_name    => $public_network_name,
+      tenant_name     => $admin_tenant_name,
+    }
+    neutron_network { $private_network_name:
+      ensure      => present,
+      tenant_name => $tenant_name,
+    }
+    neutron_subnet { $private_subnet_name:
+      ensure       => present,
+      cidr         => $fixed_range,
+      network_name => $private_network_name,
+      tenant_name  => $tenant_name,
+    }
+    # Tenant-owned router - assumes network namespace isolation
+    neutron_router { $router_name:
+      ensure               => present,
+      tenant_name          => $tenant_name,
+      gateway_network_name => $public_network_name,
+      # A neutron_router resource must explicitly declare a dependency on
+      # the first subnet of the gateway network.
+      require              => Neutron_subnet[$public_subnet_name],
+    }
+    neutron_router_interface { "${router_name}:${private_subnet_name}":
+      ensure => present,
+    }
+
+    if $setup_ovs_bridge {
+      neutron_l3_ovs_bridge { $public_bridge_name:
+        ensure      => present,
+        subnet_name => $public_subnet_name,
+      }
+    }
+  }
+  else {
+    $neutron_deps = []
+    #TODO(marun): Provision for nova network
   }
 
   ## Tempest
 
   if $configure_tempest {
+    $tempest_requires = concat([
+                                Keystone_user[$username],
+                                Keystone_user[$alt_username],
+                                Glance_image[$image_name],
+                                ], $neutron_deps)
+
     class { 'tempest':
       tempest_repo_uri          => $tempest_repo_uri,
       tempest_clone_path        => $tempest_clone_path,
@@ -195,12 +209,7 @@ class openstack::provision(
       neutron_available         => $neutron_available,
       nova_available            => $nova_available,
       swift_available           => $swift_available,
-      require                   => [
-                                    Keystone_user[$username],
-                                    Keystone_user[$alt_username],
-                                    Glance_image[$image_name],
-                                    Neutron_network[$public_network_name],
-                                  ],
+      require                   => $tempest_requires,
     }
   }
 
