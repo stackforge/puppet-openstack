@@ -73,7 +73,8 @@ class openstack::provision(
   $tempest_clone_owner       = 'root',
   $setup_venv                = false,
   $resize_available          = undef,
-  $change_password_available = undef
+  $change_password_available = undef,
+  $quantum_available         = true
 ) {
   ## Users
 
@@ -113,51 +114,65 @@ class openstack::provision(
 
   ## Networks
 
-  quantum_network { $public_network_name:
-    ensure          => present,
-    router_external => true,
-    tenant_name     => $admin_tenant_name,
-  }
-  quantum_subnet { $public_subnet_name:
-    ensure          => 'present',
-    cidr            => $floating_range,
-    enable_dhcp     => false,
-    network_name    => $public_network_name,
-    tenant_name     => $admin_tenant_name,
-  }
-  quantum_network { $private_network_name:
-    ensure      => present,
-    tenant_name => $tenant_name,
-  }
-  quantum_subnet { $private_subnet_name:
-    ensure       => present,
-    cidr         => $fixed_range,
-    network_name => $private_network_name,
-    tenant_name  => $tenant_name,
-  }
-  # Tenant-owned router - assumes network namespace isolation
-  quantum_router { $router_name:
-    ensure               => present,
-    tenant_name          => $tenant_name,
-    gateway_network_name => $public_network_name,
-    # A quantum_router resource must explicitly declare a dependency on
-    # the first subnet of the gateway network.
-    require              => Quantum_subnet[$public_subnet_name],
-  }
-  quantum_router_interface { "${router_name}:${private_subnet_name}":
-    ensure => present,
-  }
+  if $quantum_available {
+    $quantum_deps = [Quantum_network[$public_network_name]]
 
-  if $setup_ovs_bridge {
-    quantum_l3_ovs_bridge { $public_bridge_name:
-      ensure      => present,
-      subnet_name => $public_subnet_name,
+    quantum_network { $public_network_name:
+      ensure          => present,
+      router_external => true,
+      tenant_name     => $admin_tenant_name,
     }
+    quantum_subnet { $public_subnet_name:
+      ensure          => 'present',
+      cidr            => $floating_range,
+      enable_dhcp     => false,
+      network_name    => $public_network_name,
+      tenant_name     => $admin_tenant_name,
+    }
+    quantum_network { $private_network_name:
+      ensure      => present,
+      tenant_name => $tenant_name,
+    }
+    quantum_subnet { $private_subnet_name:
+      ensure       => present,
+      cidr         => $fixed_range,
+      network_name => $private_network_name,
+      tenant_name  => $tenant_name,
+    }
+    # Tenant-owned router - assumes network namespace isolation
+    quantum_router { $router_name:
+      ensure               => present,
+      tenant_name          => $tenant_name,
+      gateway_network_name => $public_network_name,
+      # A quantum_router resource must explicitly declare a dependency on
+      # the first subnet of the gateway network.
+      require              => Quantum_subnet[$public_subnet_name],
+    }
+    quantum_router_interface { "${router_name}:${private_subnet_name}":
+      ensure => present,
+    }
+
+    if $setup_ovs_bridge {
+      quantum_l3_ovs_bridge { $public_bridge_name:
+        ensure      => present,
+        subnet_name => $public_subnet_name,
+      }
+    }
+  }
+  else {
+    $quantum_deps = []
+    #TODO(marun): Provision for nova network
   }
 
   ## Tempest
 
   if $configure_tempest {
+    $tempest_requires = concat([
+                                Keystone_user[$username],
+                                Keystone_user[$alt_username],
+                                Glance_image[$image_name],
+                                ], $quantum_deps)
+
     class { 'tempest':
       tempest_repo_uri          => $tempest_repo_uri,
       tempest_clone_path        => $tempest_clone_path,
@@ -178,16 +193,11 @@ class openstack::provision(
       admin_username            => $admin_username,
       admin_password            => $admin_password,
       admin_tenant_name         => $admin_tenant_name,
-      quantum_available         => true,
+      quantum_available         => $quantum_available,
       public_network_name       => $public_network_name,
       resize_available          => $resize_available,
       change_password_available => $change_password_available,
-      require                   => [
-                                    Keystone_user[$username],
-                                    Keystone_user[$alt_username],
-                                    Glance_image[$image_name],
-                                    Quantum_network[$public_network_name],
-                                  ],
+      require                   => $tempest_requires,
     }
   }
 
