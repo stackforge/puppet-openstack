@@ -1,0 +1,8 @@
+Verified+2: Jenkins
+Approved+1: Dan Bode <bodepd@gmail.com>
+Code-Review+2: Dan Bode <bodepd@gmail.com>
+Submitted-by: Jenkins
+Submitted-at: Mon, 21 Oct 2013 01:28:25 +0000
+Reviewed-on: https://review.openstack.org/52012
+Project: stackforge/puppet-openstack
+Branch: refs/heads/master
