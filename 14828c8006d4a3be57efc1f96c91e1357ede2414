@@ -1,0 +1,9 @@
+Verified+2: Jenkins
+Code-Review+2: Dan Prince <dprince@redhat.com>
+Approved+1: Mathieu Gagné <mgagne@iweb.com>
+Code-Review+2: Mathieu Gagné <mgagne@iweb.com>
+Submitted-by: Jenkins
+Submitted-at: Wed, 23 Oct 2013 16:19:38 +0000
+Reviewed-on: https://review.openstack.org/53366
+Project: stackforge/puppet-openstack
+Branch: refs/heads/stable/grizzly
