@@ -123,11 +123,14 @@ class openstack::provision(
   if $neutron_available {
     $neutron_deps = [Neutron_network[$public_network_name]]
 
+    Keystone_endpoint<||> ->
     neutron_network { $public_network_name:
       ensure          => present,
       router_external => true,
       tenant_name     => $admin_tenant_name,
     }
+
+    Keystone_endpoint<||> ->
     neutron_subnet { $public_subnet_name:
       ensure          => 'present',
       cidr            => $floating_range,
@@ -135,10 +138,12 @@ class openstack::provision(
       network_name    => $public_network_name,
       tenant_name     => $admin_tenant_name,
     }
+    Keystone_endpoint<||> ->
     neutron_network { $private_network_name:
       ensure      => present,
       tenant_name => $tenant_name,
     }
+    Keystone_endpoint<||> ->
     neutron_subnet { $private_subnet_name:
       ensure       => present,
       cidr         => $fixed_range,
@@ -146,6 +151,7 @@ class openstack::provision(
       tenant_name  => $tenant_name,
     }
     # Tenant-owned router - assumes network namespace isolation
+    Keystone_endpoint<||> ->
     neutron_router { $router_name:
       ensure               => present,
       tenant_name          => $tenant_name,
