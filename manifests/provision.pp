@@ -127,6 +127,7 @@ class openstack::provision(
       ensure          => present,
       router_external => true,
       tenant_name     => $admin_tenant_name,
+      require         => Class['Neutron::Keystone::Auth'],
     }
     neutron_subnet { $public_subnet_name:
       ensure          => 'present',
@@ -134,16 +135,19 @@ class openstack::provision(
       enable_dhcp     => false,
       network_name    => $public_network_name,
       tenant_name     => $admin_tenant_name,
+      require         => Class['Neutron::Keystone::Auth'],
     }
     neutron_network { $private_network_name:
       ensure      => present,
       tenant_name => $tenant_name,
+      require         => Class['Neutron::Keystone::Auth'],
     }
     neutron_subnet { $private_subnet_name:
       ensure       => present,
       cidr         => $fixed_range,
       network_name => $private_network_name,
       tenant_name  => $tenant_name,
+      require         => Class['Neutron::Keystone::Auth'],
     }
     # Tenant-owned router - assumes network namespace isolation
     neutron_router { $router_name:
@@ -152,7 +156,7 @@ class openstack::provision(
       gateway_network_name => $public_network_name,
       # A neutron_router resource must explicitly declare a dependency on
       # the first subnet of the gateway network.
-      require              => Neutron_subnet[$public_subnet_name],
+      require              => [ Neutron_subnet[$public_subnet_name], Class['Neutron::Keystone::Auth'] ],
     }
     neutron_router_interface { "${router_name}:${private_subnet_name}":
       ensure => present,
