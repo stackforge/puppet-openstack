@@ -18,6 +18,14 @@
 # [rabbit_hosts] An array of IP addresses or Virttual IP address for connecting to a RabbitMQ Cluster.
 #   Optional. Defaults to false.
 #
+# [use_syslog]
+#   Use syslog for logging.
+#   (Optional) Defaults to false.
+#
+# [log_facility]
+#   Syslog facility to receive log lines.
+#   (Optional) Defaults to LOG_USER.
+#
 # === Examples
 #
 # class { 'openstack::compute':
@@ -98,6 +106,8 @@ class openstack::compute (
   $migration_support             = false,
   $verbose                       = false,
   $force_config_drive            = false,
+  $use_syslog                    = false,
+  $log_facility                  = 'LOG_USER',
   $enabled                       = true
 ) {
 
@@ -138,6 +148,8 @@ class openstack::compute (
     rabbit_host         => $rabbit_host,
     rabbit_hosts        => $rabbit_hosts,
     rabbit_virtual_host => $rabbit_virtual_host,
+    use_syslog          => $use_syslog,
+    log_facility        => $log_facility,
   }
 
   # Install / configure nova-compute
@@ -235,7 +247,9 @@ class openstack::compute (
       enable_server        => false,
       verbose              => $verbose,
       bridge_mappings      => $bridge_mappings,
-      bridge_uplinks       => $bridge_uplinks
+      bridge_uplinks       => $bridge_uplinks,
+      use_syslog           => $use_syslog,
+      log_facility         => $log_facility,
     }
 
     class { 'nova::compute::neutron':
@@ -279,6 +293,8 @@ class openstack::compute (
       rbd_pool            => $cinder_rbd_pool,
       rbd_secret_uuid     => $cinder_rbd_secret_uuid,
       volume_driver       => $cinder_volume_driver,
+      use_syslog          => $use_syslog,
+      log_facility        => $log_facility,
     }
 
     # set in nova::api
