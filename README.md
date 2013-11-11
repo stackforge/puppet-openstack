@@ -567,3 +567,23 @@ Release Notes
 * Class['openstack::all'] refactor that adds support of future compute nodes to be added.
 * The cinder-volume logical volume group is no longer a requirement.
 * Swift can use the disk storage_type
+
+
+Puppet Module for Ceph
+----------------------
+
+# User Stories
+
+## I want to try this module, heard of ceph, want to see it in action
+
+  /node/ { 
+    ceph::conf { auth_enable: false };
+    ceph::mon; 
+    ceph::osd { '/srv/osd1' }; 
+    ceph::osd { '/srv/osd2' }; 
+  }
+  
+  * install puppet,
+  * paste this in site.pp and replace /node/ with the name of your current node,
+  * puppet apply site.pp,
+  * ceph -s and see that it works
