@@ -3,6 +3,7 @@ openstack
 
 #### Table of Contents
 
+0. [Deprecation Warning](#deprecation)
 1. [Overview - What is the openstack module?](#overview)
 2. [Module Description - What does the module do?](#module-description)
 3. [Setup - The basics of getting started with cinder](#setup)
@@ -12,6 +13,13 @@ openstack
 7. [Development - Guide for contributing to the module](#development)
 8. [Contributors - Those with commits](#contributors)
 9. [Release Notes - Notes on the most recent updates to the module](#release-notes)
+
+Deprecation
+-----------
+
+This implementation of the puppet-openstack module is deprecated, and will be removed for the OpenStack Icehouse release.
+A new reference deployment based on the puppetlabs-grizzly module, and being updated for Havana, will replace the
+functionality of this module.
 
 Overview
 --------
@@ -504,6 +512,14 @@ Contributors
 
 Release Notes
 -------------
+
+**3.0.0**
+
+* Major release to support OpenStack Havana.
+* Switches from puppet-quantum to puppet-neutron for networking.
+* Change to ensure nova network compatible provisioning.
+* Added support for alternate images with glance.
+* Fixed bug to prevent dollar signs and single quote variable to be removed by shell.
 
 **2.2.0**
 

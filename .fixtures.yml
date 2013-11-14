@@ -1,14 +1,32 @@
 fixtures:
   repositories:
-    'cinder': 'git://github.com/stackforge/puppet-cinder'
-    "keystone": "git://github.com/stackforge/puppet-keystone.git"
-    "nova": "git://github.com/stackforge/puppet-nova.git"
-    "glance": "git://github.com/stackforge/puppet-glance.git"
-    'horizon': 'git://github.com/stackforge/puppet-horizon'
-    'swift' : 'git://github.com/stackforge/puppet-swift'
-    'neutron': 'git://github.com/stackforge/puppet-neutron'
-    'ceilometer' : 'git://github.com/stackforge/puppet-ceilometer'
-    'heat' : 'git://github.com/stackforge/puppet-heat'
+    'cinder': 
+      repo: 'git://github.com/stackforge/puppet-cinder'
+      ref:  'stable/havana'
+    "keystone": 
+      repo: "git://github.com/stackforge/puppet-keystone.git"
+      ref:  'stable/havana'
+    "nova": 
+      repo: "git://github.com/stackforge/puppet-nova.git"
+      ref:  'stable/havana'
+    "glance": 
+      repo: "git://github.com/stackforge/puppet-glance.git"
+      ref:  'stable/havana'
+    'horizon': 
+      repo: 'git://github.com/stackforge/puppet-horizon'
+      ref:  'stable/havana'
+    'swift' : 
+      repo: 'git://github.com/stackforge/puppet-swift'
+      ref:  'stable/havana'
+    'neutron': 
+      repo: 'git://github.com/stackforge/puppet-neutron'
+      ref:  'stable/havana'
+    'ceilometer' : 
+      repo: 'git://github.com/stackforge/puppet-ceilometer'
+      ref:  'stable/havana'
+    'heat' : 
+      repo: 'git://github.com/stackforge/puppet-heat'
+      ref:  'stable/havana'
     "apt": "git://github.com/puppetlabs/puppetlabs-apt.git"
     "apache":
       repo: "git://github.com/puppetlabs/puppetlabs-apache.git"
