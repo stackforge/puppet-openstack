@@ -1,0 +1,9 @@
+Verified+2: Jenkins
+Code-Review+1: Donald Talton <dotalton@cisco.com>
+Approved+1: Michael Chapman <michchap@cisco.com>
+Code-Review+2: Michael Chapman <michchap@cisco.com>
+Submitted-by: Jenkins
+Submitted-at: Fri, 15 Nov 2013 01:02:18 +0000
+Reviewed-on: https://review.openstack.org/56454
+Project: stackforge/puppet-openstack
+Branch: refs/heads/stable/havana
