@@ -241,6 +241,8 @@ class openstack::neutron (
     class { 'neutron::server':
       auth_host     => $keystone_host,
       auth_password => $user_password,
+      sql_connection => $sql_connection,
+      connection => $sql_connection,
     }
     class { 'neutron::plugins::ovs':
       sql_connection      => $sql_connection,

@@ -30,16 +30,17 @@ $nova_db_password        = 'nova_pass'
 $nova_user_password      = 'nova_pass'
 $glance_db_password      = 'glance_pass'
 $glance_user_password    = 'glance_pass'
-$rabbit_password         = 'openstack_rabbit_password'
-$rabbit_user             = 'openstack_rabbit_user'
+$rabbit_password         = 'rabbit_pass'
+$rabbit_user             = 'rabbit_user'
 $fixed_network_range     = '10.0.0.0/24'
-$floating_network_range  = '192.168.101.64/28'
+$floating_network_range  = '192.168.122.64/28'
 $secret_key              = 'secret_key'
 # switch this to true to have all service log at verbose
 $verbose                 = false
 # by default it does not enable atomatically adding floating IPs
 $auto_assign_floating_ip = false
-
+$neutron_user_password   = 'neutron_user_password'
+$neutron_db_password    = 'neutron_db_password'
 
 #### end shared variables #################
 
@@ -84,12 +85,12 @@ node /openstack_all/ {
 
 # multi-node specific parameters
 
-$controller_node_address  = '192.168.101.11'
+$controller_node_address  = '192.168.122.206'
 
 $controller_node_public   = $controller_node_address
 $controller_node_internal = $controller_node_address
 
-node /openstack_controller/ {
+node /puppetopenstack-havana-ctr/ {
 
 #  class { 'nova::volume': enabled => true }
 
@@ -108,7 +109,7 @@ node /openstack_controller/ {
     network_manager         => 'nova.network.manager.FlatDHCPManager',
     verbose                 => $verbose,
     auto_assign_floating_ip => $auto_assign_floating_ip,
-    mysql_root_password     => $mysql_root_password,
+    mysql_root_password     => 'password',
     admin_email             => $admin_email,
     admin_password          => $admin_password,
     keystone_db_password    => $keystone_db_password,
@@ -117,7 +118,10 @@ node /openstack_controller/ {
     cinder_user_password    => $cinder_user_password,
     glance_db_password      => $glance_db_password,
     glance_user_password    => $glance_user_password,
-    neutron                 => false,
+    neutron                 => true,
+    neutron_user_password   => $neutron_user_password,
+    neutron_db_password     => $neutron_db_password,
+
     nova_db_password        => $nova_db_password,
     nova_user_password      => $nova_user_password,
     rabbit_password         => $rabbit_password,
@@ -134,20 +138,29 @@ node /openstack_controller/ {
 
 }
 
-node /openstack_compute/ {
+node /puppetopenstack-havana-compute/ {
 
   class { 'openstack::compute':
     public_interface   => $public_interface,
     private_interface  => $private_interface,
     internal_address   => $ipaddress_eth0,
-    libvirt_type       => 'kvm',
+    libvirt_type       => 'qemu',
     fixed_range        => $fixed_network_range,
     network_manager    => 'nova.network.manager.FlatDHCPManager',
     multi_host         => true,
     cinder_db_password => $cinder_db_password,
     nova_db_password   => $nova_db_password,
     nova_user_password => $nova_user_password,
-    neutron            => false,
+    db_host            => $controller_node_internal,
+    neutron            => true,
+    neutron_user_password  => $neutron_user_password,
+    neutron_auth_url  => "${controller_node_internal}:35357/v2.0",
+    neutron_host      => $controller_node_internal,
+    bridge_uplinks        => ["br-ex:eth0" ],
+    bridge_mappings       => ["default:br-ex"],
+    #enable_l3_agent   => true,
+    #enable_dhcp_agent => true,
+    keystone_host    => $controller_node_internal,
     rabbit_host        => $controller_node_internal,
     rabbit_password    => $rabbit_password,
     rabbit_user        => $rabbit_user,
@@ -157,6 +170,11 @@ node /openstack_compute/ {
     verbose            => $verbose,
     manage_volumes     => true,
     volume_group       => 'cinder-volumes'
+  }
+  class { 'openstack::auth_file':
+    admin_password       => $admin_password,
+    keystone_admin_token => $keystone_admin_token,
+    controller_node      => $controller_node_internal,
   }
 
 }
