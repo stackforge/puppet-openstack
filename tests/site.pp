@@ -33,14 +33,21 @@ $glance_user_password    = 'glance_pass'
 $rabbit_password         = 'rabbit_pass'
 $rabbit_user             = 'rabbit_user'
 $fixed_network_range     = '10.0.0.0/24'
-$floating_network_range  = '192.168.122.64/28'
+$floating_network_range  = '192.168.1.64/28'
 $secret_key              = 'secret_key'
 # switch this to true to have all service log at verbose
 $verbose                 = false
 # by default it does not enable atomatically adding floating IPs
 $auto_assign_floating_ip = false
 $neutron_user_password   = 'neutron_user_password'
-$neutron_db_password    = 'neutron_db_password'
+$neutron_db_password     = 'neutron_db_password'
+$neutron_core_plugin     = 'neutron.plugins.plumgrid.plumgrid_plugin.plumgrid_plugin.NeutronPluginPLUMgridV2'
+$pg_director_server      = "192.168.1.122"
+$pg_director_server_port = "443"
+$pg_username             = "plumgrid"
+$pg_password             = "plumgrid"
+$pg_servertimeout        = "70"
+
 
 #### end shared variables #################
 
@@ -85,7 +92,7 @@ node /openstack_all/ {
 
 # multi-node specific parameters
 
-$controller_node_address  = '192.168.122.206'
+$controller_node_address  = '192.168.1.240'
 
 $controller_node_public   = $controller_node_address
 $controller_node_internal = $controller_node_address
@@ -118,9 +125,16 @@ node /puppetopenstack-havana-ctr/ {
     cinder_user_password    => $cinder_user_password,
     glance_db_password      => $glance_db_password,
     glance_user_password    => $glance_user_password,
+    
     neutron                 => true,
     neutron_user_password   => $neutron_user_password,
     neutron_db_password     => $neutron_db_password,
+    neutron_core_plugin     => $neutron_core_plugin,
+    pg_director_server      => $pg_director_server,
+    pg_director_server_port => $pg_director_server_port,
+    pg_username             => $pg_username,
+    pg_password             => $pg_password,
+    pg_servertimeout        => $pg_servertimeout,
 
     nova_db_password        => $nova_db_password,
     nova_user_password      => $nova_user_password,
@@ -156,8 +170,8 @@ node /puppetopenstack-havana-compute/ {
     neutron_user_password  => $neutron_user_password,
     neutron_auth_url  => "${controller_node_internal}:35357/v2.0",
     neutron_host      => $controller_node_internal,
-    bridge_uplinks        => ["br-ex:eth0" ],
-    bridge_mappings       => ["default:br-ex"],
+    #bridge_uplinks        => ["br-ex:eth0" ],
+    #bridge_mappings       => ["default:br-ex"],
     #enable_l3_agent   => true,
     #enable_dhcp_agent => true,
     keystone_host    => $controller_node_internal,

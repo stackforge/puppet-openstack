@@ -174,6 +174,12 @@ class openstack::controller (
   $cinder_user_password    = false,
   $cinder_db_password      = false,
   $swift_user_password     = false,
+  $pg_director_server      = undef,
+  $pg_director_server_port = undef,
+  $pg_username             = undef,
+  $pg_password             = undef,
+  $pg_servertimeout        = undef,
+
   # Database
   $db_host                 = '127.0.0.1',
   $db_type                 = 'mysql',
@@ -258,19 +264,19 @@ class openstack::controller (
   $neutron                 = true,
   $physical_network        = 'default',
   $tenant_network_type     = 'gre',
-  $ovs_enable_tunneling    = true,
+  $ovs_enable_tunneling    = false,
   $allow_overlapping_ips   = false,
   $ovs_local_ip            = false,
   $network_vlan_ranges     = undef,
-  $bridge_interface        = 'eth0',  #undef,
-  $external_bridge_name    = 'br-ex',
+  $bridge_interface        = undef,
+  $external_bridge_name    = undef,
   $bridge_uplinks          = undef,
   $bridge_mappings         = undef,
-  $enable_ovs_agent        = true,
-  $enable_dhcp_agent       = true,
-  $enable_l3_agent         = true,
-  $enable_metadata_agent   = true,
-  $metadata_shared_secret  = true,
+  $enable_ovs_agent        = false,
+  $enable_dhcp_agent       = false,
+  $enable_l3_agent         = false,
+  $enable_metadata_agent   = false,
+  $metadata_shared_secret  = false,
   $firewall_driver         = 'neutron.agent.linux.iptables_firewall.OVSHybridIptablesFirewallDriver',
   $neutron_db_user         = 'neutron',
   $neutron_db_name         = 'neutron',
@@ -504,21 +510,21 @@ class openstack::controller (
       fail('neutron_db_password must be set when configuring neutron')
     }
 
-    if ! $bridge_interface {
-      fail('bridge_interface must be set when configuring neutron')
-    }
+   # if ! $bridge_interface {
+   #   fail('bridge_interface must be set when configuring neutron')
+   # }
 
-    if ! $bridge_uplinks {
-      $bridge_uplinks_real = ["${external_bridge_name}:${bridge_interface}"]
-    } else {
-      $bridge_uplinks_real = $bridge_uplinks
-    }
+   # if ! $bridge_uplinks {
+   #   $bridge_uplinks_real = ["${external_bridge_name}:${bridge_interface}"]
+   # } else {
+   #   $bridge_uplinks_real = $bridge_uplinks
+   # }
 
-    if ! $bridge_mappings {
-      $bridge_mappings_real  = ["${physical_network}:${external_bridge_name}"]
-    } else {
-      $bridge_mappings_real  = $bridge_mappings
-    }
+   # if ! $bridge_mappings {
+   #   $bridge_mappings_real  = ["${physical_network}:${external_bridge_name}"]
+   # } else {
+   #   $bridge_mappings_real  = $bridge_mappings
+   # }
 
     class { 'openstack::neutron':
       # Database
@@ -544,8 +550,14 @@ class openstack::controller (
       db_name               => $neutron_db_name,
       db_user               => $neutron_db_user,
       db_password           => $neutron_db_password,
-      # Plugin
+      # Plugin      
       core_plugin           => $neutron_core_plugin,
+      pg_director_server     => $pg_director_server,
+      pg_director_server_port => $pg_director_server_port,
+      pg_username           => $pg_username,
+      pg_password           => $pg_password,
+      pg_servertimeout      => $pg_servertimeout,
+
       # Neutron agents
       enable_dhcp_agent     => $enable_dhcp_agent,
       enable_l3_agent       => $enable_l3_agent,

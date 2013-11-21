@@ -169,6 +169,13 @@ class openstack::neutron (
   # enable or disable neutron
   $enabled                = true,
   $enable_server          = true,
+  # plumgrid plugin setting
+  $pg_director_server     = undef,
+  $pg_director_server_port = undef,
+  $pg_username            = undef,
+  $pg_password            = undef,
+  $pg_servertimeout       = undef,
+
   # Set DHCP/L3 Agents on Primary Controller
   $enable_dhcp_agent      = false,
   $enable_l3_agent        = false,
@@ -244,11 +251,21 @@ class openstack::neutron (
       sql_connection => $sql_connection,
       connection => $sql_connection,
     }
-    class { 'neutron::plugins::ovs':
-      sql_connection      => $sql_connection,
-      sql_idle_timeout    => $sql_idle_timeout,
-      tenant_network_type => $tenant_network_type,
-      network_vlan_ranges => $network_vlan_ranges,
+
+    #class { 'neutron::plugins::ovs':
+    #  sql_connection      => $sql_connection,
+    #  sql_idle_timeout    => $sql_idle_timeout,
+    #  tenant_network_type => $tenant_network_type,
+    #  network_vlan_ranges => $network_vlan_ranges,
+    #}
+    
+    class { 'neutron::plugins::plumgrid':
+      connection              => $sql_connection,
+      pg_director_server      => $pg_director_server,
+      pg_director_server_port => $pg_director_server_port,
+      pg_username             => $pg_username,
+      pg_password             => $pg_password,
+      pg_servertimeout        => $pg_servertimeout,
     }
   }
 

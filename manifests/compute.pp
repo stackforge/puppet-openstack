@@ -52,13 +52,13 @@ class openstack::compute (
   $neutron_user_password         = false,
   $neutron_admin_tenant_name     = 'services',
   $neutron_admin_user            = 'neutron',
-  $enable_ovs_agent              = true,
+  $enable_ovs_agent              = false,
   $enable_l3_agent               = false,
   $enable_dhcp_agent             = false,
   $neutron_auth_url              = 'http://127.0.0.1:35357/v2.0',
   $keystone_host                 = '127.0.0.1',
   $neutron_host                  = '127.0.0.1',
-  $ovs_enable_tunneling          = true,
+  $ovs_enable_tunneling          = false,
   $ovs_local_ip                  = false,
   $neutron_firewall_driver       = false,
   $bridge_mappings               = undef,
@@ -239,7 +239,7 @@ class openstack::compute (
     }
 
     class { 'nova::compute::neutron':
-      libvirt_vif_driver => $libvirt_vif_driver,
+      #libvirt_vif_driver => $libvirt_vif_driver,
     }
 
     # Configures nova.conf entries applicable to Neutron.
