@@ -220,6 +220,7 @@ class openstack::controller (
   $purge_nova_config       = false,
   $enabled_apis            = 'ec2,osapi_compute,metadata',
   $nova_bind_address       = '0.0.0.0',
+  $libvirt_vif_driver      = 'nova.virt.libvirt.vif.LibvirtGenericVIFDriver',
   # Nova Networking
   $public_interface        = false,
   $private_interface       = false,
@@ -575,6 +576,10 @@ class openstack::controller (
       enable_server         => $enable_neutron_server,
       debug                 => $debug,
       verbose               => $verbose,
+    }
+
+    class { 'nova::compute::neutron':
+      libvirt_vif_driver => $libvirt_vif_driver,
     }
   }
 

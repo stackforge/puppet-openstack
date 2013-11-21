@@ -239,7 +239,7 @@ class openstack::compute (
     }
 
     class { 'nova::compute::neutron':
-      #libvirt_vif_driver => $libvirt_vif_driver,
+      libvirt_vif_driver => $libvirt_vif_driver,
     }
 
     # Configures nova.conf entries applicable to Neutron.
