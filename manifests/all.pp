@@ -45,6 +45,9 @@
 # [cache_server_ip]     local memcached instance ip
 # [cache_server_port]   local memcached instance port
 # [horizon]             (bool) is horizon installed. Defaults to: true
+# [local_settings_template]
+#    (optional) Location of template to use for local_settings.py generation.
+#
 # [neutron]             (bool) is neutron installed
 # [network_vlan_ranges] array of vlan_start:vlan_stop groups
 # [bridge_mappings]     array of physical_newtork:l2_start:l2end groups
@@ -185,6 +188,7 @@ class openstack::all (
   $cache_server_ip         = '127.0.0.1',
   $cache_server_port       = '11211',
   $horizon_app_links       = undef,
+  $local_settings_template = undef,
   # VNC
   $vnc_enabled             = true,
   $vncproxy_host           = false,
@@ -548,10 +552,11 @@ class openstack::all (
   ######## Horizon ########
   if ($horizon) {
     class { 'openstack::horizon':
-      secret_key        => $secret_key,
-      cache_server_ip   => $cache_server_ip,
-      cache_server_port => $cache_server_port,
-      horizon_app_links => $horizon_app_links,
+      secret_key              => $secret_key,
+      cache_server_ip         => $cache_server_ip,
+      cache_server_port       => $cache_server_port,
+      horizon_app_links       => $horizon_app_links,
+      local_settings_template => $local_settings_template,
     }
   }
 }
