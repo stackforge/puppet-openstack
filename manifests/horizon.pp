@@ -54,6 +54,10 @@
 #    (Optional) Maximum results to show on a page before pagination kicks in.
 #    Defaults to 1000.
 #
+#  [*local_settings_template*]
+#    (optional) Location of template to use for local_settings.py generation.
+#    Defaults to 'openstack/local_settings.py.erb'.
+
 # === Examples
 #
 # class { 'openstack::horizon':
@@ -72,7 +76,8 @@ class openstack::horizon (
   $keystone_scheme       = 'http',
   $keystone_default_role = 'Member',
   $django_debug          = 'False',
-  $api_result_limit      = 1000
+  $api_result_limit      = 1000,
+  $local_settings_template = 'openstack/local_settings.py.erb'
 ) {
 
   if $configure_memcached {
@@ -99,6 +104,7 @@ class openstack::horizon (
     keystone_default_role => $keystone_default_role,
     django_debug          => $django_debug,
     api_result_limit      => $api_result_limit,
+    local_settings_template => $local_settings_template,
   }
 
   if str2bool($::selinux) {
