@@ -54,6 +54,9 @@
 #    (Optional) Maximum results to show on a page before pagination kicks in.
 #    Defaults to 1000.
 #
+#  [*local_settings_template*]
+#    (optional) Location of template to use for local_settings.py generation.
+
 # === Examples
 #
 # class { 'openstack::horizon':
@@ -63,16 +66,17 @@
 
 class openstack::horizon (
   $secret_key,
-  $configure_memcached   = true,
-  $memcached_listen_ip   = undef,
-  $cache_server_ip       = '127.0.0.1',
-  $cache_server_port     = '11211',
-  $horizon_app_links     = undef,
-  $keystone_host         = '127.0.0.1',
-  $keystone_scheme       = 'http',
-  $keystone_default_role = 'Member',
-  $django_debug          = 'False',
-  $api_result_limit      = 1000
+  $configure_memcached      = true,
+  $memcached_listen_ip      = undef,
+  $cache_server_ip          = '127.0.0.1',
+  $cache_server_port        = '11211',
+  $horizon_app_links        = undef,
+  $keystone_host            = '127.0.0.1',
+  $keystone_scheme          = 'http',
+  $keystone_default_role    = 'Member',
+  $django_debug             = 'False',
+  $api_result_limit         = 1000,
+  $local_settings_template  = undef
 ) {
 
   if $configure_memcached {
@@ -90,15 +94,16 @@ class openstack::horizon (
   }
 
   class { '::horizon':
-    cache_server_ip       => $cache_server_ip,
-    cache_server_port     => $cache_server_port,
-    secret_key            => $secret_key,
-    horizon_app_links     => $horizon_app_links,
-    keystone_host         => $keystone_host,
-    keystone_scheme       => $keystone_scheme,
-    keystone_default_role => $keystone_default_role,
-    django_debug          => $django_debug,
-    api_result_limit      => $api_result_limit,
+    cache_server_ip         => $cache_server_ip,
+    cache_server_port       => $cache_server_port,
+    secret_key              => $secret_key,
+    horizon_app_links       => $horizon_app_links,
+    keystone_host           => $keystone_host,
+    keystone_scheme         => $keystone_scheme,
+    keystone_default_role   => $keystone_default_role,
+    django_debug            => $django_debug,
+    api_result_limit        => $api_result_limit,
+    local_settings_template => $local_settings_template,
   }
 
   if str2bool($::selinux) {
