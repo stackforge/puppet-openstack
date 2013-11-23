@@ -62,6 +62,10 @@
 # [verbose] Whether to log services at verbose.
 # Horizon related config - assumes puppetlabs-horizon code
 # [secret_key]          secret key to encode cookies, …
+#  [*fqdn*]
+#    (optional) FQDN(s) used to access Horizon. This is used by Django for
+#    security reasons. Can be set to * in environments where security is
+#    deemed unimportant. Defaults to ::fqdn
 # [cache_server_ip]     local memcached instance ip
 # [cache_server_port]   local memcached instance port
 # [horizon]             (bool) is horizon installed. Defaults to: true
@@ -105,6 +109,10 @@
 # [horizon_app_links]     array as in '[ ["Nagios","http://nagios_addr:port/path"],["Ganglia","http://ganglia_addr"] ]'
 # [enabled] Whether services should be enabled. This parameter can be used to
 #   implement services in active-passive modes for HA. Optional. Defaults to true.
+#  [local_settings_template]
+#    (optional) Location of template to use for local_settings.py generation.
+#    Defaults to 'openstack/local_settings.py.erb'.
+
 # [swift]
 #   Whether or not to configure keystone for swift authorization.
 #   (Optional). Defaults to false.
@@ -238,6 +246,8 @@ class openstack::controller (
   $cache_server_ip         = '127.0.0.1',
   $cache_server_port       = '11211',
   $horizon_app_links       = undef,
+  $fqdn                    = undef,
+  $local_settings_template = 'openstack/local_settings.py.erb',
   # VNC
   $vnc_enabled             = true,
   $vncproxy_host           = false,
@@ -611,6 +621,7 @@ class openstack::controller (
       cache_server_port => $cache_server_port,
       horizon_app_links => $horizon_app_links,
       keystone_host     => $keystone_host,
+      local_settings_template => $local_settings_template,
     }
   }
 

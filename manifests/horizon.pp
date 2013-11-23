@@ -14,6 +14,11 @@
 #   (required) A secret key for a particular Django installation. This is used to provide cryptographic signing,
 #   and should be set to a unique, unpredictable value.
 #
+#  [*fqdn*]
+#    (optional) FQDN(s) used to access Horizon. This is used by Django for
+#    security reasons. Can be set to * in environments where security is
+#    deemed unimportant. Defaults to ::fqdn
+#
 # [*configure_memcached*]
 #   (optional) Enable/disable the use of memcached with Horizon.
 #   Defaults to true.
@@ -54,6 +59,10 @@
 #    (Optional) Maximum results to show on a page before pagination kicks in.
 #    Defaults to 1000.
 #
+#  [*local_settings_template*]
+#    (optional) Location of template to use for local_settings.py generation.
+#    Defaults to 'horizon/local_settings.py.erb'.
+
 # === Examples
 #
 # class { 'openstack::horizon':
@@ -63,6 +72,7 @@
 
 class openstack::horizon (
   $secret_key,
+  $fqdn,                 = undef,
   $configure_memcached   = true,
   $memcached_listen_ip   = undef,
   $cache_server_ip       = '127.0.0.1',
@@ -72,7 +82,8 @@ class openstack::horizon (
   $keystone_scheme       = 'http',
   $keystone_default_role = 'Member',
   $django_debug          = 'False',
-  $api_result_limit      = 1000
+  $api_result_limit      = 1000,
+  $local_settings_template,
 ) {
 
   if $configure_memcached {
@@ -99,6 +110,7 @@ class openstack::horizon (
     keystone_default_role => $keystone_default_role,
     django_debug          => $django_debug,
     api_result_limit      => $api_result_limit,
+    local_settings_template => $local_settings_template,
   }
 
   if str2bool($::selinux) {
