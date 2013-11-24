@@ -63,7 +63,7 @@ class openstack::compute (
   $neutron_firewall_driver       = false,
   $bridge_mappings               = undef,
   $bridge_uplinks                = undef,
-  $security_group_api            = 'neutron',
+  $security_group_api            = 'nova',
   # Nova
   $nova_admin_tenant_name        = 'services',
   $nova_admin_user               = 'nova',
@@ -253,7 +253,10 @@ class openstack::compute (
       security_group_api        => $security_group_api
     }
 
-  }
+    nova_config { 'DEFAULT/scheduler_driver': value => 'nova.scheduler.filter_scheduler.FilterScheduler' }
+    nova_config { 'DEFAULT/libvirt_vif_type': value => 'ethernet'}
+    nova_config { 'DEFAULT/libvirt_cpu_mode': value => 'none'}
+   }
 
   if $manage_volumes {
 

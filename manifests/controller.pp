@@ -283,7 +283,7 @@ class openstack::controller (
   $neutron_db_name         = 'neutron',
   $neutron_auth_url        = 'http://127.0.0.1:35357/v2.0',
   $enable_neutron_server   = true,
-  $security_group_api      = 'neutron',
+  $security_group_api      = 'nova',
   # swift
   $swift                   = false,
   $swift_public_address    = false,
@@ -581,6 +581,10 @@ class openstack::controller (
     class { 'nova::compute::neutron':
       libvirt_vif_driver => $libvirt_vif_driver,
     }
+
+    nova_config { 'DEFAULT/scheduler_driver': value => 'nova.scheduler.filter_scheduler.FilterScheduler' }
+    nova_config { 'DEFAULT/libvirt_vif_type': value => 'ethernet'}
+    nova_config { 'DEFAULT/libvirt_cpu_mode': value => 'none'}
   }
 
   ######### Cinder Controller Services ########
