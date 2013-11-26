@@ -421,11 +421,12 @@ describe 'openstack::all' do
     end
 
     it 'should configure horizon' do
-      should contain_class('openstack::horizon').with(
+      should contain_class('horizon').with(
         :secret_key      => 'secret_key',
         :cache_server_ip => '127.0.0.1',
         :cache_server_port => 11211,
-        :horizon_app_links => ''
+        :fqdn              => `hostname`.split,
+        :horizon_app_links => 'false'
       )
     end
   end

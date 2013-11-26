@@ -31,6 +31,7 @@ describe 'openstack::horizon' do
       :cache_server_port     => '11211',
       :secret_key            => 'super_secret',
       :horizon_app_links     => false,
+      :fqdn                  => `hostname`.strip,
       :keystone_host         => '127.0.0.1',
       :keystone_scheme       => 'http',
       :keystone_default_role => '_member_',
