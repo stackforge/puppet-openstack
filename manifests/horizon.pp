@@ -14,6 +14,11 @@
 #   (required) A secret key for a particular Django installation. This is used to provide cryptographic signing,
 #   and should be set to a unique, unpredictable value.
 #
+#  [*fqdn*]
+#    (optional) FQDN(s) used to access Horizon. This is used by Django for
+#    security reasons. Can be set to * in environments where security is
+#    deemed unimportant. Defaults to undef
+#
 # [*configure_memcached*]
 #   (optional) Enable/disable the use of memcached with Horizon.
 #   Defaults to true.
@@ -63,6 +68,7 @@
 
 class openstack::horizon (
   $secret_key,
+  $fqdn                  = undef,
   $configure_memcached   = true,
   $memcached_listen_ip   = undef,
   $cache_server_ip       = '127.0.0.1',
@@ -93,6 +99,7 @@ class openstack::horizon (
     cache_server_ip       => $cache_server_ip,
     cache_server_port     => $cache_server_port,
     secret_key            => $secret_key,
+    fqdn                  => $fqdn,
     horizon_app_links     => $horizon_app_links,
     keystone_host         => $keystone_host,
     keystone_scheme       => $keystone_scheme,
