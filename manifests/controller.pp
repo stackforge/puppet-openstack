@@ -62,6 +62,10 @@
 # [verbose] Whether to log services at verbose.
 # Horizon related config - assumes puppetlabs-horizon code
 # [secret_key]          secret key to encode cookies, …
+#  [*fqdn*]
+#    (optional) FQDN(s) used to access Horizon. This is used by Django for
+#    security reasons. Can be set to * in environments where security is
+#    deemed unimportant. Defaults to undef
 # [cache_server_ip]     local memcached instance ip
 # [cache_server_port]   local memcached instance port
 # [horizon]             (bool) is horizon installed. Defaults to: true
@@ -238,6 +242,7 @@ class openstack::controller (
   $cache_server_ip         = '127.0.0.1',
   $cache_server_port       = '11211',
   $horizon_app_links       = undef,
+  $fqdn                    = undef,
   # VNC
   $vnc_enabled             = true,
   $vncproxy_host           = false,
