@@ -672,6 +672,7 @@ describe 'openstack::controller' do
         :cache_server_ip   => '127.0.0.1',
         :cache_server_port => '11211',
         :horizon_app_links => false,
+        :fqdn              => Facter.fact(:fqdn).value,
         :keystone_host     => '127.0.0.1'
       )
     end
