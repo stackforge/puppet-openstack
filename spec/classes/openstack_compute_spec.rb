@@ -39,6 +39,8 @@ describe 'openstack::compute' do
         :rabbit_virtual_host => '/',
         :image_service       => 'nova.image.glance.GlanceImageService',
         :glance_api_servers  => false,
+        :use_syslog          => false,
+        :log_facility        => 'LOG_USER',
         :verbose             => false
       )
       should_not contain_resources('nova_config').with_purge(true)
@@ -81,7 +83,9 @@ describe 'openstack::compute' do
         :enabled             => true,
         :verbose             => false,
         :setup_test_volume   => false,
-        :volume_driver       => 'iscsi'
+        :volume_driver       => 'iscsi',
+        :use_syslog          => false,
+        :log_facility        => 'LOG_USER'
       )
     }
   end
@@ -178,7 +182,9 @@ describe 'openstack::compute' do
                  :setup_test_volume   => false,
                  :rbd_user            => 'volumes',
                  :rbd_pool            => 'volumes',
-                 :volume_driver       => 'rbd'
+                 :volume_driver       => 'rbd',
+                 :use_syslog          => false,
+                 :log_facility        => 'LOG_USER'
              )
     end
   end
@@ -305,6 +311,8 @@ describe 'openstack::compute' do
         :keystone_host        => params[:keystone_host],
         :enabled              => true,
         :enable_server        => false,
+        :use_syslog           => false,
+        :log_facility         => 'LOG_USER',
         :verbose              => false
       )
 
@@ -328,5 +336,33 @@ describe 'openstack::compute' do
       should_not contain_class('neutron::agents::l3')
     end
   end
+
+ describe 'with custom syslog settings' do
+   before do
+     params.merge!({
+       :use_syslog   => true,
+       :log_facility => 'LOG_LOCAL0',
+       :neutron      => true,
+       :neutron_user_password => 'foobar'
+     })
+   end
+
+   it do
+     should contain_class('nova').with(
+       :use_syslog   => true,
+       :log_facility => 'LOG_LOCAL0'
+     )
+
+     should contain_class('openstack::neutron').with(
+       :use_syslog   => true,
+       :log_facility => 'LOG_LOCAL0'
+     )
+
+     should contain_class('openstack::cinder::storage').with(
+       :use_syslog   => true,
+       :log_facility => 'LOG_LOCAL0'
+     )
+   end
+ end
 
 end
