@@ -5,19 +5,20 @@ describe 'openstack::all' do
   # minimum set of default parameters
   let :params do
     {
-      :public_address        => '10.0.0.1',
-      :public_interface      => 'eth0',
-      :admin_email           => 'some_user@some_fake_email_address.foo',
-      :admin_password        => 'ChangeMe',
-      :rabbit_password       => 'rabbit_pw',
-      :keystone_db_password  => 'keystone_pass',
-      :keystone_admin_token  => 'keystone_admin_token',
-      :glance_db_password    => 'glance_pass',
-      :glance_user_password  => 'glance_pass',
-      :nova_db_password      => 'nova_pass',
-      :nova_user_password    => 'nova_pass',
-      :secret_key            => 'secret_key',
-      :mysql_root_password   => 'sql_pass',
+      :public_address       => '10.0.0.1',
+      :public_interface     => 'eth0',
+      :admin_email          => 'some_user@some_fake_email_address.foo',
+      :admin_password       => 'ChangeMe',
+      :rabbit_password      => 'rabbit_pw',
+      :keystone_db_password => 'keystone_pass',
+      :keystone_admin_token => 'keystone_admin_token',
+      :glance_db_password   => 'glance_pass',
+      :glance_user_password => 'glance_pass',
+      :nova_db_password     => 'nova_pass',
+      :nova_user_password   => 'nova_pass',
+      :secret_key           => 'secret_key',
+      :mysql_root_password  => 'sql_pass',
+      :fqdn					=> `hostname`.split,
     }
   end
 
@@ -425,7 +426,8 @@ describe 'openstack::all' do
         :secret_key      => 'secret_key',
         :cache_server_ip => '127.0.0.1',
         :cache_server_port => 11211,
-        :horizon_app_links => ''
+        :fqdn              => `hostname`.split,
+        :horizon_app_links => 'false'
       )
     end
   end
