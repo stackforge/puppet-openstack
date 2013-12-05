@@ -149,6 +149,13 @@ class openstack::compute (
     force_config_drive            => $force_config_drive,
   }
 
+  class { 'nova::api':
+    admin_password    => $nova_user_password,
+    enabled           => true,
+    auth_host         => $controller_node_address,
+    admin_tenant_name => $nova_admin_tenant_name,
+  }
+
   # Configure libvirt for nova-compute
   class { 'nova::compute::libvirt':
     libvirt_type      => $libvirt_type,
@@ -256,6 +263,34 @@ class openstack::compute (
     nova_config { 'DEFAULT/scheduler_driver': value => 'nova.scheduler.filter_scheduler.FilterScheduler' }
     nova_config { 'DEFAULT/libvirt_vif_type': value => 'ethernet'}
     nova_config { 'DEFAULT/libvirt_cpu_mode': value => 'none'}
+
+    $enable_network_service = true
+      nova_config {
+        'DEFAULT/multi_host':      value => false;
+        'DEFAULT/send_arp_for_ha': value => false;
+      }
+
+    class { 'nova::network':
+      private_interface => $private_interface,
+      public_interface  => $public_interface,
+      fixed_range       => $fixed_range,
+      floating_range    => false,
+      network_manager   => $network_manager,
+      config_overrides  => $network_config,
+      create_networks   => false,
+      enabled           => $enable_network_service,
+      install_service   => $enable_network_service,
+    }
+
+    class { 'libvirt':
+      qemu_config => {
+              cgroup_device_acl => { value => ["/dev/null","/dev/full","/dev/zero",
+              "/dev/random","/dev/urandom","/dev/ptmx",
+              "/dev/kvm","/dev/kqemu",
+              "/dev/rtc","/dev/hpet","/dev/net/tun"] },
+        },
+    }
+
    }
 
   if $manage_volumes {
