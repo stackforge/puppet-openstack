@@ -154,6 +154,7 @@ class openstack::controller (
   # Required Network
   $public_address,
   $admin_email,
+  $fqdn = $::fqdn,
   # required password
   $admin_password,
   $rabbit_password,
@@ -265,25 +266,25 @@ class openstack::controller (
   $neutron                 = true,
   $physical_network        = 'default',
   $tenant_network_type     = 'gre',
-  $ovs_enable_tunneling    = false,
+  $ovs_enable_tunneling    = true,
   $allow_overlapping_ips   = false,
   $ovs_local_ip            = false,
   $network_vlan_ranges     = undef,
   $bridge_interface        = undef,
-  $external_bridge_name    = undef,
+  $external_bridge_name    = 'br-ex',
   $bridge_uplinks          = undef,
   $bridge_mappings         = undef,
-  $enable_ovs_agent        = false,
-  $enable_dhcp_agent       = false,
-  $enable_l3_agent         = false,
-  $enable_metadata_agent   = false,
+  $enable_ovs_agent        = true,
+  $enable_dhcp_agent       = true,
+  $enable_l3_agent         = true,
+  $enable_metadata_agent   = true,
   $metadata_shared_secret  = false,
   $firewall_driver         = 'neutron.agent.linux.iptables_firewall.OVSHybridIptablesFirewallDriver',
   $neutron_db_user         = 'neutron',
   $neutron_db_name         = 'neutron',
   $neutron_auth_url        = 'http://127.0.0.1:35357/v2.0',
   $enable_neutron_server   = true,
-  $security_group_api      = 'nova',
+  $security_group_api      = 'neutron',
   # swift
   $swift                   = false,
   $swift_public_address    = false,
@@ -551,7 +552,7 @@ class openstack::controller (
       db_name               => $neutron_db_name,
       db_user               => $neutron_db_user,
       db_password           => $neutron_db_password,
-      # Plugin      
+      # Plugin
       core_plugin           => $neutron_core_plugin,
       pg_director_server     => $pg_director_server,
       pg_director_server_port => $pg_director_server_port,
@@ -627,6 +628,7 @@ class openstack::controller (
   ######## Horizon ########
   if ($horizon) {
     class { 'openstack::horizon':
+      fqdn              => $fqdn,
       secret_key        => $secret_key,
       cache_server_ip   => $cache_server_ip,
       cache_server_port => $cache_server_port,
