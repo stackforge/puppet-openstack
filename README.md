@@ -105,7 +105,7 @@ Every node that is configured to be a cinder volume service must have a volume g
 ### Compute nodes
 
 * Compute nodes should be deployed onto physical hardware.
-* If compute nodes are deployed on virtual machines for testing, the `libvirt_type` parameter for the `openstack::compute` class should probably be configured as `qemu`.  This is because most virtualization technologies do now pass through the virtualization CPU extensions to their virtual machines.
+* If compute nodes are deployed on virtual machines for testing, the `libvirt_type` parameter for the `openstack::compute` class should probably be configured as `qemu`.  This is because most virtualization technologies do not pass the virtualization CPU extensions through to their virtual machines.
 
 ```puppet
 class { 'openstack::compute':
