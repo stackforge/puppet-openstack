@@ -101,6 +101,8 @@ class openstack::compute (
   $enabled                       = true
 ) {
 
+  include nova::params
+
   if $ovs_local_ip {
     $ovs_local_ip_real = $ovs_local_ip
   } else {
@@ -257,29 +259,30 @@ class openstack::compute (
       neutron_admin_username    => $neutron_admin_user,
       neutron_admin_tenant_name => $neutron_admin_tenant_name,
       neutron_admin_auth_url    => "http://${keystone_host}:35357/v2.0",
-      security_group_api        => $security_group_api
+      security_group_api        => $security_group_api,
+      neutron_url_timeout       => '300',
     }
 
     nova_config { 'DEFAULT/scheduler_driver': value => 'nova.scheduler.filter_scheduler.FilterScheduler' }
     nova_config { 'DEFAULT/libvirt_vif_type': value => 'ethernet'}
     nova_config { 'DEFAULT/libvirt_cpu_mode': value => 'none'}
 
-    $enable_network_service = true
-      nova_config {
-        'DEFAULT/multi_host':      value => false;
-        'DEFAULT/send_arp_for_ha': value => false;
-      }
+    # forward all ipv4 traffic
+    # this is required for the vms to pass through the gateways
+    # public interface
+    Exec {
+      path => $::path
+    }
 
-    class { 'nova::network':
-      private_interface => $private_interface,
-      public_interface  => $public_interface,
-      fixed_range       => $fixed_range,
-      floating_range    => false,
-      network_manager   => $network_manager,
-      config_overrides  => $network_config,
-      create_networks   => false,
-      enabled           => $enable_network_service,
-      install_service   => $enable_network_service,
+    sysctl::value { 'net.ipv4.ip_forward':
+      value => '1'
+    }
+
+    # network.filters should only be included in the nova-network node package
+    # Reference: https://wiki.openstack.org/wiki/Packager/Rootwrap
+    nova::generic_service { 'network.filters':
+      package_name   => $::nova::params::network_package_name,
+      service_name   => $::nova::params::network_service_name,
     }
 
     class { 'libvirt':
