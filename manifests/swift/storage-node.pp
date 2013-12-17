@@ -12,7 +12,7 @@ class openstack::swift::storage-node (
   $byte_size            = '1024',
 ) {
 
-  if !tagged(swift){
+  if !defined(swift){
     class { 'swift':
       swift_hash_suffix => $swift_hash_suffix,
       package_ensure    => $package_ensure,
