@@ -12,9 +12,11 @@ class openstack::swift::storage-node (
   $byte_size            = '1024',
 ) {
 
-  class { 'swift':
-    swift_hash_suffix => $swift_hash_suffix,
-    package_ensure    => $package_ensure,
+  if !defined(swift){
+    class { 'swift':
+      swift_hash_suffix => $swift_hash_suffix,
+      package_ensure    => $package_ensure,
+    }
   }
 
   case $storage_type {
