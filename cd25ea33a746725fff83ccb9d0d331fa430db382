@@ -1,0 +1,9 @@
+Verified+2: Jenkins
+Code-Review+2: François Charlier <francois.charlier@enovance.com>
+Approved+1: Chris Hoge <chris.hoge@puppetlabs.com>
+Code-Review+2: Chris Hoge <chris.hoge@puppetlabs.com>
+Submitted-by: Jenkins
+Submitted-at: Tue, 17 Dec 2013 00:36:31 +0000
+Reviewed-on: https://review.openstack.org/60462
+Project: stackforge/puppet-openstack
+Branch: refs/heads/master
