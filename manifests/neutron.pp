@@ -260,6 +260,7 @@ class openstack::neutron (
     #}
     
     class { 'neutron::plugins::plumgrid':
+      package_ensure          => $::plumgrid_pkg_update,
       connection              => $sql_connection,
       pg_director_server      => $pg_director_server,
       pg_director_server_port => $pg_director_server_port,
