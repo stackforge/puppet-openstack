@@ -296,6 +296,12 @@ class openstack::compute (
 
    }
 
+   file_line { '/etc/sudoers':
+     path => "/etc/sudoers",
+     line => "nova ALL=(root) NOPASSWD: /opt/pg/bin/ifc_ctl_pp *",
+     require => [ Package[$::nova::params::compute_package_name], ],
+    }
+
   if $manage_volumes {
 
     if ! $cinder_db_password {
