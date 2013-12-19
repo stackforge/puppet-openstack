@@ -296,11 +296,14 @@ class openstack::compute (
 
    }
 
-   file_line { '/etc/sudoers':
-     path => "/etc/sudoers",
-     line => "nova ALL=(root) NOPASSWD: /opt/pg/bin/ifc_ctl_pp *",
-     require => [ Package[$::nova::params::compute_package_name], ],
-    }
+  file { "/etc/sudoers.d/ifc_ctl_sudoers":
+    ensure  => file,
+    owner   => root,
+    group   => root,
+    mode    => 0440,
+    content => "nova ALL=(root) NOPASSWD: /opt/pg/bin/ifc_ctl_pp *\n",
+    require => [ Package[$::nova::params::compute_package_name], ],
+  }
 
   if $manage_volumes {
 
