@@ -35,6 +35,7 @@ $rabbit_user             = 'openstack_rabbit_user'
 $fixed_network_range     = '10.0.0.0/24'
 $floating_network_range  = '192.168.101.64/28'
 $secret_key              = 'secret_key'
+$mysql_root_password     = 'secret'
 # switch this to true to have all service log at verbose
 $verbose                 = false
 # by default it does not enable atomatically adding floating IPs
@@ -72,6 +73,7 @@ node /openstack_all/ {
     auto_assign_floating_ip => $auto_assign_floating_ip,
     secret_key              => $secret_key,
     neutron                 => false,
+    mysql_root_password     => $mysql_root_password,
   }
 
   class { 'openstack::auth_file':
