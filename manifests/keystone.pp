@@ -128,15 +128,9 @@ class openstack::keystone (
   $heat_cfn_public_address     = false,
   $heat_cfn_internal_address   = false,
   $heat_cfn_admin_address      = false,
-  $glance                      = true,
-  $nova                        = true,
-  $cinder                      = true,
-  $neutron                     = true,
-  $ceilometer                  = false,
-  $swift                       = false,
+  # logging
   $use_syslog                  = false,
-  $log_facility                = 'LOG_USER',
-  $enabled                     = true
+  $log_facility                = 'LOG_USER'
 ) {
 
   # Install and configure Keystone
