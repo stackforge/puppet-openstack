@@ -1,0 +1,10 @@
+Verified+2: Jenkins
+Approved+1: Xingchao Yu <xingchao@unitedstack.com>
+Code-Review+2: Xingchao Yu <xingchao@unitedstack.com>
+Code-Review+2: Chris Hoge <chris.hoge@puppetlabs.com>
+Code-Review+1: Liping Mao <limao@cisco.com>
+Submitted-by: Jenkins
+Submitted-at: Mon, 30 Dec 2013 06:29:49 +0000
+Reviewed-on: https://review.openstack.org/64078
+Project: stackforge/puppet-openstack
+Branch: refs/heads/master
