@@ -7,7 +7,7 @@ class openstack::repo::rdo(
   $release_cap = capitalize($release)
 
   if $::osfamily == 'RedHat' {
-    case $operatingsystem {
+    case $::operatingsystem {
       centos, redhat, scientific, slc: { $dist = 'epel' }
       fedora: { $dist = 'fedora' }
     }
