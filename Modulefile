@@ -1,5 +1,5 @@
 name    'puppetlabs-openstack'
-version '3.0.0-rc2'
+version '3.0.0'
 source  'https://github.com/stackforge/puppet-openstack'
 author  'Puppet Labs'
 license 'Apache License 2.0'
