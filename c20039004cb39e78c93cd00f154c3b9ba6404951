@@ -1,0 +1,8 @@
+Verified+2: Jenkins
+Approved+1: Chris Hoge <chris.hoge@puppetlabs.com>
+Code-Review+2: Chris Hoge <chris.hoge@puppetlabs.com>
+Submitted-by: Jenkins
+Submitted-at: Mon, 13 Jan 2014 20:01:01 +0000
+Reviewed-on: https://review.openstack.org/65798
+Project: stackforge/puppet-openstack
+Branch: refs/heads/stable/havana
