@@ -9,6 +9,8 @@
 # [idle_timeout] Timeout to reap SQL connections. Optional. Defaults to '200'.
 # [db_password] Password for keystone DB. Required.
 # [admin_token]. Auth token for keystone admin. Required.
+# [admin_user] Username of admin user. Default: 'admin'. Set to the empty
+#   string to not create an admin user.
 # [admin_email] Email address of system admin. Required.
 # [admin_password] Auth password for admin user. Required.
 # [glance_user_password] Auth password for glance user. Required.
@@ -59,6 +61,7 @@
 class openstack::keystone (
   $db_password,
   $admin_token,
+  $admin_user = 'admin',
   $admin_email,
   $admin_password,
   $public_address,
@@ -302,10 +305,13 @@ class openstack::keystone (
 
   if ($enabled) {
     # Setup the admin user
-    class { 'keystone::roles::admin':
-      email        => $admin_email,
-      password     => $admin_password,
-      admin_tenant => $admin_tenant,
+    if ($admin_user) {
+      class { 'keystone::roles::admin':
+        admin        => $admin_user,
+        email        => $admin_email,
+        password     => $admin_password,
+        admin_tenant => $admin_tenant,
+      }
     }
 
     # Setup the Keystone Identity Endpoint
