@@ -13,6 +13,8 @@
 # [mysql_root_password] Root password for mysql server.
 # [sql_idle_timeout] Timeout for sql to reap connections.
 #   (Optional) Defaults to undef.
+# [admin_user] Username of admin user. Default: 'admin'. Set to the empty
+#   string to not create an admin user.
 # [admin_email] Admin email.
 # [admin_password] Admin password.
 # [keystone_db_password] Keystone database password.
@@ -153,6 +155,7 @@
 class openstack::controller (
   # Required Network
   $public_address,
+  $admin_user              = undef,
   $admin_email,
   # required password
   $admin_password,
@@ -365,6 +368,7 @@ class openstack::controller (
     db_ssl                    => $mysql_ssl,
     db_ssl_ca                 => $mysql_ca,
     idle_timeout              => $sql_idle_timeout,
+    admin_user                => $admin_user,
     admin_token               => $keystone_admin_token,
     admin_tenant              => $keystone_admin_tenant,
     admin_email               => $admin_email,

@@ -236,6 +236,7 @@ describe 'openstack::controller' do
         )
 
         should contain_class('keystone::roles::admin').with(
+          :admin        => 'admin',
           :email        => 'some_user@some_fake_email_address.foo',
           :password     => 'ChangeMe',
           :admin_tenant => 'admin'
@@ -284,6 +285,17 @@ describe 'openstack::controller' do
         end
       end
     end
+
+    context 'with an empty admin user' do
+      let :params do
+        default_params.merge(:admin_user => '')
+      end
+
+      it 'should not configure an admin user' do
+        should_not contain_class('keystone::roles::admin')
+      end
+    end
+
     context 'when not enabled' do
 
       let :params do
