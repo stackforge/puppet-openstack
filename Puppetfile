@@ -1,15 +1,31 @@
 forge "http://forge.puppetlabs.com"
 
-mod 'puppetlabs/nova', :git => 'git://github.com/stackforge/puppet-nova'
-mod 'puppetlabs/glance', :git => 'git://github.com/stackforge/puppet-glance'
-mod 'puppetlabs/keystone', :git => 'git://github.com/stackforge/puppet-keystone'
-mod 'puppetlabs/horizon', :git => 'git://github.com/stackforge/puppet-horizon'
-mod 'puppetlabs/swift', :git => 'git://github.com/stackforge/puppet-swift'
-mod 'puppetlabs/cinder', :git => 'git://github.com/stackforge/puppet-cinder'
-mod 'puppetlabs/tempest', :git => 'git://github.com/stackforge/puppet-tempest'
-mod 'stackforge/neutron', :git => 'git://github.com/stackforge/puppet-neutron'
+mod 'puppetlabs/nova',
+    :git => 'git://github.com/stackforge/puppet-nova',
+    :ref => 'origin/stable/havana'
+mod 'puppetlabs/glance',
+    :git => 'git://github.com/stackforge/puppet-glance',
+    :ref => 'origin/stable/havana'
+mod 'puppetlabs/keystone',
+    :git => 'git://github.com/stackforge/puppet-keystone',
+    :ref => 'origin/stable/havana'
+mod 'puppetlabs/horizon',
+    :git => 'git://github.com/stackforge/puppet-horizon',
+    :ref => 'origin/stable/havana'
+mod 'puppetlabs/swift',
+    :git => 'git://github.com/stackforge/puppet-swift',
+    :ref => 'origin/stable/havana'
+mod 'puppetlabs/cinder',
+    :git => 'git://github.com/stackforge/puppet-cinder',
+    :ref => 'origin/stable/havana'
+mod 'puppetlabs/tempest',
+    :git => 'git://github.com/stackforge/puppet-tempest',
+    :ref => 'origin/stable/havana'
+mod 'stackforge/neutron', 
+    :git => 'git://github.com/stackforge/puppet-neutron',
+    :ref => 'origin/stable/havana'
 # openstack middleware
-mod 'puppet/vswitch', :git => 'git://github.com/bodepd/puppet-vswitch'
+mod 'puppet/vswitch', :git => 'git://github.com/stackforge/puppet-vswitch'
 mod 'puppetlabs/rabbitmq',
     :git => 'git://github.com/puppetlabs/puppetlabs-rabbitmq',
     :ref => 'origin/2.x'
