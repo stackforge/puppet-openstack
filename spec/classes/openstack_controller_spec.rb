@@ -814,6 +814,26 @@ describe 'openstack::controller' do
         })
       end
 
+      context 'when ovs is not enabled' do
+
+        let :params do
+          default_params.merge({
+              :enable_ovs_agent       => false,
+              :neutron                => true,
+              :neutron_user_password  => 'q_pass',
+              :allow_overlapping_ips  => false,
+              :internal_address       => '10.0.0.3',
+              :neutron_db_password    => 'q_db_pass',
+              :metadata_shared_secret => 'secret',
+              :external_bridge_name   => 'br-ex'
+          })
+        end
+
+        it 'should not fail when required ovs parameters are not set' do
+          should contain_class('openstack::controller')
+        end
+      end
+
       it { should_not contain_class('nova::network') }
 
       it { should contain_class('nova::network::neutron').with(:security_group_api => 'neutron') }
