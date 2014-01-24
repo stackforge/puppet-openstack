@@ -504,20 +504,22 @@ class openstack::controller (
       fail('neutron_db_password must be set when configuring neutron')
     }
 
-    if ! $bridge_interface {
-      fail('bridge_interface must be set when configuring neutron')
-    }
+    if $enable_ovs_agent {
+      if ! $bridge_interface {
+        fail('bridge_interface must be set when configuring neutron')
+      }
 
-    if ! $bridge_uplinks {
-      $bridge_uplinks_real = ["${external_bridge_name}:${bridge_interface}"]
-    } else {
+      if ! $bridge_uplinks {
+        $bridge_uplinks_real = ["${external_bridge_name}:${bridge_interface}"]
+      } else {
       $bridge_uplinks_real = $bridge_uplinks
-    }
+      }
 
-    if ! $bridge_mappings {
-      $bridge_mappings_real  = ["${physical_network}:${external_bridge_name}"]
-    } else {
-      $bridge_mappings_real  = $bridge_mappings
+      if ! $bridge_mappings {
+        $bridge_mappings_real  = ["${physical_network}:${external_bridge_name}"]
+      } else {
+        $bridge_mappings_real  = $bridge_mappings
+      }
     }
 
     class { 'openstack::neutron':
