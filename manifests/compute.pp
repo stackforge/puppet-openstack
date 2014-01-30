@@ -291,6 +291,8 @@ class openstack::compute (
               "/dev/random","/dev/urandom","/dev/ptmx",
               "/dev/kvm","/dev/kqemu",
               "/dev/rtc","/dev/hpet","/dev/net/tun"] },
+               clear_emulator_capabilities => { value => 0 },
+               user => { value => "root" },
         },
     }
 
