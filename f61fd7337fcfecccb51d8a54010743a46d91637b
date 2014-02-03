@@ -1,0 +1,10 @@
+Verified+2: Jenkins
+Approved+1: Dan Bode <bodepd@gmail.com>
+Code-Review+2: Dan Bode <bodepd@gmail.com>
+Code-Review+2: Mark T. Voelker <mvoelker@cisco.com>
+Code-Review+1: Pradeep Kilambi <pkilambi@cisco.com>
+Submitted-by: Jenkins
+Submitted-at: Mon, 03 Feb 2014 23:58:26 +0000
+Reviewed-on: https://review.openstack.org/70813
+Project: stackforge/puppet-openstack
+Branch: refs/heads/stable/havana
