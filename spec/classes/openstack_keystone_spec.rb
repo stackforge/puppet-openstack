@@ -95,7 +95,6 @@ describe 'openstack::keystone' do
       it do
         should contain_class('swift::keystone::auth').with(
           :password => 'dude',
-          :address  => '127.0.0.1',
           :region   => 'RegionOne'
         )
       end
