@@ -34,6 +34,9 @@
 #   (optional) External Monitoring links.
 #   Defaults to undef.
 #
+# [local_settings_template]
+#    (optional) Location of template to use for local_settings.py generation.
+#
 # [*keystone_host*]
 #   (optional) Address of keystone host.
 #   Defaults to '127.0.0.1'.
@@ -63,16 +66,17 @@
 
 class openstack::horizon (
   $secret_key,
-  $configure_memcached   = true,
-  $memcached_listen_ip   = undef,
-  $cache_server_ip       = '127.0.0.1',
-  $cache_server_port     = '11211',
-  $horizon_app_links     = undef,
-  $keystone_host         = '127.0.0.1',
-  $keystone_scheme       = 'http',
-  $keystone_default_role = '_member_',
-  $django_debug          = 'False',
-  $api_result_limit      = 1000
+  $configure_memcached      = true,
+  $memcached_listen_ip      = undef,
+  $cache_server_ip          = '127.0.0.1',
+  $cache_server_port        = '11211',
+  $horizon_app_links        = undef,
+  $local_settings_template  = undef,
+  $keystone_host            = '127.0.0.1',
+  $keystone_scheme          = 'http',
+  $keystone_default_role    = '_member_',
+  $django_debug             = 'False',
+  $api_result_limit         = 1000
 ) {
 
   if $configure_memcached {
@@ -90,15 +94,16 @@ class openstack::horizon (
   }
 
   class { '::horizon':
-    cache_server_ip       => $cache_server_ip,
-    cache_server_port     => $cache_server_port,
-    secret_key            => $secret_key,
-    horizon_app_links     => $horizon_app_links,
-    keystone_host         => $keystone_host,
-    keystone_scheme       => $keystone_scheme,
-    keystone_default_role => $keystone_default_role,
-    django_debug          => $django_debug,
-    api_result_limit      => $api_result_limit,
+    cache_server_ip         => $cache_server_ip,
+    cache_server_port       => $cache_server_port,
+    secret_key              => $secret_key,
+    horizon_app_links       => $horizon_app_links,
+    local_settings_template => $local_settings_template,
+    keystone_host           => $keystone_host,
+    keystone_scheme         => $keystone_scheme,
+    keystone_default_role   => $keystone_default_role,
+    django_debug            => $django_debug,
+    api_result_limit        => $api_result_limit,
   }
 
   if str2bool($::selinux) {

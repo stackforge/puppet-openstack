@@ -27,15 +27,16 @@ describe 'openstack::horizon' do
       :udp_port  => '11211'
     )
     should contain_class('horizon').with(
-      :cache_server_ip       => '127.0.0.1',
-      :cache_server_port     => '11211',
-      :secret_key            => 'super_secret',
-      :horizon_app_links     => false,
-      :keystone_host         => '127.0.0.1',
-      :keystone_scheme       => 'http',
-      :keystone_default_role => '_member_',
-      :django_debug          => 'False',
-      :api_result_limit      => 1000
+      :cache_server_ip       	=> '127.0.0.1',
+      :cache_server_port     	=> '11211',
+      :secret_key            	=> 'super_secret',
+      :horizon_app_links     	=> false,
+      :local_settings_template	=> 'horizon/local_settings.py.erb',
+      :keystone_host         	=> '127.0.0.1',
+      :keystone_scheme       	=> 'http',
+      :keystone_default_role 	=> '_member_',
+      :django_debug          	=> 'False',
+      :api_result_limit      	=> 1000
     )
   end
 
@@ -48,15 +49,16 @@ describe 'openstack::horizon' do
     it 'should configure horizon without memcached using default parameters and secret key' do
       should_not contain_class('memcached')
       should contain_class('horizon').with(
-        :cache_server_ip       => '127.0.0.1',
-        :cache_server_port     => '11211',
-        :secret_key            => 'super_secret',
-        :horizon_app_links     => false,
-        :keystone_host         => '127.0.0.1',
-        :keystone_scheme       => 'http',
-        :keystone_default_role => '_member_',
-        :django_debug          => 'False',
-        :api_result_limit      => 1000
+        :cache_server_ip       		=> '127.0.0.1',
+        :cache_server_port     		=> '11211',
+        :secret_key            		=> 'super_secret',
+        :horizon_app_links     		=> false,
+      	:local_settings_template	=> 'horizon/local_settings.py.erb',
+        :keystone_host         		=> '127.0.0.1',
+        :keystone_scheme       		=> 'http',
+        :keystone_default_role 		=> '_member_',
+        :django_debug          		=> 'False',
+        :api_result_limit      		=> 1000
       )
     end
   end

@@ -68,6 +68,8 @@
 # [horizon_app_links]     array as in '[ ["Nagios","http://nagios_addr:port/path"],["Ganglia","http://ganglia_addr"] ]'
 # [enabled] Whether services should be enabled. This parameter can be used to
 #   implement services in active-passive modes for HA. Optional. Defaults to true.
+# [local_settings_template]
+#    (optional) Location of template to use for local_settings.py generation.
 #
 # === Examples
 #
@@ -185,6 +187,7 @@ class openstack::all (
   $cache_server_ip         = '127.0.0.1',
   $cache_server_port       = '11211',
   $horizon_app_links       = undef,
+  $local_settings_template = undef,
   # VNC
   $vnc_enabled             = true,
   $vncproxy_host           = false,
@@ -548,10 +551,11 @@ class openstack::all (
   ######## Horizon ########
   if ($horizon) {
     class { 'openstack::horizon':
-      secret_key        => $secret_key,
-      cache_server_ip   => $cache_server_ip,
-      cache_server_port => $cache_server_port,
-      horizon_app_links => $horizon_app_links,
+      secret_key              => $secret_key,
+      cache_server_ip         => $cache_server_ip,
+      cache_server_port       => $cache_server_port,
+      horizon_app_links       => $horizon_app_links,
+      local_settings_template => $local_settings_template,
     }
   }
 }
