@@ -668,11 +668,12 @@ describe 'openstack::controller' do
 
     it 'should contain enabled horizon' do
       should contain_class('horizon').with(
-        :secret_key        => 'secret_key',
-        :cache_server_ip   => '127.0.0.1',
-        :cache_server_port => '11211',
-        :horizon_app_links => false,
-        :keystone_host     => '127.0.0.1'
+        :secret_key        			=> 'secret_key',
+        :cache_server_ip   			=> '127.0.0.1',
+        :cache_server_port 			=> '11211',
+        :horizon_app_links 			=> false,
+		:local_settings_template	=> 'horizon/local_settings.py.erb',
+        :keystone_host     			=> '127.0.0.1'
       )
     end
 
