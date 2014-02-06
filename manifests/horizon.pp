@@ -44,7 +44,7 @@
 #
 # [*keystone_default_role*]
 #   (Optional) Default role for keystone authentication.
-#   Defaults to 'Member'.
+#   Defaults to '_member_'.
 #
 # [*django_debug*]
 #    (Optional) Sets Django debug level.
@@ -71,7 +71,7 @@ class openstack::horizon (
   $horizon_app_links     = undef,
   $keystone_host         = '127.0.0.1',
   $keystone_scheme       = 'http',
-  $keystone_default_role = 'Member',
+  $keystone_default_role = '_member_',
   $django_debug          = 'False',
   $api_result_limit      = 1000
 ) {
