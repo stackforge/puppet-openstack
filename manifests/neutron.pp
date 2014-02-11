@@ -239,8 +239,9 @@ class openstack::neutron (
       fail("Unsupported db type: ${db_type}. Only mysql is currently supported.")
     }
     class { 'neutron::server':
-      auth_host     => $keystone_host,
-      auth_password => $user_password,
+      connection     => $sql_connection,
+      auth_host      => $keystone_host,
+      auth_password  => $user_password,
     }
     class { 'neutron::plugins::ovs':
       sql_connection      => $sql_connection,
