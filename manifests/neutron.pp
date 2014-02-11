@@ -241,10 +241,10 @@ class openstack::neutron (
     class { 'neutron::server':
       auth_host     => $keystone_host,
       auth_password => $user_password,
+      connection    => $sql_connection,
+      idle_timeout  => $sql_idle_timeout,
     }
     class { 'neutron::plugins::ovs':
-      sql_connection      => $sql_connection,
-      sql_idle_timeout    => $sql_idle_timeout,
       tenant_network_type => $tenant_network_type,
       network_vlan_ranges => $network_vlan_ranges,
     }
