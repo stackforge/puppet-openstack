@@ -188,6 +188,8 @@ class openstack::all (
   # VNC
   $vnc_enabled             = true,
   $vncproxy_host           = false,
+  $vncproxy_protocol       = 'http',
+  $vncproxy_port           = '6080',
   $vncserver_listen        = false,
   # cinder
   # if the cinder management components should be installed
@@ -366,6 +368,8 @@ class openstack::all (
     vnc_enabled                   => $vnc_enabled,
     vncserver_proxyclient_address => $internal_address_real,
     vncproxy_host                 => $vncproxy_host_real,
+    vncproxy_protocol             => $vncproxy_protocol,
+    vncproxy_port                 => $vncproxy_port,
     force_config_drive            => $force_config_drive
   }
 
@@ -414,6 +418,7 @@ class openstack::all (
     # VNC
     vnc_enabled             => $vnc_enabled,
     vncproxy_host           => $vncproxy_host_real,
+    vncproxy_port           => $vncproxy_port,
     # General
     debug                   => $debug,
     verbose                 => $verbose,

@@ -106,6 +106,7 @@ class openstack::nova::controller (
   # VNC
   $vnc_enabled               = true,
   $vncproxy_host             = undef,
+  $vncproxy_port             = '6080',
   # Keystone
   $keystone_host             = '127.0.0.1',
   # Syslog
@@ -260,7 +261,8 @@ class openstack::nova::controller (
 
   if $vnc_enabled {
     class { 'nova::vncproxy':
-      host    => $vncproxy_host_real,
+      #host    => $vncproxy_host_real,
+      port    => $vncproxy_port,
       enabled => $enabled,
     }
   }
