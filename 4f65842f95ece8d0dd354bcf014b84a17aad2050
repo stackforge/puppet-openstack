@@ -1,0 +1,9 @@
+Verified+2: Jenkins
+Approved+1: Emilien Macchi <emilien.macchi@enovance.com>
+Code-Review+2: Emilien Macchi <emilien.macchi@enovance.com>
+Code-Review+2: Michael Chapman <woppin@gmail.com>
+Submitted-by: Jenkins
+Submitted-at: Thu, 20 Feb 2014 17:31:55 +0000
+Reviewed-on: https://review.openstack.org/74369
+Project: stackforge/puppet-openstack
+Branch: refs/heads/stable/havana
