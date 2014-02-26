@@ -185,6 +185,10 @@ class openstack::all (
   $cache_server_ip         = '127.0.0.1',
   $cache_server_port       = '11211',
   $horizon_app_links       = undef,
+  $listen_ssl              = false,
+  $horizon_cert            = undef,
+  $horizon_key             = undef,
+  $horizon_ca              = undef,
   # VNC
   $vnc_enabled             = true,
   $vncproxy_host           = false,
@@ -557,6 +561,10 @@ class openstack::all (
       cache_server_ip   => $cache_server_ip,
       cache_server_port => $cache_server_port,
       horizon_app_links => $horizon_app_links,
+      listen_ssl        => $listen_ssl,
+      horizon_cert      => $horizon_cert,
+      horizon_key       => $horizon_key,
+      horizon_ca        => $horizon_ca,
     }
   }
 }
