@@ -257,6 +257,10 @@ class openstack::neutron (
       bridge_uplinks   => $bridge_uplinks,
       bridge_mappings  => $bridge_mappings,
       enable_tunneling => $ovs_enable_tunneling,
+      tunnel_types     => $ovs_enable_tunneling ? {
+        true    => [$tenant_network_type],
+        default => [],
+      },
       local_ip         => $ovs_local_ip,
       firewall_driver  => $firewall_driver,
     }
