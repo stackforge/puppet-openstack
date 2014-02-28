@@ -15,6 +15,7 @@ class openstack::cinder::controller(
   $rabbit_hosts             =  false,
   $rabbit_port              = '5672',
   $rabbit_virtual_host      = '/',
+  $glance_api_servers       = '127.0.0.1:9292',
   # Database. Currently mysql is the only option.
   $db_type                  = 'mysql',
   $db_user                  = 'cinder',
@@ -80,4 +81,7 @@ class openstack::cinder::controller(
     enabled                => $scheduler_enabled,
   }
 
+  class { '::cinder::glance':
+    glance_api_servers => $glance_api_servers
+  }
 }
