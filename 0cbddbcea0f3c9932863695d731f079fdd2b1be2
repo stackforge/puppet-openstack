@@ -1,0 +1,9 @@
+Verified+2: Jenkins
+Approved+1: Emilien Macchi <emilien.macchi@enovance.com>
+Code-Review+2: Emilien Macchi <emilien.macchi@enovance.com>
+Code-Review+2: Mark T. Voelker <mvoelker@cisco.com>
+Submitted-by: Jenkins
+Submitted-at: Fri, 28 Feb 2014 14:13:54 +0000
+Reviewed-on: https://review.openstack.org/77175
+Project: stackforge/puppet-openstack
+Branch: refs/heads/master
