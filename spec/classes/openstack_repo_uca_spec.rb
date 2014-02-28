@@ -11,6 +11,7 @@ describe 'openstack::repo::uca' do
         :operatingsystemrelease => '12.04',
         :lsbdistdescription     => 'Ubuntu 12.04.1 LTS',
         :lsbdistcodename        => 'precise',
+        :lsbdistid              => 'ubuntu',
       }
     end
     it do
@@ -32,6 +33,7 @@ describe 'openstack::repo::uca' do
         :operatingsystemrelease => '12.04',
         :lsbdistdescription     => 'Ubuntu 12.04.1 LTS',
         :lsbdistcodename        => 'precise',
+        :lsbdistid              => 'ubuntu',
       }
     end
 
