@@ -103,6 +103,7 @@ describe 'openstack::repo' do
         :operatingsystemrelease => '12.04',
         :lsbdistdescription     => 'Ubuntu 12.04.1 LTS',
         :lsbdistcodename        => 'precise',
+        :lsbdistid              => 'ubuntu',
       }
     end
 
@@ -123,6 +124,7 @@ describe 'openstack::repo' do
         :operatingsystemrelease => '12.04',
         :lsbdistdescription     => 'Ubuntu 12.04.1 LTS',
         :lsbdistcodename        => 'precise',
+        :lsbdistid              => 'ubuntu',
       }
     end
 
