@@ -1,5 +1,7 @@
 # EPEL repo (RHEL-alikes only, _not_ Fedora)
-class openstack::repo::epel {
+class openstack::repo::epel(
+  $enforce_package_ordering = true,
+} {
   if ($::osfamily == 'RedHat' and
       $::operatingsystem != 'Fedora' and
       $::operatingsystemrelease =~ /^6\..*$/) {
@@ -21,6 +23,8 @@ class openstack::repo::epel {
       mode   => '0644',
       before => Yumrepo['epel'],
     }
-    Yumrepo['epel'] -> Package<||>
+    if ($enforce_package_ordering) {
+      Yumrepo['epel'] -> Package<||>
+    }
   }
 }
