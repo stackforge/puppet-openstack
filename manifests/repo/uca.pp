@@ -1,6 +1,6 @@
-# Ubuntu Cloud Archive repo (supports either Folsom or Grizzly)
+# Ubuntu Cloud Archive repo (supports either Folsom, Grizzly or Havana)
 class openstack::repo::uca(
-  $release = 'grizzly',
+  $release = 'havana',
   $repo    = 'updates'
 ) {
   if ($::operatingsystem == 'Ubuntu' and
@@ -13,7 +13,5 @@ class openstack::repo::uca(
       repos             => 'main',
       required_packages => 'ubuntu-cloud-keyring',
     }
-
-    Exec['apt_update'] -> Package<||>
   }
 }
