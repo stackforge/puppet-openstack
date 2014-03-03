@@ -21,6 +21,5 @@ class openstack::repo::epel {
       mode   => '0644',
       before => Yumrepo['epel'],
     }
-    Yumrepo['epel'] -> Package<||>
   }
 }

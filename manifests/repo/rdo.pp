@@ -1,13 +1,13 @@
-# RDO repo (supports Grizzly on both RHEL-alikes and Fedora, requires EPEL)
+# RDO repo (supports Grizzly and Havana on both RHEL-alikes and Fedora, requires EPEL)
 class openstack::repo::rdo(
-  $release = 'grizzly'
+  $release = 'havana'
 ) {
   include openstack::repo::epel
 
   $release_cap = capitalize($release)
 
   if $::osfamily == 'RedHat' {
-    case $::operatingsystem {
+    case $operatingsystem {
       centos, redhat, scientific, slc: { $dist = 'epel' }
       fedora: { $dist = 'fedora' }
     }
@@ -30,6 +30,5 @@ class openstack::repo::rdo(
       mode   => '0644',
       before => Yumrepo['rdo-release'],
     }
-    Yumrepo['rdo-release'] -> Package<||>
   }
 }
