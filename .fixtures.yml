@@ -10,9 +10,7 @@ fixtures:
     'ceilometer' : 'git://github.com/stackforge/puppet-ceilometer'
     'heat' : 'git://github.com/stackforge/puppet-heat'
     "apt": "git://github.com/puppetlabs/puppetlabs-apt.git"
-    "apache":
-      repo: "git://github.com/puppetlabs/puppetlabs-apache.git"
-      ref: 'origin/0.x'
+    "apache": "git://github.com/puppetlabs/puppetlabs-apache.git"
     "concat": "git://github.com/puppetlabs/puppetlabs-concat.git"
     "firewall": "git://github.com/puppetlabs/puppetlabs-firewall.git"
     "mysql":
