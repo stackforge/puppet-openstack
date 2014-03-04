@@ -37,7 +37,8 @@ class openstack::cinder::all(
   $use_syslog               = false,
   $log_facility             = 'LOG_USER',
   $debug                    = false,
-  $verbose                  = false
+  $verbose                  = false,
+  $glance_api_servers       = '127.0.0.1:9292'
 ) {
 
   ####### DATABASE SETUP ######
@@ -112,5 +113,9 @@ class openstack::cinder::all(
         warning("Unsupported volume driver: ${volume_driver}, make sure you are configuring this yourself")
       }
     }
+  }
+
+  class { '::cinder::glance':
+    glance_api_servers => $glance_api_servers
   }
 }

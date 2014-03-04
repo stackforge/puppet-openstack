@@ -32,7 +32,8 @@ class openstack::cinder::controller(
   $use_syslog               = false,
   $log_facility             = 'LOG_USER',
   $debug                    = false,
-  $verbose                  = false
+  $verbose                  = false,
+  $glance_api_servers       = '127.0.0.1:9292'
 ) {
 
   ####### DATABASE SETUP ######
@@ -80,4 +81,7 @@ class openstack::cinder::controller(
     enabled                => $scheduler_enabled,
   }
 
+  class { '::cinder::glance':
+    glance_api_servers => $glance_api_servers
+  }
 }
