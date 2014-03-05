@@ -32,10 +32,12 @@ class openstack::swift::proxy (
   } else {
     $real_keystone_host = $keystone_host
   }
-  class { 'swift':
-    swift_hash_suffix => $swift_hash_suffix,
-    package_ensure    => $package_ensure,
-  }
+
+  ensure_resource('class', 'swift',
+    { swift_hash_suffix => $swift_hash_suffix,
+      package_ensure    => $package_ensure,
+    }
+  )
 
   if $memcached {
     class { 'memcached':
