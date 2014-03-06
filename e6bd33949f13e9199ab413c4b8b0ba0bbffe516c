@@ -1,0 +1,9 @@
+Verified+2: Jenkins
+Code-Review+2: Mark T. Voelker <mvoelker@cisco.com>
+Approved+1: Chris Hoge <chris.hoge@puppetlabs.com>
+Code-Review+2: Chris Hoge <chris.hoge@puppetlabs.com>
+Submitted-by: Jenkins
+Submitted-at: Thu, 06 Mar 2014 18:46:57 +0000
+Reviewed-on: https://review.openstack.org/78427
+Project: stackforge/puppet-openstack
+Branch: refs/heads/stable/havana
