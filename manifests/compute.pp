@@ -263,7 +263,7 @@ class openstack::compute (
       neutron_url               => "http://${neutron_host}:9696",
       neutron_admin_username    => $neutron_admin_user,
       neutron_admin_tenant_name => $neutron_admin_tenant_name,
-      neutron_admin_auth_url    => "http://${keystone_host}:35357/v2.0",
+      neutron_admin_auth_url    => $neutron_auth_url,
       security_group_api        => $security_group_api
     }
 
