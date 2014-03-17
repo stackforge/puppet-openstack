@@ -8,7 +8,7 @@ openstack
 3. [Setup - The basics of getting started with cinder](#setup)
 4. [Implementation - An under-the-hood peek at what the module is doing](#implementation)
 5. [Limitations - OS compatibility, etc.](#limitations)
-6. [Getting Involved - How to go deaper](#involved)
+6. [Getting Involved - How to go deaper](#getting-involved)
 7. [Development - Guide for contributing to the module](#development)
 8. [Contributors - Those with commits](#contributors)
 9. [Release Notes - Notes on the most recent updates to the module](#release-notes)
