@@ -15,6 +15,7 @@ class openstack::cinder::all(
   $rabbit_hosts             =  undef,
   $rabbit_port              = '5672',
   $rabbit_virtual_host      = '/',
+  $glance_api_servers       = '127.0.0.1:9292',
   # Database. Currently mysql is the only option.
   $db_type                  = 'mysql',
   $db_user                  = 'cinder',
@@ -112,5 +113,9 @@ class openstack::cinder::all(
         warning("Unsupported volume driver: ${volume_driver}, make sure you are configuring this yourself")
       }
     }
+  }
+
+  class { '::cinder::glance':
+    glance_api_servers => $glance_api_servers
   }
 }

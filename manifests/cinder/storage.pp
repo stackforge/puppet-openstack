@@ -6,6 +6,7 @@ class openstack::cinder::storage(
   $rabbit_hosts          = false,
   $rabbit_port           = '5672',
   $rabbit_virtual_host   = '/',
+  $glance_api_servers    = '127.0.0.1:9292',
   $package_ensure        = 'present',
   $api_paste_config      = '/etc/cinder/api-paste.ini',
   $volume_package_ensure = 'present',
@@ -69,5 +70,9 @@ class openstack::cinder::storage(
     default:  {
       warning("Unsupported volume driver: ${volume_driver}, make sure you are configuring this yourself")
     }
+  }
+
+  class { '::cinder::glance':
+    glance_api_servers => $glance_api_servers
   }
 }

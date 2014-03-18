@@ -49,6 +49,9 @@ describe 'openstack::cinder::controller' do
       :package_ensure         => 'present',
       :enabled                => true
     )
+    should contain_class('cinder::glance').with(
+      :glance_api_servers     => '127.0.0.1:9292'
+    )
   end
 
   describe 'with custom syslog settings' do

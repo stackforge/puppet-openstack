@@ -57,6 +57,9 @@ describe 'openstack::cinder::all' do
       :iscsi_ip_address => '127.0.0.1',
       :volume_group     => 'cinder-volumes'
     )
+    should contain_class('cinder::glance').with(
+      :glance_api_servers => '127.0.0.1:9292'
+    )
     should_not contain_class('cinder::setup_test_volume')
   end
 
