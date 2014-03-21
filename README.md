@@ -13,6 +13,12 @@ openstack
 8. [Contributors - Those with commits](#contributors)
 9. [Release Notes - Notes on the most recent updates to the module](#release-notes)
 
+Deprecation
+-----------
+
+This implementation of the puppet-openstack module is deprecated, and will be removed for the OpenStack Icehouse release.
+A new reference deployment based on the [puppetlabs-havana](https://github.com/puppetlabs/puppetlabs-havana)  module is under development.
+
 Overview
 --------
 
