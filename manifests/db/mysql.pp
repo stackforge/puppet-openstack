@@ -13,6 +13,8 @@
 # [cinder_db_password] Password for cinder database. Required.
 # [neutron_db_password] Password for neutron database. Required.
 # [ceilometer_db_password] Password for ceilometer database. Required.
+# [mysql_package_name] Name of the mysql package. Optional.
+# [mysql_service_name] Name of the mysql service. Optional.
 # [mysql_bind_address] Address that mysql will bind to. Optional .Defaults to '0.0.0.0'.
 # [mysql_account_security] If a secure mysql db should be setup. Optional .Defaults to true.
 # [mysql_ssl] Enable SSL in the mysql server. Default is false.
@@ -65,6 +67,8 @@ class openstack::db::mysql (
     # ceilometer code has been added.
     $ceilometer_db_password = false,
     # MySQL
+    $mysql_package_name     = undef,
+    $mysql_service_name     = undef,
     $mysql_bind_address     = '0.0.0.0',
     $mysql_account_security = true,
     $mysql_ssl              = false,
@@ -108,7 +112,9 @@ class openstack::db::mysql (
       'ssl_cert'      => $mysql_cert,
       'ssl_key'       => $mysql_key,
     },
-    enabled     => $enabled,
+    package_name => $mysql_package_name,
+    service_name => $mysql_service_name,
+    enabled      => $enabled,
   }
 
   # This removes default users and guest access
