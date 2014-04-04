@@ -49,7 +49,7 @@ class openstack::provision(
 
   ## Glance
   $image_name                = 'cirros',
-  $image_source              = 'http://download.cirros-cloud.net/0.3.1/cirros-0.3.1-x86_64-disk.img',
+  $image_source              = 'http://download.cirros-cloud.net/0.3.2/cirros-0.3.2-x86_64-disk.img',
   $image_ssh_user            = 'cirros',
 
   ## Neutron

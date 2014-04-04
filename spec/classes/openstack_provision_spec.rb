@@ -12,7 +12,7 @@ describe 'openstack::provision' do
     let :params do
       {
         :image_name    => 'cirros',
-        :image_source  => 'http://download.cirros-cloud.net/0.3.1/cirros-0.3.1-x86_64-disk.img',
+        :image_source  => 'http://download.cirros-cloud.net/0.3.2/cirros-0.3.2-x86_64-disk.img',
         :image_name_alt    => 'cirros2',
       }
     end
@@ -40,7 +40,7 @@ describe 'openstack::provision' do
     let :params do
       {
         :image_name    => 'cirros',
-        :image_source  => 'http://download.cirros-cloud.net/0.3.1/cirros-0.3.1-x86_64-disk.img',
+        :image_source  => 'http://download.cirros-cloud.net/0.3.2/cirros-0.3.2-x86_64-disk.img',
       }
     end
 
