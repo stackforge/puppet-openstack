@@ -1,0 +1,9 @@
+Verified+2: Jenkins
+Approved+1: Mark T. Voelker <mvoelker@cisco.com>
+Code-Review+2: Mark T. Voelker <mvoelker@cisco.com>
+Code-Review+2: Chris Hoge <chris.hoge@puppetlabs.com>
+Submitted-by: Jenkins
+Submitted-at: Fri, 04 Apr 2014 17:44:14 +0000
+Reviewed-on: https://review.openstack.org/85007
+Project: stackforge/puppet-openstack
+Branch: refs/heads/master
