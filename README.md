@@ -1,17 +1,17 @@
-openstack
+Openstack
 =========
 
 #### Table of Contents
 
 1. [Overview - What is the openstack module?](#overview)
 2. [Module Description - What does the module do?](#module-description)
-3. [Setup - The basics of getting started with cinder](#setup)
-4. [Implementation - An under-the-hood peek at what the module is doing](#implementation)
+3. [Setup - The basics of getting started with cinder.](#setup)
+4. [Implementation - An under-the-hood peek at what the module is doing.](#implementation)
 5. [Limitations - OS compatibility, etc.](#limitations)
-6. [Getting Involved - How to go deaper](#getting-involved)
-7. [Development - Guide for contributing to the module](#development)
-8. [Contributors - Those with commits](#contributors)
-9. [Release Notes - Notes on the most recent updates to the module](#release-notes)
+6. [Getting Involved - How to go deeper?](#getting-involved)
+7. [Development - Guide for contributing to the module.](#development)
+8. [Contributors - Those with commits.](#contributors)
+9. [Release Notes - Notes on the most recent updates to the module.](#release-notes)
 
 Deprecation
 -----------
@@ -129,7 +129,7 @@ class { 'openstack::all':
 
 ### Beginning with openstack
 
-Utlization of this module can come in many forms.  It was designed to be capable of deploying all services to a single node or distributed across several.  This is not an exhaustive list, we recommend you consult and understand all the manifests included in this module and the [core openstack](http://docs.openstack.org) documentation.
+Utilization of this module can come in many forms.  It was designed to be capable of deploying all services to a single node or distributed across several.  This is not an exhaustive list, we recommend you consult and understand all the manifests included in this module and the [core openstack](http://docs.openstack.org) documentation.
 
 **Defining an all in one configuration**
 
@@ -178,7 +178,7 @@ The `openstack::controller` class deploys the following Openstack services:
   * keystone
   * horizon
   * glance
-  * nova (ommitting the nova compute service and, when multi_host is enabled,
+  * nova (omitting the nova compute service and, when multi_host is enabled,
     the nova network service)
   * mysql
   * rabbitmq
@@ -365,7 +365,7 @@ class { 'openstack::auth_file':
 ### Verification Process
 
   1. Ensure that your authentication information is stored in /root/openrc.  This assumes that the class `openstack::auth_file` had been applied to this node.
-  2. Ensure that your authenthication information is in the user's environment.
+  2. Ensure that your authentication information is in the user's environment.
 
         source /root/openrc
 
@@ -397,7 +397,7 @@ class { 'openstack::auth_file':
          - create a volume
          - attach that volume to the VM
          - allocate a floating IP address to a VM instance.
-         - verify that voluem is actually attached to the VM and that
+         - verify that volume is actually attached to the VM and that
            it is reachable by its floating ip address (which will require
            some security groups)
 
@@ -540,13 +540,13 @@ Release Notes
 * Added support for RabbitMQ clustering.
 * Added support for Nova API Bind Address.
 * Added support for SQL Idle Timeout.
-* Added suport for debug logging.
+* Added support for debug logging.
 * Added support for RabbitMQ mirrored queues.
 * Added support for RDO setup on additional RedHat based systems.
 * Added swift_public_address.
 * Added configuration for Swift auth in controller.
 * Reintroduces support for provider networks.
-* Propogates both internal and admin addresses to services.
+* Propagates both internal and admin addresses to services.
 * Passes through neutron core plugin.
 * Exposes public_protocol parameter in openstack::controller.
 * Exposes Glance registry_host parameter.
