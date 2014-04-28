@@ -63,6 +63,7 @@
 
 class openstack::horizon (
   $secret_key,
+  $fqdn                  = $::fqdn,
   $configure_memcached   = true,
   $memcached_listen_ip   = undef,
   $cache_server_ip       = '127.0.0.1',
@@ -90,6 +91,7 @@ class openstack::horizon (
   }
 
   class { '::horizon':
+    fqdn                  => $fqdn,
     cache_server_ip       => $cache_server_ip,
     cache_server_port     => $cache_server_port,
     secret_key            => $secret_key,

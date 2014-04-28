@@ -60,6 +60,7 @@ class openstack::compute (
   $neutron_user_password         = false,
   $neutron_admin_tenant_name     = 'services',
   $neutron_admin_user            = 'neutron',
+  $enable_plumgrid               = true,
   $enable_ovs_agent              = true,
   $enable_l3_agent               = false,
   $enable_dhcp_agent             = false,
@@ -264,7 +265,62 @@ class openstack::compute (
       neutron_admin_username    => $neutron_admin_user,
       neutron_admin_tenant_name => $neutron_admin_tenant_name,
       neutron_admin_auth_url    => "http://${keystone_host}:35357/v2.0",
-      security_group_api        => $security_group_api
+      security_group_api        => $security_group_api,
+      neutron_url_timeout       => '300',
+    }
+
+    if $enable_plumgrid {
+      include nova::params
+
+      class { 'nova::api':
+        admin_password    => $nova_user_password,
+        enabled           => true,
+        auth_host         => $controller_node_address,
+        admin_tenant_name => $nova_admin_tenant_name,
+      }
+    
+      nova_config { 'DEFAULT/scheduler_driver': value => 'nova.scheduler.filter_scheduler.FilterScheduler' }
+      nova_config { 'DEFAULT/libvirt_vif_type': value => 'ethernet'}
+      nova_config { 'DEFAULT/libvirt_cpu_mode': value => 'none'}
+
+      # forward all ipv4 traffic
+      # this is required for the vms to pass through the gateways
+      # public interface
+      Exec {
+        path => $::path
+      }
+
+      sysctl::value { 'net.ipv4.ip_forward':
+        value => '1'
+      }
+
+      # network.filters should only be included in the nova-network node package
+      # Reference: https://wiki.openstack.org/wiki/Packager/Rootwrap
+      nova::generic_service { 'network.filters':
+        package_name   => $::nova::params::network_package_name,
+        service_name   => $::nova::params::network_service_name,
+      }
+
+      class { 'libvirt':
+        qemu_config => {
+                cgroup_device_acl => { value => ["/dev/null","/dev/full","/dev/zero",
+                "/dev/random","/dev/urandom","/dev/ptmx",
+                "/dev/kvm","/dev/kqemu",
+                "/dev/rtc","/dev/hpet","/dev/net/tun"] },
+                 clear_emulator_capabilities => { value => 0 },
+                 user => { value => "root" },
+          },
+      }
+
+      file { "/etc/sudoers.d/ifc_ctl_sudoers":
+        ensure  => file,
+        owner   => root,
+        group   => root,
+        mode    => 0440,
+        content => "nova ALL=(root) NOPASSWD: /opt/pg/bin/ifc_ctl_pp *\n",
+        require => [ Package[$::nova::params::compute_package_name], ],
+      }
+
     }
 
   }
