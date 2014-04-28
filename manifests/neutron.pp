@@ -170,6 +170,7 @@ class openstack::neutron (
   $enabled                = true,
   $enable_server          = true,
   # plumgrid plugin setting
+  $enable_plumgrid        = true,
   $pg_director_server     = undef,
   $pg_director_server_port = undef,
   $pg_username            = undef,
@@ -245,28 +246,34 @@ class openstack::neutron (
     } else {
       fail("Unsupported db type: ${db_type}. Only mysql is currently supported.")
     }
-    class { 'neutron::server':
-      auth_host     => $keystone_host,
-      auth_password => $user_password,
-      sql_connection => $sql_connection,
-      connection => $sql_connection,
+    if $enable_ovs_agent {
+      class { 'neutron::server':
+        auth_host     => $keystone_host,
+        auth_password => $user_password,
+      }
+      class { 'neutron::plugins::ovs':
+        sql_connection      => $sql_connection,
+        sql_idle_timeout    => $sql_idle_timeout,
+        tenant_network_type => $tenant_network_type,
+        network_vlan_ranges => $network_vlan_ranges,
+      }
     }
-
-    #class { 'neutron::plugins::ovs':
-    #  sql_connection      => $sql_connection,
-    #  sql_idle_timeout    => $sql_idle_timeout,
-    #  tenant_network_type => $tenant_network_type,
-    #  network_vlan_ranges => $network_vlan_ranges,
-    #}
-    
-    class { 'neutron::plugins::plumgrid':
-      package_ensure          => $::plumgrid_pkg_update,
-      connection              => $sql_connection,
-      pg_director_server      => $pg_director_server,
-      pg_director_server_port => $pg_director_server_port,
-      pg_username             => $pg_username,
-      pg_password             => $pg_password,
-      pg_servertimeout        => $pg_servertimeout,
+    elsif $enable_plumgrid {
+      class { 'neutron::server':
+        auth_host     => $keystone_host,
+        auth_password => $user_password,
+        sql_connection => $sql_connection,
+        connection => $sql_connection,
+      }
+      class { 'neutron::plugins::plumgrid':
+        package_ensure          => $::plumgrid_pkg_update,
+        connection              => $sql_connection,
+        pg_director_server      => $pg_director_server,
+        pg_director_server_port => $pg_director_server_port,
+        pg_username             => $pg_username,
+        pg_password             => $pg_password,
+        pg_servertimeout        => $pg_servertimeout,
+      }
     }
   }
 

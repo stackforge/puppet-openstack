@@ -175,6 +175,7 @@ class openstack::controller (
   $cinder_user_password    = false,
   $cinder_db_password      = false,
   $swift_user_password     = false,
+  $enable_plumgrid         = true,
   $pg_director_server      = undef,
   $pg_director_server_port = undef,
   $pg_username             = undef,
@@ -512,21 +513,23 @@ class openstack::controller (
       fail('neutron_db_password must be set when configuring neutron')
     }
 
-   # if ! $bridge_interface {
-   #   fail('bridge_interface must be set when configuring neutron')
-   # }
+    if $enable_ovs_agent {
+      if ! $bridge_interface {
+        fail('bridge_interface must be set when configuring neutron')
+      }
 
-   # if ! $bridge_uplinks {
-   #   $bridge_uplinks_real = ["${external_bridge_name}:${bridge_interface}"]
-   # } else {
-   #   $bridge_uplinks_real = $bridge_uplinks
-   # }
+      if ! $bridge_uplinks {
+        $bridge_uplinks_real = ["${external_bridge_name}:${bridge_interface}"]
+      } else {
+      $bridge_uplinks_real = $bridge_uplinks
+      }
 
-   # if ! $bridge_mappings {
-   #   $bridge_mappings_real  = ["${physical_network}:${external_bridge_name}"]
-   # } else {
-   #   $bridge_mappings_real  = $bridge_mappings
-   # }
+      if ! $bridge_mappings {
+        $bridge_mappings_real  = ["${physical_network}:${external_bridge_name}"]
+      } else {
+        $bridge_mappings_real  = $bridge_mappings
+      }
+    }
 
     class { 'openstack::neutron':
       # Database
@@ -554,7 +557,8 @@ class openstack::controller (
       db_password           => $neutron_db_password,
       # Plugin
       core_plugin           => $neutron_core_plugin,
-      pg_director_server     => $pg_director_server,
+      enable_plumgrid       => $enable_plumgrid,
+      pg_director_server    => $pg_director_server,
       pg_director_server_port => $pg_director_server_port,
       pg_username           => $pg_username,
       pg_password           => $pg_password,
@@ -578,14 +582,15 @@ class openstack::controller (
       debug                 => $debug,
       verbose               => $verbose,
     }
+    if $enable_plumgrid {
+      class { 'nova::compute::neutron':
+        libvirt_vif_driver => $libvirt_vif_driver,
+      }
 
-    class { 'nova::compute::neutron':
-      libvirt_vif_driver => $libvirt_vif_driver,
+      nova_config { 'DEFAULT/scheduler_driver': value => 'nova.scheduler.filter_scheduler.FilterScheduler' }
+      nova_config { 'DEFAULT/libvirt_vif_type': value => 'ethernet'}
+      nova_config { 'DEFAULT/libvirt_cpu_mode': value => 'none'}
     }
-
-    nova_config { 'DEFAULT/scheduler_driver': value => 'nova.scheduler.filter_scheduler.FilterScheduler' }
-    nova_config { 'DEFAULT/libvirt_vif_type': value => 'ethernet'}
-    nova_config { 'DEFAULT/libvirt_cpu_mode': value => 'none'}
   }
 
   ######### Cinder Controller Services ########
