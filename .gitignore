@@ -4,3 +4,4 @@ spec/fixtures/manifests/*
 .vendor
 Gemfile.lock
 pkg
+.gitreview
