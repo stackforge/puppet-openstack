@@ -906,8 +906,8 @@ describe 'openstack::controller' do
         it { should contain_nova_config('DEFAULT/multi_host').with(:value => true)}
         it {should contain_class('nova::network').with(
           :create_networks   => true,
-          :enabled           => true,
-          :install_service   => true
+          :enabled           => false,
+          :install_service   => false
         )}
       end
 
