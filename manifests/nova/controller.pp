@@ -196,7 +196,7 @@ class openstack::nova::controller (
     # Configure nova-network
     if $multi_host {
       nova_config { 'DEFAULT/multi_host': value => true }
-      $enable_network_service = true
+      $enable_network_service = false
     } else {
       nova_config { 'DEFAULT/multi_host': value => false }
       if $enabled {
