@@ -4,7 +4,7 @@ describe 'openstack::cinder::storage' do
 
   let :params do
     {
-      :sql_connection  => 'mysql://a:b:c:d',
+      :sql_connection  => 'mysql://cinder:pass@127.0.0.1/cinder?charset=utf8',
       :rabbit_password => 'rabpass'
     }
   end
