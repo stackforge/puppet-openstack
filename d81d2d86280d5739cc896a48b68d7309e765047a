@@ -1,0 +1,9 @@
+Verified+2: Jenkins
+Code-Review+2: Chris Ricker <chricker@cisco.com>
+Workflow+1: Chris Ricker <chricker@cisco.com>
+Code-Review+2: Sebastien Badia <sebastien.badia@enovance.com>
+Submitted-by: Jenkins
+Submitted-at: Fri, 23 May 2014 13:23:09 +0000
+Reviewed-on: https://review.openstack.org/94033
+Project: stackforge/puppet-openstack
+Branch: refs/heads/master
