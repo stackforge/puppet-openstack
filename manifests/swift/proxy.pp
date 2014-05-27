@@ -8,7 +8,7 @@ class openstack::swift::proxy (
   $ring_part_power                  = 18,
   $ring_replicas                    = 3,
   $ring_min_part_hours              = 1,
-  $proxy_pipeline                   = ['catch_errors', 'healthcheck', 'cache', 'ratelimit', 'swift3', 's3token', 'authtoken', 'keystone', 'proxy-server'],
+  $proxy_pipeline                   = ['catch_errors', 'healthcheck', 'cache', 'ratelimit', 'swift3', 's3token', 'authtoken', 'keystone', 'account_quotas', 'container_quotas', 'proxy-server'],
   $proxy_workers                    = $::processorcount,
   $proxy_port                       = '8080',
   $proxy_allow_account_management   = true,
@@ -58,7 +58,9 @@ class openstack::swift::proxy (
 
   # configure all of the middlewares
   class { [
+    '::swift::proxy::account_quotas',
     '::swift::proxy::catch_errors',
+    '::swift::proxy::container_quotas',
     '::swift::proxy::healthcheck',
     '::swift::proxy::swift3',
   ]: }
