@@ -84,7 +84,7 @@ describe 'openstack::controller' do
       end
 
       it 'should configure mysql server' do
-        param_value(subject, 'class', 'mysql::server', 'enabled').should be_true
+        param_value(subject, 'class', 'mysql::server', 'enabled').should be_truthy
         config_hash = param_value(subject, 'class', 'mysql::server', 'config_hash')
         config_hash['bind_address'].should == '0.0.0.0'
         config_hash['root_password'].should == 'sql_pass'
@@ -152,7 +152,7 @@ describe 'openstack::controller' do
       end
 
       it 'should configure mysql server' do
-        param_value(subject, 'class', 'mysql::server', 'enabled').should be_false
+        param_value(subject, 'class', 'mysql::server', 'enabled').should be_falsey
         config_hash = param_value(subject, 'class', 'mysql::server', 'config_hash')
         config_hash['bind_address'].should == '0.0.0.0'
         config_hash['root_password'].should == 'sql_pass'
