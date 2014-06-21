@@ -12,7 +12,7 @@ describe 'openstack::horizon' do
 
   let :facts do
     {
-      :osfamily       => 'Redhat',
+      :osfamily       => 'RedHat',
       :memorysize     => '1GB',
       :processorcount => '1',
       :concat_basedir => '/tmp',
@@ -21,12 +21,12 @@ describe 'openstack::horizon' do
   end
 
   it 'should configure horizon and memcache using default parameters and secret key' do
-    should contain_class('memcached').with(
+    is_expected.to contain_class('memcached').with(
       :listen_ip => '127.0.0.1',
       :tcp_port  => '11211',
       :udp_port  => '11211'
     )
-    should contain_class('horizon').with(
+    is_expected.to contain_class('horizon').with(
       :cache_server_ip       => '127.0.0.1',
       :cache_server_port     => '11211',
       :secret_key            => 'super_secret',
@@ -46,8 +46,8 @@ describe 'openstack::horizon' do
       )
     end
     it 'should configure horizon without memcached using default parameters and secret key' do
-      should_not contain_class('memcached')
-      should contain_class('horizon').with(
+      is_expected.to_not contain_class('memcached')
+      is_expected.to contain_class('horizon').with(
         :cache_server_ip       => '127.0.0.1',
         :cache_server_port     => '11211',
         :secret_key            => 'super_secret',
@@ -69,7 +69,7 @@ describe 'openstack::horizon' do
       )
     end
     it 'should override params for memcached' do
-      should contain_class('memcached').with(
+      is_expected.to contain_class('memcached').with(
         :listen_ip => '10.10.10.10'
       )
     end

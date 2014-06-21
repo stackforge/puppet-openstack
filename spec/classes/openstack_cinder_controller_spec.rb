@@ -11,11 +11,11 @@ describe 'openstack::cinder::controller' do
   end
 
   let :facts do
-    { :osfamily => 'Redhat' }
+    { :osfamily => 'RedHat' }
   end
 
   it 'should configure using the default values' do
-    should contain_class('cinder').with(
+    is_expected.to contain_class('cinder').with(
       :sql_connection      => "mysql://cinder:#{params[:db_password]}@127.0.0.1/cinder?charset=utf8",
       :sql_idle_timeout    => '3600',
       :rpc_backend         => 'cinder.openstack.common.rpc.impl_kombu',
@@ -32,7 +32,7 @@ describe 'openstack::cinder::controller' do
       :debug               => false,
       :verbose             => false
     )
-    should contain_class('cinder::api').with(
+    is_expected.to contain_class('cinder::api').with(
       :keystone_password       => params[:keystone_password],
       :keystone_enabled        => true,
       :keystone_user           => 'cinder',
@@ -44,12 +44,12 @@ describe 'openstack::cinder::controller' do
       :bind_host               => '0.0.0.0',
       :enabled                 => true
     )
-    should contain_class('cinder::scheduler').with(
+    is_expected.to contain_class('cinder::scheduler').with(
       :scheduler_driver       => 'cinder.scheduler.simple.SimpleScheduler',
       :package_ensure         => 'present',
       :enabled                => true
     )
-    should contain_class('cinder::glance').with(
+    is_expected.to contain_class('cinder::glance').with(
       :glance_api_servers     => '127.0.0.1:9292'
     )
   end
@@ -63,7 +63,7 @@ describe 'openstack::cinder::controller' do
     end
 
     it do
-      should contain_class('cinder').with(
+      is_expected.to contain_class('cinder').with(
         :use_syslog   => true,
         :log_facility => 'LOG_LOCAL0'
       )
@@ -77,7 +77,7 @@ describe 'openstack::cinder::controller' do
     end
 
     it do
-      expect { subject }.to raise_error(Puppet::Error, /Unsupported db_type sqlite/)
+      expect { catalogue }.to raise_error(Puppet::Error, /Unsupported db_type sqlite/)
     end
   end
 

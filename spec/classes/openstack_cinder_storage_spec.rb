@@ -10,11 +10,11 @@ describe 'openstack::cinder::storage' do
   end
 
   let :facts do
-    { :osfamily => 'Redhat' }
+    { :osfamily => 'RedHat' }
   end
 
   it 'should configure cinder and cinder::volume using defaults and required parameters' do
-    should contain_class('cinder').with(
+    is_expected.to contain_class('cinder').with(
       :sql_connection      => params[:sql_connection],
       :rabbit_userid       => 'guest',
       :rabbit_password     => params[:rabbit_password],
@@ -29,18 +29,18 @@ describe 'openstack::cinder::storage' do
       :debug               => false,
       :verbose             => false
     )
-    should contain_class('cinder::volume').with(
+    is_expected.to contain_class('cinder::volume').with(
       :package_ensure => 'present',
       :enabled        => true
     )
-    should contain_class('cinder::volume::iscsi').with(
+    is_expected.to contain_class('cinder::volume::iscsi').with(
       :iscsi_ip_address => '127.0.0.1',
       :volume_group     => 'cinder-volumes'
     )
-    should contain_class('cinder::glance').with(
+    is_expected.to contain_class('cinder::glance').with(
       :glance_api_servers => '127.0.0.1:9292'
     )
-    should_not contain_class('cinder::setup_test_volume')
+    is_expected.to_not contain_class('cinder::setup_test_volume')
   end
 
   describe 'with a volume driver other than iscsi' do
@@ -49,7 +49,7 @@ describe 'openstack::cinder::storage' do
         :volume_driver => 'netapp'
       )
     end
-    it { should_not contain_class('cinder::volume::iscsi') }
+    it { is_expected.to_not contain_class('cinder::volume::iscsi') }
   end
 
   describe 'when setting up test volumes for iscsi' do
@@ -58,14 +58,14 @@ describe 'openstack::cinder::storage' do
         :setup_test_volume => true
       )
     end
-    it { should contain_class('cinder::setup_test_volume').with(
+    it { is_expected.to contain_class('cinder::setup_test_volume').with(
       :volume_name => 'cinder-volumes'
     )}
     describe 'when volume_group is set' do
       before do
         params.merge!(:volume_group => 'foo')
       end
-      it { should contain_class('cinder::setup_test_volume').with(
+      it { is_expected.to contain_class('cinder::setup_test_volume').with(
         :volume_name => 'foo'
       )}
     end
@@ -81,7 +81,7 @@ describe 'openstack::cinder::storage' do
       )
     end
 
-    it { should contain_class('cinder::volume::rbd').with(
+    it { is_expected.to contain_class('cinder::volume::rbd').with(
                     :rbd_user => 'rbd',
                     :rbd_pool => 'rbd_pool',
                     :rbd_secret_uuid => 'secret'
@@ -98,7 +98,7 @@ describe 'openstack::cinder::storage' do
       )
     end
 
-    it { should contain_class('cinder').with(
+    it { is_expected.to contain_class('cinder').with(
       :use_syslog   => true,
       :log_facility => 'LOG_LOCAL0'
     ) }

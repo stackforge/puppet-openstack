@@ -3,7 +3,8 @@ source 'https://rubygems.org'
 group :development, :test do
   gem 'puppetlabs_spec_helper', :require => false
   gem 'puppet-lint', '~> 0.3.2'
-  gem 'rake', '10.1.1'
+  gem 'json'
+  gem 'webmock'
 end
 
 if puppetversion = ENV['PUPPET_GEM_VERSION']

@@ -30,7 +30,7 @@ describe 'openstack::keystone' do
   describe 'with only required params (and defaults for everything else)' do
 
     it 'should configure keystone and all default endpoints' do
-      should contain_class('keystone').with(
+      is_expected.to contain_class('keystone').with(
         :verbose        => false,
         :debug          => false,
         :bind_host      => '0.0.0.0',
@@ -45,7 +45,7 @@ describe 'openstack::keystone' do
         :log_facility   => 'LOG_USER'
       )
       [ 'glance', 'cinder', 'neutron' ].each do |type|
-        should contain_class("#{type}::keystone::auth").with(
+        is_expected.to contain_class("#{type}::keystone::auth").with(
           :password         => params["#{type}_user_password".intern],
           :public_address   => params[:public_address],
           :admin_address    => params[:public_address],
@@ -53,7 +53,7 @@ describe 'openstack::keystone' do
           :region           => 'RegionOne'
         )
       end
-      should contain_class('nova::keystone::auth').with(
+      is_expected.to contain_class('nova::keystone::auth').with(
         :password         => params[:nova_user_password],
         :public_address   => params[:public_address],
         :admin_address    => params[:public_address],
@@ -69,12 +69,12 @@ describe 'openstack::keystone' do
       required_params.merge(:nova => false)
     end
 
-    it { should_not contain_class('nova::keystone::auth') }
+    it { is_expected.to_not contain_class('nova::keystone::auth') }
 
   end
 
   describe 'without swift' do
-    it { should_not contain_class('swift::keystone::auth') }
+    it { is_expected.to_not contain_class('swift::keystone::auth') }
   end
 
   describe 'swift' do
@@ -84,7 +84,7 @@ describe 'openstack::keystone' do
       end
       it 'should fail when the password is not set' do
         expect do
-          subject
+          catalogue
         end.to raise_error(Puppet::Error)
       end
     end
@@ -93,7 +93,7 @@ describe 'openstack::keystone' do
         required_params.merge(:swift => true, :swift_user_password => 'dude')
       end
       it do
-        should contain_class('swift::keystone::auth').with(
+        is_expected.to contain_class('swift::keystone::auth').with(
           :password => 'dude',
           :region   => 'RegionOne'
         )
@@ -102,7 +102,7 @@ describe 'openstack::keystone' do
   end
 
   describe 'without heat' do
-    it { should_not contain_class('heat::keystone::auth') }
+    it { is_expected.to_not contain_class('heat::keystone::auth') }
   end
 
   describe 'heat' do
@@ -112,7 +112,7 @@ describe 'openstack::keystone' do
       end
       it 'should fail when the password is not set' do
         expect do
-          subject
+          catalogue
         end.to raise_error(Puppet::Error)
       end
     end
@@ -121,7 +121,7 @@ describe 'openstack::keystone' do
         required_params.merge(:heat => true, :heat_user_password => 'dude')
       end
       it do
-        should contain_class('heat::keystone::auth').with(
+        is_expected.to contain_class('heat::keystone::auth').with(
           :password        => 'dude',
           :public_address  => '127.0.0.1',
           :region          => 'RegionOne'
@@ -131,7 +131,7 @@ describe 'openstack::keystone' do
   end
 
   describe 'without heat_cfn' do
-    it { should_not contain_class('heat::keystone::auth_cfn') }
+    it { is_expected.to_not contain_class('heat::keystone::auth_cfn') }
   end
 
   describe 'heat_cfn' do
@@ -141,7 +141,7 @@ describe 'openstack::keystone' do
       end
       it 'should fail when the password is not set' do
         expect do
-          subject
+          catalogue
         end.to raise_error(Puppet::Error)
       end
     end
@@ -150,7 +150,7 @@ describe 'openstack::keystone' do
         required_params.merge(:heat_cfn => true, :heat_cfn_user_password => 'dude')
       end
       it do
-        should contain_class('heat::keystone::auth_cfn').with(
+        is_expected.to contain_class('heat::keystone::auth_cfn').with(
           :password        => 'dude',
           :public_address  => '127.0.0.1',
           :region          => 'RegionOne'
@@ -168,7 +168,7 @@ describe 'openstack::keystone' do
     end
 
     it 'should configure mysql properly' do
-      should contain_class('keystone').with(
+      is_expected.to contain_class('keystone').with(
         :sql_connection => 'mysql://keystone:pass@127.0.0.1/keystone?ssl_ca=/etc/mysql/ca.pem'
       )
     end
@@ -183,7 +183,7 @@ describe 'openstack::keystone' do
     end
 
     it 'should set parameters in included classes' do
-      should contain_class('keystone').with(
+      is_expected.to contain_class('keystone').with(
         :use_syslog   => true,
         :log_facility => 'LOG_LOCAL0'
       )

@@ -39,7 +39,7 @@ describe 'openstack::all' do
     end
 
     it 'raises an error if no neutron_user_password is set' do
-      expect { subject }.to raise_error(Puppet::Error, /neutron_user_password must be specified when neutron is configured/)
+      expect { catalogue }.to raise_error(Puppet::Error, /neutron_user_password must be specified when neutron is configured/)
     end
 
     context 'with neutron_user_password set' do
@@ -47,7 +47,7 @@ describe 'openstack::all' do
         params.merge!(:neutron_user_password => 'neutron_user_password')
       end
       it 'raises an error if no neutron_db_password is set' do
-        expect { subject }.to raise_error(Puppet::Error, /neutron_db_password must be set when configuring neutron/)
+        expect { catalogue }.to raise_error(Puppet::Error, /neutron_db_password must be set when configuring neutron/)
       end
     end
 
@@ -59,7 +59,7 @@ describe 'openstack::all' do
         )
       end
       it 'raises an error if no bridge_interface is set' do
-        expect { subject }.to raise_error(Puppet::Error, /bridge_interface must be set when configuring neutron/)
+        expect { catalogue }.to raise_error(Puppet::Error, /bridge_interface must be set when configuring neutron/)
       end
     end
 
@@ -84,7 +84,7 @@ describe 'openstack::all' do
         )
       end
       it 'raises an error if no shared metadata key is set' do
-        expect { subject }.to raise_error(Puppet::Error, /metadata_shared_secret parameter must be set when using metadata agent/)
+        expect { catalogue }.to raise_error(Puppet::Error, /metadata_shared_secret parameter must be set when using metadata agent/)
       end
     end
 
@@ -100,7 +100,7 @@ describe 'openstack::all' do
         )
       end
       it 'contains an openstack::neutron class' do
-        should contain_class('openstack::neutron').with(
+        is_expected.to contain_class('openstack::neutron').with(
           :db_host             => '127.0.0.1',
           :rabbit_host         => '127.0.0.1',
           :rabbit_user         => 'openstack',
@@ -143,7 +143,7 @@ describe 'openstack::all' do
         )
       end
       it 'contains a nova::compute class with force_config_drive set' do
-        should contain_class('nova::compute').with(
+        is_expected.to contain_class('nova::compute').with(
           :enabled                => true,
           :force_config_drive     => true
         )
@@ -166,7 +166,7 @@ describe 'openstack::all' do
         )
       end
       it 'contains an openstack::neutron class' do
-        should contain_class('openstack::neutron').with(
+        is_expected.to contain_class('openstack::neutron').with(
           :db_host             => '127.0.0.1',
           :rabbit_host         => '127.0.0.1',
           :rabbit_user         => 'openstack',
@@ -212,7 +212,7 @@ describe 'openstack::all' do
     end
 
     it 'raises an error if no cinder_db_password is set' do
-      expect { subject }.to raise_error(Puppet::Error, /Must set cinder db password when setting up a cinder controller/)
+      expect { catalogue }.to raise_error(Puppet::Error, /Must set cinder db password when setting up a cinder controller/)
     end
 
     context 'with cinder_db_password set' do
@@ -220,7 +220,7 @@ describe 'openstack::all' do
         params.merge!(:cinder_db_password => 'cinder_db_password')
       end
       it 'raises an error if no cinder_user_password is set' do
-        expect { subject }.to raise_error(Puppet::Error, /Must set cinder user password when setting up a cinder controller/)
+        expect { catalogue }.to raise_error(Puppet::Error, /Must set cinder user password when setting up a cinder controller/)
       end
     end
 
@@ -232,7 +232,7 @@ describe 'openstack::all' do
         )
       end
       it 'raises an error if no cinder_user_password is set' do
-        should contain_class('openstack::cinder::all').with(
+        is_expected.to contain_class('openstack::cinder::all').with(
           :bind_host          => '0.0.0.0',
           :keystone_auth_host => '127.0.0.1',
           :keystone_password  => 'cinder_user_password',
@@ -249,7 +249,7 @@ describe 'openstack::all' do
           :debug              => false,
           :verbose            => false
         )
-        should contain_nova_config('DEFAULT/volume_api_class').with(:value => 'nova.volume.cinder.API')
+        is_expected.to contain_nova_config('DEFAULT/volume_api_class').with(:value => 'nova.volume.cinder.API')
       end
     end
   end
@@ -271,7 +271,7 @@ describe 'openstack::all' do
     end
 
     it 'should have cinder::volume::rbd' do
-      should contain_class('cinder::volume::rbd').with(
+      is_expected.to contain_class('cinder::volume::rbd').with(
         :rbd_pool        => 'volumes',
         :rbd_user        => 'volumes',
         :rbd_secret_uuid => 'e80afa94-a64c-486c-9e34-d55e85f26406'
@@ -294,7 +294,7 @@ describe 'openstack::all' do
     end
 
     it 'should have openstack::db::mysql configured' do
-      should contain_class('openstack::db::mysql').with(
+      is_expected.to contain_class('openstack::db::mysql').with(
         :charset                => 'latin1',
         :mysql_root_password    => 'sql_pass',
         :mysql_bind_address     => '0.0.0.0',
@@ -322,7 +322,7 @@ describe 'openstack::all' do
     end
 
     it 'should have openstack::keystone configured' do
-      should contain_class('openstack::keystone').with(
+      is_expected.to contain_class('openstack::keystone').with(
         :debug                 => false,
         :verbose               => false,
         :db_type               => 'mysql',
@@ -350,7 +350,7 @@ describe 'openstack::all' do
     end
 
     it 'should have openstack::glance configured' do
-      should contain_class('openstack::glance').with(
+      is_expected.to contain_class('openstack::glance').with(
         :debug                 => false,
         :verbose               => false,
         :db_type               => 'mysql',
@@ -366,7 +366,7 @@ describe 'openstack::all' do
     end
 
     it 'should have nova::compute configured' do
-      should contain_class('nova::compute').with(
+      is_expected.to contain_class('nova::compute').with(
         :enabled               => true,
         :vnc_enabled           => true,
         :vncserver_proxyclient_address => '10.0.0.1',
@@ -375,7 +375,7 @@ describe 'openstack::all' do
     end
 
     it 'should have nova::compute::libvirt configured' do
-      should contain_class('nova::compute::libvirt').with(
+      is_expected.to contain_class('nova::compute::libvirt').with(
         :libvirt_type          => 'kvm',
         :vncserver_listen      => '10.0.0.1',
         :migration_support     => false
@@ -383,7 +383,7 @@ describe 'openstack::all' do
     end
 
     it 'should have openstack::nova::controller configured' do
-      should contain_class('openstack::nova::controller').with(
+      is_expected.to contain_class('openstack::nova::controller').with(
         :db_host                 => '127.0.0.1',
         :network_manager         => 'nova.network.manager.FlatDHCPManager',
         :network_config          => {},
@@ -421,11 +421,11 @@ describe 'openstack::all' do
     end
 
     it 'should configure horizon' do
-      should contain_class('openstack::horizon').with(
+      is_expected.to contain_class('openstack::horizon').with(
         :secret_key      => 'secret_key',
         :cache_server_ip => '127.0.0.1',
         :cache_server_port => 11211,
-        :horizon_app_links => ''
+        :horizon_app_links => nil
       )
     end
   end
@@ -445,7 +445,7 @@ describe 'openstack::all' do
         )
       end
       it 'raises an error if no fixed_range is given' do
-        expect { subject }.to raise_error(Puppet::Error, /Must specify the fixed range when using nova-network/)
+        expect { catalogue }.to raise_error(Puppet::Error, /Must specify the fixed range when using nova-network/)
       end
     end
 
@@ -454,7 +454,7 @@ describe 'openstack::all' do
         params.merge!(:private_interface  => false)
       end
       it 'raises an error if no private_interface is given' do
-        expect { subject }.to raise_error(Puppet::Error, /private interface must be set when nova networking is used/)
+        expect { catalogue }.to raise_error(Puppet::Error, /private interface must be set when nova networking is used/)
       end
     end
 
@@ -466,7 +466,7 @@ describe 'openstack::all' do
       end
 
       it 'sets send_arp_for_ha' do
-        should contain_nova_config('DEFAULT/send_arp_for_ha').with(:value => true)
+        is_expected.to contain_nova_config('DEFAULT/send_arp_for_ha').with(:value => true)
       end
 
 
@@ -480,13 +480,13 @@ describe 'openstack::all' do
       end
 
       it 'unsets multi_host and send_arp_for_ha' do
-        should contain_nova_config('DEFAULT/multi_host').with(:value => false)
-        should contain_nova_config('DEFAULT/send_arp_for_ha').with(:value => false)
+        is_expected.to contain_nova_config('DEFAULT/multi_host').with(:value => false)
+        is_expected.to contain_nova_config('DEFAULT/send_arp_for_ha').with(:value => false)
       end
     end
 
     it 'configures nova::network' do
-      should contain_class('nova::network').with(
+      is_expected.to contain_class('nova::network').with(
         :private_interface => 'eth1',
         :public_interface  => 'eth0',
         :fixed_range       => '10.0.0.0/24',
@@ -516,7 +516,7 @@ describe 'openstack::all' do
     end
 
     it 'should have glance::backend::rbd with default user/pool' do
-      should contain_class('glance::backend::rbd').with(
+      is_expected.to contain_class('glance::backend::rbd').with(
         :rbd_store_user   => 'images',
         :rbd_store_pool   => 'images'
       )
