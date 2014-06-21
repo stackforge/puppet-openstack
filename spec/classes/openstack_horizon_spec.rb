@@ -12,7 +12,7 @@ describe 'openstack::horizon' do
 
   let :facts do
     {
-      :osfamily       => 'Redhat',
+      :osfamily       => 'RedHat',
       :memorysize     => '1GB',
       :processorcount => '1',
       :concat_basedir => '/tmp',

@@ -10,7 +10,7 @@ describe 'openstack::cinder::storage' do
   end
 
   let :facts do
-    { :osfamily => 'Redhat' }
+    { :osfamily => 'RedHat' }
   end
 
   it 'should configure cinder and cinder::volume using defaults and required parameters' do

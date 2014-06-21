@@ -3,7 +3,7 @@ require 'spec_helper'
 describe 'openstack::neutron' do
 
   let :facts do
-    {:osfamily => 'Redhat'}
+    {:osfamily => 'RedHat'}
   end
 
   let :params do
