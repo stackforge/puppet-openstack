@@ -11,7 +11,7 @@ describe 'openstack::cinder::controller' do
   end
 
   let :facts do
-    { :osfamily => 'Redhat' }
+    { :osfamily => 'RedHat' }
   end
 
   it 'should configure using the default values' do
