@@ -15,7 +15,7 @@ describe 'openstack::repo::uca' do
       }
     end
     it do
-      should contain_apt__source('ubuntu-cloud-archive').with(
+      is_expected.to contain_apt__source('ubuntu-cloud-archive').with(
         :release => 'precise-updates/grizzly'
       )
     end
@@ -38,7 +38,7 @@ describe 'openstack::repo::uca' do
     end
 
     it do
-      should contain_apt__source('ubuntu-cloud-archive').with(
+      is_expected.to contain_apt__source('ubuntu-cloud-archive').with(
         :release => 'precise-proposed/folsom'
       )
     end

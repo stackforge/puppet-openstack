@@ -17,7 +17,7 @@ describe 'openstack::provision' do
       }
     end
 
-    it { should contain_glance_image(params[:image_name_alt]).with(
+    it { is_expected.to contain_glance_image(params[:image_name_alt]).with(
       :ensure           => 'present',
       :is_public        => 'yes',
       :container_format => 'bare',
@@ -26,7 +26,7 @@ describe 'openstack::provision' do
       )
     }
 
-    it { should contain_glance_image(params[:image_name]).with(
+    it { is_expected.to contain_glance_image(params[:image_name]).with(
       :ensure           => 'present',
       :is_public        => 'yes',
       :container_format => 'bare',
@@ -44,7 +44,7 @@ describe 'openstack::provision' do
       }
     end
 
-    it { should contain_glance_image(params[:image_name]).with(
+    it { is_expected.to contain_glance_image(params[:image_name]).with(
       :ensure           => 'present',
       :is_public        => 'yes',
       :container_format => 'bare',
@@ -64,19 +64,19 @@ describe 'openstack::provision' do
       }
     end
 
-    it { should contain_class('tempest').with(
+    it { is_expected.to contain_class('tempest').with(
       :resize_available          => true,
       :change_password_available => true,
       :tempest_repo_revision     => 'stable/grizzly'
     ) }
 
     it 'should configure neutron networks' do
-      should contain_neutron_network('public').with(
+      is_expected.to contain_neutron_network('public').with(
         'ensure'          => 'present',
         'router_external' => true,
         'tenant_name'     => 'admin'
       )
-      should contain_neutron_network('private').with(
+      is_expected.to contain_neutron_network('private').with(
         'ensure'          => 'present',
         'tenant_name'     => 'demo'
       )
@@ -93,7 +93,7 @@ describe 'openstack::provision' do
       }
     end
 
-    it { should contain_class('tempest').with(
+    it { is_expected.to contain_class('tempest').with(
       :tempest_repo_revision     => 'stable/grizzly'
     ) }
   end

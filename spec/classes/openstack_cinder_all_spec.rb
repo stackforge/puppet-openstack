@@ -14,8 +14,8 @@ describe 'openstack::cinder::all' do
     { :osfamily => 'Debian' }
   end
 
-  it 'should configure using the default values' do
-    should contain_class('cinder').with(
+  it 'is_expected.to configure using the default values' do
+    is_expected.to contain_class('cinder').with(
       :sql_connection      => "mysql://cinder:#{params[:db_password]}@127.0.0.1/cinder?charset=utf8",
       :sql_idle_timeout    => '3600',
       :rpc_backend         => 'cinder.openstack.common.rpc.impl_kombu',
@@ -32,7 +32,7 @@ describe 'openstack::cinder::all' do
       :debug               => false,
       :verbose             => false
     )
-    should contain_class('cinder::api').with(
+    is_expected.to contain_class('cinder::api').with(
       :keystone_password       => params[:keystone_password],
       :keystone_enabled        => true,
       :keystone_user           => 'cinder',
@@ -44,23 +44,23 @@ describe 'openstack::cinder::all' do
       :bind_host               => '0.0.0.0',
       :enabled                 => true
     )
-    should contain_class('cinder::scheduler').with(
+    is_expected.to contain_class('cinder::scheduler').with(
       :scheduler_driver       => 'cinder.scheduler.simple.SimpleScheduler',
       :package_ensure         => 'present',
       :enabled                => true
     )
-    should contain_class('cinder::volume').with(
+    is_expected.to contain_class('cinder::volume').with(
       :package_ensure => 'present',
       :enabled        => true
     )
-    should contain_class('cinder::volume::iscsi').with(
+    is_expected.to contain_class('cinder::volume::iscsi').with(
       :iscsi_ip_address => '127.0.0.1',
       :volume_group     => 'cinder-volumes'
     )
-    should contain_class('cinder::glance').with(
+    is_expected.to contain_class('cinder::glance').with(
       :glance_api_servers => '127.0.0.1:9292'
     )
-    should_not contain_class('cinder::setup_test_volume')
+    is_expected.to_not contain_class('cinder::setup_test_volume')
   end
 
   describe 'with manage_volumes set to false' do
@@ -69,7 +69,7 @@ describe 'openstack::cinder::all' do
         :manage_volumes => false
       )
     end
-    it { should_not contain_class('cinder::volume') }
+    it { is_expected.to_not contain_class('cinder::volume') }
   end
 
   describe 'with a volume driver other than iscsi' do
@@ -78,7 +78,7 @@ describe 'openstack::cinder::all' do
         :volume_driver => 'netapp'
       )
     end
-    it { should_not contain_class('cinder::volume::iscsi') }
+    it { is_expected.to_not contain_class('cinder::volume::iscsi') }
   end
 
   describe 'with a volume driver other than rbd' do
@@ -87,7 +87,7 @@ describe 'openstack::cinder::all' do
         :volume_driver => 'netapp'
       )
     end
-    it { should_not contain_class('cinder::volume::rbd') }
+    it { is_expected.to_not contain_class('cinder::volume::rbd') }
   end
 
   describe 'with the rbd volume driver' do
@@ -96,7 +96,7 @@ describe 'openstack::cinder::all' do
         :volume_driver => 'rbd'
       )
     end
-    it { should contain_class('cinder::volume::rbd') }
+    it { is_expected.to contain_class('cinder::volume::rbd') }
   end
 
   describe 'when setting up test volumes for iscsi' do
@@ -105,14 +105,14 @@ describe 'openstack::cinder::all' do
         :setup_test_volume => true
       )
     end
-    it { should contain_class('cinder::setup_test_volume').with(
+    it { is_expected.to contain_class('cinder::setup_test_volume').with(
       :volume_name => 'cinder-volumes'
     )}
     describe 'when volume_group is set' do
       before do
         params.merge!(:volume_group => 'foo')
       end
-      it { should contain_class('cinder::setup_test_volume').with(
+      it { is_expected.to contain_class('cinder::setup_test_volume').with(
         :volume_name => 'foo'
       )}
     end
@@ -125,7 +125,7 @@ describe 'openstack::cinder::all' do
         :log_facility => 'LOG_LOCAL0'
       )
     end
-    it { should contain_class('cinder').with(
+    it { is_expected.to contain_class('cinder').with(
       :use_syslog   => true,
       :log_facility => 'LOG_LOCAL0'
     )}
@@ -138,7 +138,7 @@ describe 'openstack::cinder::all' do
     end
 
     it do
-      expect { subject }.to raise_error(Puppet::Error, /Unsupported db_type sqlite/)
+      expect { catalogue }.to raise_error(Puppet::Error, /Unsupported db_type sqlite/)
     end
   end
 

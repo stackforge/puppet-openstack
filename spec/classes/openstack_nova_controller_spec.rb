@@ -25,20 +25,20 @@ describe 'openstack::nova::controller' do
     default_params
   end
 
-  it { should contain_class('openstack::nova::controller') }
+  it { is_expected.to contain_class('openstack::nova::controller') }
 
   context 'when configuring neutron' do
 
     it 'should configure nova with neutron' do
 
-      should contain_class('nova::rabbitmq').with(
+      is_expected.to contain_class('nova::rabbitmq').with(
         :userid                 => 'openstack',
         :password               => 'rabbit_pass',
         :enabled                => true,
         :cluster_disk_nodes     => false,
         :virtual_host           => '/'
       )
-      should contain_class('nova').with(
+      is_expected.to contain_class('nova').with(
         :sql_connection       => 'mysql://nova:nova_db_pass@127.0.0.1/nova',
         :rabbit_userid        => 'openstack',
         :rabbit_password      => 'rabbit_pass',
@@ -54,7 +54,7 @@ describe 'openstack::nova::controller' do
         :log_facility         => 'LOG_USER'
       )
 
-      should contain_class('nova::api').with(
+      is_expected.to contain_class('nova::api').with(
         :enabled                              => true,
         :admin_tenant_name                    => 'services',
         :admin_user                           => 'nova',
@@ -65,7 +65,7 @@ describe 'openstack::nova::controller' do
         :neutron_metadata_proxy_shared_secret => 'secret'
       )
 
-      should contain_class('nova::network::neutron').with(
+      is_expected.to contain_class('nova::network::neutron').with(
         :neutron_admin_password    => 'neutron_user_pass',
         :neutron_auth_strategy     => 'keystone',
         :neutron_url               => "http://127.0.0.1:9696",
@@ -76,10 +76,10 @@ describe 'openstack::nova::controller' do
       )
 
       ['nova::scheduler', 'nova::objectstore', 'nova::cert', 'nova::consoleauth', 'nova::conductor'].each do |x|
-        should contain_class(x).with_enabled(true)
+        is_expected.to contain_class(x).with_enabled(true)
       end
 
-      should contain_class('nova::vncproxy').with(
+      is_expected.to contain_class('nova::vncproxy').with(
         :host    => '127.0.0.1',
         :enabled => true
       )
@@ -93,7 +93,7 @@ describe 'openstack::nova::controller' do
       )
     end
     it 'should configure nova with memcached' do
-      should contain_class('nova').with(
+      is_expected.to contain_class('nova').with(
         :memcached_servers => ['memcached01:11211', 'memcached02:11211']
       )
     end
@@ -107,7 +107,7 @@ describe 'openstack::nova::controller' do
       )
     end
     it 'should configure SSL' do
-      should contain_class('nova').with(
+      is_expected.to contain_class('nova').with(
         :sql_connection       => 'mysql://nova:nova_db_pass@127.0.0.1/nova?ssl_ca=/etc/mysql/ca.pem'
       )
     end
@@ -121,7 +121,7 @@ describe 'openstack::nova::controller' do
       )
     end
     it do
-      should contain_class('nova').with(
+      is_expected.to contain_class('nova').with(
         :use_syslog   => true,
         :log_facility => 'LOG_LOCAL0'
       )

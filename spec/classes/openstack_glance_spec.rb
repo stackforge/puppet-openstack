@@ -19,7 +19,7 @@ describe 'openstack::glance' do
 
   describe 'with only required parameters' do
     it 'should configure with applicable defaults' do
-      should contain_class('glance::api').with(
+      is_expected.to contain_class('glance::api').with(
         :verbose           => false,
         :debug             => false,
         :registry_host     => '0.0.0.0',
@@ -36,7 +36,7 @@ describe 'openstack::glance' do
         :log_facility      => 'LOG_USER',
         :enabled           => true
       )
-      should contain_class('glance::registry').with(
+      is_expected.to contain_class('glance::registry').with(
         :verbose           => false,
         :debug             => false,
         :bind_host         => '0.0.0.0',
@@ -52,7 +52,7 @@ describe 'openstack::glance' do
         :log_facility      => 'LOG_USER',
         :enabled           => true
       )
-      should contain_class('glance::backend::file')
+      is_expected.to contain_class('glance::backend::file')
     end
   end
 
@@ -61,7 +61,7 @@ describe 'openstack::glance' do
       params.merge!(:db_type => 'sqlite' )
     end
     it 'should fail' do
-      expect { subject }.to raise_error(Puppet::Error, /db_type sqlite is not supported/)
+      expect { catalogue }.to raise_error(Puppet::Error, /db_type sqlite is not supported/)
     end
   end
 
@@ -70,7 +70,7 @@ describe 'openstack::glance' do
       params.merge!(:backend => 'ceph')
     end
     it 'should fail' do
-      expect { subject }.to raise_error(Puppet::Error, /Unsupported backend ceph/)
+      expect { catalogue }.to raise_error(Puppet::Error, /Unsupported backend ceph/)
     end
   end
 
@@ -85,9 +85,9 @@ describe 'openstack::glance' do
     end
 
     it 'should configure swift as the backend' do
-      should_not contain_class('glance::backend::file')
+      is_expected.to_not contain_class('glance::backend::file')
 
-      should contain_class('glance::backend::swift').with(
+      is_expected.to contain_class('glance::backend::swift').with(
         :swift_store_user                    => 'dan',
         :swift_store_key                     => '123',
         :swift_store_auth_address            => 'http://127.0.0.1:5000/v2.0/',
@@ -101,7 +101,7 @@ describe 'openstack::glance' do
       end
       it 'should fail' do
         expect do
-          subject
+          catalogue
         end.to raise_error(Puppet::Error, /swift_store_key must be set when configuring swift/)
       end
     end
@@ -111,7 +111,7 @@ describe 'openstack::glance' do
       end
       it 'should fail' do
         expect do
-          subject
+          catalogue
         end.to raise_error(Puppet::Error, /swift_store_user must be set when configuring swift/)
       end
     end
@@ -128,11 +128,11 @@ describe 'openstack::glance' do
     end
 
     it 'should configure rbd as the backend' do
-      should_not contain_class('glance::backend::file')
+      is_expected.to_not contain_class('glance::backend::file')
 
-      should_not contain_class('glance::backend::swift')
+      is_expected.to_not contain_class('glance::backend::swift')
 
-      should contain_class('glance::backend::rbd').with(
+      is_expected.to contain_class('glance::backend::rbd').with(
         :rbd_store_user => 'don',
         :rbd_store_pool => 'images'
       )
@@ -148,7 +148,7 @@ describe 'openstack::glance' do
     end
 
     it 'should configure mysql properly' do
-      should contain_class('glance::registry').with(
+      is_expected.to contain_class('glance::registry').with(
         :sql_connection    => 'mysql://glance:glance_db_pass@127.0.0.1/glance?ssl_ca=/etc/mysql/ca.pem'
       )
     end
@@ -163,12 +163,12 @@ describe 'openstack::glance' do
     end
 
     it 'should set parameters in included classes' do
-      should contain_class('glance::api').with(
+      is_expected.to contain_class('glance::api').with(
         :use_syslog   => true,
         :log_facility => 'LOG_LOCAL0'
       )
 
-      should contain_class('glance::registry').with(
+      is_expected.to contain_class('glance::registry').with(
         :use_syslog   => true,
         :log_facility => 'LOG_LOCAL0'
       )

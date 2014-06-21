@@ -15,13 +15,13 @@ describe 'openstack::repo' do
     end
 
     it do
-      should contain_yumrepo('rdo-release').with(
+      is_expected.to contain_yumrepo('rdo-release').with(
         :baseurl => 'http://repos.fedorapeople.org/repos/openstack/openstack-havana/epel-6/'
       )
-      should contain_file('/etc/pki/rpm-gpg/RPM-GPG-KEY-RDO-Havana')
+      is_expected.to contain_file('/etc/pki/rpm-gpg/RPM-GPG-KEY-RDO-Havana')
 
-      should contain_yumrepo('epel')
-      should contain_file('/etc/pki/rpm-gpg/RPM-GPG-KEY-EPEL-6')
+      is_expected.to contain_yumrepo('epel')
+      is_expected.to contain_file('/etc/pki/rpm-gpg/RPM-GPG-KEY-EPEL-6')
     end
   end
 
@@ -38,13 +38,13 @@ describe 'openstack::repo' do
     end
 
     it do
-      should contain_yumrepo('rdo-release').with(
+      is_expected.to contain_yumrepo('rdo-release').with(
         :baseurl => 'http://repos.fedorapeople.org/repos/openstack/openstack-grizzly/epel-6/'
       )
-      should contain_file('/etc/pki/rpm-gpg/RPM-GPG-KEY-RDO-Grizzly')
+      is_expected.to contain_file('/etc/pki/rpm-gpg/RPM-GPG-KEY-RDO-Grizzly')
 
-      should contain_yumrepo('epel')
-      should contain_file('/etc/pki/rpm-gpg/RPM-GPG-KEY-EPEL-6')
+      is_expected.to contain_yumrepo('epel')
+      is_expected.to contain_file('/etc/pki/rpm-gpg/RPM-GPG-KEY-EPEL-6')
     end
   end
 
@@ -62,10 +62,10 @@ describe 'openstack::repo' do
     end
 
     it do
-      should contain_yumrepo('rdo-release').with(
+      is_expected.to contain_yumrepo('rdo-release').with(
         :baseurl => 'http://repos.fedorapeople.org/repos/openstack/openstack-havana/fedora-18/'
       )
-      should contain_file('/etc/pki/rpm-gpg/RPM-GPG-KEY-RDO-Havana')
+      is_expected.to contain_file('/etc/pki/rpm-gpg/RPM-GPG-KEY-RDO-Havana')
     end
   end
 
@@ -84,10 +84,10 @@ describe 'openstack::repo' do
     end
 
     it do
-      should contain_yumrepo('rdo-release').with(
+      is_expected.to contain_yumrepo('rdo-release').with(
         :baseurl => 'http://repos.fedorapeople.org/repos/openstack/openstack-grizzly/fedora-18/'
       )
-      should contain_file('/etc/pki/rpm-gpg/RPM-GPG-KEY-RDO-Grizzly')
+      is_expected.to contain_file('/etc/pki/rpm-gpg/RPM-GPG-KEY-RDO-Grizzly')
     end
   end
 
@@ -108,7 +108,7 @@ describe 'openstack::repo' do
     end
 
     it do
-      should contain_apt__source('ubuntu-cloud-archive').with_release('precise-updates/havana')
+      is_expected.to contain_apt__source('ubuntu-cloud-archive').with_release('precise-updates/havana')
     end
   end
 
@@ -129,7 +129,7 @@ describe 'openstack::repo' do
     end
 
     it do
-      should contain_apt__source('ubuntu-cloud-archive').with_release('precise-updates/grizzly')
+      is_expected.to contain_apt__source('ubuntu-cloud-archive').with_release('precise-updates/grizzly')
     end
   end
 end

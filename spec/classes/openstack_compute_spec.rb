@@ -30,7 +30,7 @@ describe 'openstack::compute' do
 
   describe "when using default class parameters" do
     it {
-      should contain_class('nova').with(
+      is_expected.to contain_class('nova').with(
         :sql_connection      => 'mysql://nova:pass@127.0.0.1/nova',
         :rabbit_host         => '127.0.0.1',
         :rabbit_hosts        => false,
@@ -43,22 +43,22 @@ describe 'openstack::compute' do
         :log_facility        => 'LOG_USER',
         :verbose             => false
       )
-      should_not contain_resources('nova_config').with_purge(true)
-      should contain_class('nova::compute').with(
+      is_expected.to_not contain_resources('nova_config').with_purge(true)
+      is_expected.to contain_class('nova::compute').with(
         :enabled                        => true,
         :vnc_enabled                    => true,
         :vncserver_proxyclient_address  => '127.0.0.2',
         :vncproxy_host                  => false,
         :force_config_drive             => false
       )
-      should contain_class('nova::compute::libvirt').with(
+      is_expected.to contain_class('nova::compute::libvirt').with(
         :libvirt_type     => 'kvm',
         :vncserver_listen => '127.0.0.2'
       )
-      should contain_nova_config('DEFAULT/multi_host').with( :value => false )
-      should contain_nova_config('DEFAULT/send_arp_for_ha').with( :value => false )
-      should_not contain_class('nova::api')
-      should contain_class('nova::network').with({
+      is_expected.to contain_nova_config('DEFAULT/multi_host').with( :value => false )
+      is_expected.to contain_nova_config('DEFAULT/send_arp_for_ha').with( :value => false )
+      is_expected.to_not contain_class('nova::api')
+      is_expected.to contain_class('nova::network').with({
         :enabled           => false,
         :install_service   => false,
         :private_interface => 'eth0',
@@ -71,7 +71,7 @@ describe 'openstack::compute' do
         :enabled           => false,
         :install_service   => false
       })
-      should contain_class('openstack::cinder::storage').with(
+      is_expected.to contain_class('openstack::cinder::storage').with(
         :sql_connection      => 'mysql://cinder:cinder_pass@127.0.0.1/cinder',
         :rabbit_password     => 'rabbit_pw',
         :rabbit_userid       => 'openstack',
@@ -113,7 +113,7 @@ describe 'openstack::compute' do
       )
     end
     it do
-      should contain_class('nova').with(
+      is_expected.to contain_class('nova').with(
         :sql_connection      => 'mysql://nova_user:pass@127.0.0.1/novadb',
         :rabbit_host         => 'my_host',
         :rabbit_hosts        => ['rabbit:5673', 'rabbit2:5674'],
@@ -124,21 +124,21 @@ describe 'openstack::compute' do
         :glance_api_servers  => ['controller:9292'],
         :verbose             => true
       )
-      should contain_class('nova::compute').with(
+      is_expected.to contain_class('nova::compute').with(
         :enabled                        => true,
         :vnc_enabled                    => false,
         :vncserver_proxyclient_address  => '127.0.0.1',
         :vncproxy_host                  => '127.0.0.2',
         :force_config_drive             => true
       )
-      should contain_class('nova::compute::libvirt').with(
+      is_expected.to contain_class('nova::compute::libvirt').with(
         :libvirt_type     => 'qemu',
         :vncserver_listen => '127.0.0.1'
       )
-      should contain_nova_config('DEFAULT/multi_host').with( :value => false )
-      should contain_nova_config('DEFAULT/send_arp_for_ha').with( :value => false )
-      should_not contain_class('nova::api')
-      should contain_class('nova::network').with({
+      is_expected.to contain_nova_config('DEFAULT/multi_host').with( :value => false )
+      is_expected.to contain_nova_config('DEFAULT/send_arp_for_ha').with( :value => false )
+      is_expected.to_not contain_class('nova::api')
+      is_expected.to contain_class('nova::network').with({
         :enabled           => false,
         :install_service   => false,
         :private_interface => 'eth1',
@@ -156,7 +156,7 @@ describe 'openstack::compute' do
         :manage_volumes => false
       )
     end
-    it { should_not contain_class('openstack::cinder::storage') }
+    it { is_expected.to_not contain_class('openstack::cinder::storage') }
 
   end
 
@@ -169,7 +169,7 @@ describe 'openstack::compute' do
       )
     end
     it do
-      should contain_class('openstack::cinder::storage').with(
+      is_expected.to contain_class('openstack::cinder::storage').with(
                  :sql_connection      => 'mysql://cinder:cinder_pass@127.0.0.1/cinder',
                  :rabbit_password     => 'rabbit_pw',
                  :rabbit_userid       => 'openstack',
@@ -201,18 +201,18 @@ describe 'openstack::compute' do
       end
 
       it 'should configure nova for multi-host' do
-        #should contain_class('keystone::python')
-        should contain_nova_config('DEFAULT/multi_host').with(:value => true)
-        should contain_nova_config('DEFAULT/send_arp_for_ha').with( :value => true)
-        should contain_class('nova::network').with({
+        #is_expected.to contain_class('keystone::python')
+        is_expected.to contain_nova_config('DEFAULT/multi_host').with(:value => true)
+        is_expected.to contain_nova_config('DEFAULT/send_arp_for_ha').with( :value => true)
+        is_expected.to contain_class('nova::network').with({
           'enabled' => true,
           'install_service' => true
         })
-        should_not contain_class('openstack::neutron')
+        is_expected.to_not contain_class('openstack::neutron')
       end
 
       describe 'with defaults' do
-        it { should contain_class('nova::api').with(
+        it { is_expected.to contain_class('nova::api').with(
           :enabled           => true,
           :admin_tenant_name => 'services',
           :admin_user        => 'nova',
@@ -236,7 +236,7 @@ describe 'openstack::compute' do
         )
       end
 
-      it { should contain_class('nova::network').with({
+      it { is_expected.to contain_class('nova::network').with({
         :private_interface => 'eth1',
         :public_interface  => 'eth2',
         :fixed_range       => '12.0.0.0/24',
@@ -256,7 +256,7 @@ describe 'openstack::compute' do
     end
 
     it {
-      expect { should raise_error(Puppet::Error) }
+      expect { is_expected.to raise_error(Puppet::Error) }
     }
   end
 
@@ -270,9 +270,9 @@ describe 'openstack::compute' do
     end
 
     it {
-      should contain_nova_config('DEFAULT/multi_host').with({ 'value' => true})
-      should contain_class('nova::api')
-      should contain_class('nova::network').with({
+      is_expected.to contain_nova_config('DEFAULT/multi_host').with({ 'value' => true})
+      is_expected.to contain_class('nova::api')
+      is_expected.to contain_class('nova::network').with({
         'enabled' => true,
         'install_service' => true
       })
@@ -294,7 +294,7 @@ describe 'openstack::compute' do
     end
 
     it 'should configure neutron' do
-      should contain_class('openstack::neutron').with(
+      is_expected.to contain_class('openstack::neutron').with(
         :db_host              => '127.0.0.1',
         :ovs_local_ip         => params[:internal_address],
         :rabbit_host          => params[:rabbit_host],
@@ -316,11 +316,11 @@ describe 'openstack::compute' do
         :verbose              => false
       )
 
-      should contain_class('nova::compute::neutron').with(
+      is_expected.to contain_class('nova::compute::neutron').with(
         :libvirt_vif_driver => 'nova.virt.libvirt.vif.LibvirtGenericVIFDriver'
       )
 
-      should contain_class('nova::network::neutron').with(
+      is_expected.to contain_class('nova::network::neutron').with(
         :neutron_admin_password    => 'neutron_user_password',
         :neutron_auth_strategy     => 'keystone',
         :neutron_url               => "http://127.0.0.2:9696",
@@ -330,10 +330,10 @@ describe 'openstack::compute' do
         :security_group_api        => 'neutron'
       )
 
-      should_not contain_class('neutron::server')
-      should_not contain_class('neutron::plugins::ovs')
-      should_not contain_class('neutron::agents::dhcp')
-      should_not contain_class('neutron::agents::l3')
+      is_expected.to_not contain_class('neutron::server')
+      is_expected.to_not contain_class('neutron::plugins::ovs')
+      is_expected.to_not contain_class('neutron::agents::dhcp')
+      is_expected.to_not contain_class('neutron::agents::l3')
     end
   end
 
@@ -348,17 +348,17 @@ describe 'openstack::compute' do
    end
 
    it do
-     should contain_class('nova').with(
+     is_expected.to contain_class('nova').with(
        :use_syslog   => true,
        :log_facility => 'LOG_LOCAL0'
      )
 
-     should contain_class('openstack::neutron').with(
+     is_expected.to contain_class('openstack::neutron').with(
        :use_syslog   => true,
        :log_facility => 'LOG_LOCAL0'
      )
 
-     should contain_class('openstack::cinder::storage').with(
+     is_expected.to contain_class('openstack::cinder::storage').with(
        :use_syslog   => true,
        :log_facility => 'LOG_LOCAL0'
      )
