@@ -234,17 +234,16 @@ class openstack::neutron (
       fail('db password must be set when configuring a neutron server')
     }
     if ($db_type == 'mysql') {
-      $sql_connection = "mysql://${db_user}:${db_password}@${db_host}/${db_name}?charset=utf8"
+      $database_connection = "mysql://${db_user}:${db_password}@${db_host}/${db_name}?charset=utf8"
     } else {
       fail("Unsupported db type: ${db_type}. Only mysql is currently supported.")
     }
     class { 'neutron::server':
-      auth_host     => $keystone_host,
-      auth_password => $user_password,
+      auth_host           => $keystone_host,
+      auth_password       => $user_password,
+      database_connection => $database_connection,
     }
     class { 'neutron::plugins::ovs':
-      sql_connection      => $sql_connection,
-      sql_idle_timeout    => $sql_idle_timeout,
       tenant_network_type => $tenant_network_type,
       network_vlan_ranges => $network_vlan_ranges,
     }
