@@ -1,0 +1,9 @@
+Verified+2: Jenkins
+Code-Review+2: Emilien Macchi <emilien@redhat.com>
+Code-Review+2: Clayton O'Neill <clayton.oneill@twcable.com>
+Workflow+1: Clayton O'Neill <clayton.oneill@twcable.com>
+Submitted-by: Jenkins
+Submitted-at: Thu, 16 Apr 2015 15:58:55 +0000
+Reviewed-on: https://review.openstack.org/101704
+Project: stackforge/puppet-openstack
+Branch: refs/heads/master
