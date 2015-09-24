@@ -23,6 +23,8 @@
 #   (optional) Defaults to 'RegionOne'.
 # [*use_no_cache*]
 #   (optional) Do not use the auth token cache. Defaults to true.
+# [*default_domain*]
+#   (optional) Default domain for keystone V3 auth. Defaults to 'default'.
 # [*cinder_endpoint_type*]
 #   (optional) Defaults to 'publicURL'.
 # [*glance_endpoint_type*]
@@ -42,6 +44,7 @@ class openstack::auth_file(
   $admin_tenant             = 'openstack',
   $region_name              = 'RegionOne',
   $use_no_cache             = true,
+  $default_domain           = 'default',
   $cinder_endpoint_type     = 'publicURL',
   $glance_endpoint_type     = 'publicURL',
   $keystone_endpoint_type   = 'publicURL',
