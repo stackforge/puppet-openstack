@@ -185,9 +185,15 @@ class openstack::all (
   $cache_server_ip         = '127.0.0.1',
   $cache_server_port       = '11211',
   $horizon_app_links       = undef,
+  $listen_ssl              = false,
+  $horizon_cert            = undef,
+  $horizon_key             = undef,
+  $horizon_ca              = undef,
   # VNC
   $vnc_enabled             = true,
   $vncproxy_host           = false,
+  $vncproxy_protocol       = 'http',
+  $vncproxy_port           = '6080',
   $vncserver_listen        = false,
   # cinder
   # if the cinder management components should be installed
@@ -366,6 +372,8 @@ class openstack::all (
     vnc_enabled                   => $vnc_enabled,
     vncserver_proxyclient_address => $internal_address_real,
     vncproxy_host                 => $vncproxy_host_real,
+    vncproxy_protocol             => $vncproxy_protocol,
+    vncproxy_port                 => $vncproxy_port,
     force_config_drive            => $force_config_drive
   }
 
@@ -414,6 +422,7 @@ class openstack::all (
     # VNC
     vnc_enabled             => $vnc_enabled,
     vncproxy_host           => $vncproxy_host_real,
+    vncproxy_port           => $vncproxy_port,
     # General
     debug                   => $debug,
     verbose                 => $verbose,
@@ -552,6 +561,10 @@ class openstack::all (
       cache_server_ip   => $cache_server_ip,
       cache_server_port => $cache_server_port,
       horizon_app_links => $horizon_app_links,
+      listen_ssl        => $listen_ssl,
+      horizon_cert      => $horizon_cert,
+      horizon_key       => $horizon_key,
+      horizon_ca        => $horizon_ca,
     }
   }
 }

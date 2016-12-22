@@ -39,7 +39,7 @@ class openstack::auth_file(
   $controller_node          = '127.0.0.1',
   $keystone_admin_token     = undef,
   $admin_user               = 'admin',
-  $admin_tenant             = 'openstack',
+  $admin_tenant             = 'admin',
   $region_name              = 'RegionOne',
   $use_no_cache             = true,
   $cinder_endpoint_type     = 'publicURL',
